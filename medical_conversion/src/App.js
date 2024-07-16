@@ -3,7 +3,7 @@ import './App.css';
 import NavBar from './NavBar.js';
 import * as React from 'react';
 
-import Dashboard from './NavBarSide';
+import Dashboard from './Dashboard';
 import Copyright from './copyright';
 
 
