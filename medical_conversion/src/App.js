@@ -12,7 +12,9 @@ function App() {
   return (
     <div className="app-container">
           {/*<NavBar mode={mode} />*/}
-          <Dashboard />
+          <Dashboard heading='Home'>
+          <h1>Conversion Application</h1>
+          </Dashboard>
           <Copyright/>
     </div>
   );

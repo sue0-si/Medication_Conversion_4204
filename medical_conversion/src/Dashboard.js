@@ -10,21 +10,20 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import VaccinesIcon from '@mui/icons-material/Vaccines';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import BalanceIcon from '@mui/icons-material/Balance';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 
-
-const drawerWidth = 240;
+//width of open nav pannel
+const drawerWidth = 300;
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -70,10 +69,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
+//implementation: <Dashboard heading='PageTitle'> <children/> </Dashboard>
+
+export default function Dashboard({children, heading}) {
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
@@ -108,13 +108,8 @@ export default function Dashboard() {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            Dashboard
+                            {heading}
                         </Typography>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Drawer variant="permanent" open={open}>
@@ -134,28 +129,28 @@ export default function Dashboard() {
                     <List component="nav">
                         <ListItemButton>
                             <ListItemIcon>
-                                
+                                <ManageSearchIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Medication Information" />
                         </ListItemButton>
 
                         <ListItemButton>
                             <ListItemIcon>
-
+                                <VaccinesIcon/>
                             </ListItemIcon>
                             <ListItemText primary="PO:IV Conversion" />
                         </ListItemButton>
 
                         <ListItemButton>
                             <ListItemIcon>
-
+                                <BalanceIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Alt. Medication Conversion" />
                         </ListItemButton>
 
                         <ListItemButton>
                             <ListItemIcon>
-
+                                <QuestionMarkIcon/>
                             </ListItemIcon>
                             <ListItemText primary="FAQ" />
                         </ListItemButton>
@@ -174,6 +169,9 @@ export default function Dashboard() {
                     }}
                 >
                     <Toolbar />
+                    <Container>
+                        { children}
+                    </Container>
                 </Box>
             </Box>
         </ThemeProvider>
