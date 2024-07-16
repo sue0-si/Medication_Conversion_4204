@@ -20,6 +20,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import BalanceIcon from '@mui/icons-material/Balance';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import { Link } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
 
 
 //width of open nav pannel
@@ -127,12 +129,22 @@ export default function Dashboard({children, heading}) {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <ManageSearchIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Medication Information" />
-                        </ListItemButton>
+                        <Link to='/'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Home" />
+                            </ListItemButton>
+                        </Link>
+                        <Link to='/medication-information'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <ManageSearchIcon/>
+                                </ListItemIcon>
+                                    <ListItemText primary="Medication Information" />
+                            </ListItemButton>
+                         </Link>
 
                         <ListItemButton>
                             <ListItemIcon>

@@ -2,9 +2,15 @@
 import './App.css';
 import NavBar from './NavBar.js';
 import * as React from 'react';
-
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+} from "react-router-dom";
 import Dashboard from './Dashboard';
 import Copyright from './copyright';
+import Home from './Home';
+import MedicationLookup from './MedicationSearch';
 
 
 function App() {
@@ -12,9 +18,15 @@ function App() {
   return (
     <div className="app-container">
           {/*<NavBar mode={mode} />*/}
-          <Dashboard heading='Home'>
-          <h1>Conversion Application</h1>
-          </Dashboard>
+          <Router>
+              <Dashboard heading='Home'>
+                  <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/medication-information" element={<MedicationLookup />} />
+                      
+                  </Routes>
+              </Dashboard>
+          </Router>
           <Copyright/>
     </div>
   );
