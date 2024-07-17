@@ -1,6 +1,5 @@
 // JavaScript source code
 import React from "react";
-
 const Home = () => {
     return (
         <div>
