@@ -2,6 +2,7 @@
 import React from "react";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
+import SearchResult from "./SearchResult";
 
 const filterData = (query, data) => {
     if (!query) {
@@ -11,12 +12,29 @@ const filterData = (query, data) => {
     }
 };
 
+// data - should be replaced with api
 const data = [
     "Morphine",
     "Hydromorphone",
     "Hydrocodone",
     "Oxycodone",
     "Fentanyl"
+]
+
+const description = [
+    "Description 1",
+    "Description 2",
+    "Description 3",
+    "Description 4",
+    "Description 5"
+]
+
+const rxValue = [
+    "15.31",
+    "12.35",
+    "35.32",
+    "21.74",
+    "18.76"   
 ]
 
 const MedicationLookup = () => {
@@ -28,23 +46,8 @@ const MedicationLookup = () => {
             <h1>Medication Lookup</h1>
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             <div style={{ padding: 3 }}>
-                {dataFiltered.map((d) => (
-                    <div
-                        className="text"
-                        style={{
-                            padding: 5,
-                            justifyContent: "normal",
-                            fontSize: 20,
-                            color: "blue",
-                            margin: 1,
-                            width: "250px",
-                            BorderColor: "green",
-                            borderWidth: "10px"
-                        }}
-                        key={d.id}
-                    >
-                        {d}
-                    </div>
+                {dataFiltered.map((d, i) => (
+                    <SearchResult value={d} desc={description} rxValue={rxValue} id={i}/>   
                 ))}
             </div>
         </div>

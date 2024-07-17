@@ -11,6 +11,7 @@ import Dashboard from './Dashboard';
 import Copyright from './copyright';
 import Home from './Home';
 import MedicationLookup from './MedicationSearch';
+import DrugDetail from './DrugDetail.js';
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
                   <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/medication-information" element={<MedicationLookup />} />
-                      
+                      <Route path="/drug-detail" element={<DrugDetail />} />
                   </Routes>
               </Dashboard>
           </Router>
