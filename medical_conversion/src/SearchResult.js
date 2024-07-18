@@ -7,9 +7,10 @@ import { Typography } from "@mui/material";
 import DrugDetail from "./DrugDetail";
 
 const SearchResult = (data) => {
+    const redirect = "/medication-information/" + data.value;
     return (
         <ListItem key={data.value.id}>
-            <ListItemButton component="a" href="/drug-detail">
+            <ListItemButton component="a" href={redirect}>
                 
                     <ListItemText primary={data.value} secondary={
                         <React.Fragment>

@@ -23,7 +23,7 @@ function App() {
               <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/medication-information" element={<MedicationLookup />} />
-                  <Route path="/drug-detail" element={<DrugDetail />} />
+                  <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
                   </Routes>
           </Router>
           <Copyright/>

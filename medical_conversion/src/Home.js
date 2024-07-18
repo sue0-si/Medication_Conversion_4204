@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <div>
             <Dashboard heading='Home'>
-              <h1>Welcome to the our Medication Conversion Tool</h1>
+              <h1>Welcome to our Medication Conversion Tool</h1>
             </Dashboard>
         </div>
     );
