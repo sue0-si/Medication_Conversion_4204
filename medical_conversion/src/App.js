@@ -20,13 +20,11 @@ function App() {
     <div className="app-container">
           {/*<NavBar mode={mode} />*/}
           <Router>
-              <Dashboard heading='Home'>
-                  <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/medication-information" element={<MedicationLookup />} />
-                      <Route path="/drug-detail" element={<DrugDetail />} />
+              <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/medication-information" element={<MedicationLookup />} />
+                  <Route path="/drug-detail" element={<DrugDetail />} />
                   </Routes>
-              </Dashboard>
           </Router>
           <Copyright/>
     </div>
