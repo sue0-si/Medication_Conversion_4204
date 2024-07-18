@@ -3,6 +3,7 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
 import SearchResult from "./SearchResult";
+import Dashboard from "./Dashboard";
 
 const filterData = (query, data) => {
     if (!query) {
@@ -42,15 +43,17 @@ const MedicationLookup = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const dataFiltered = filterData(searchQuery, data);
     return (
-        <div>
-            <h1>Medication Lookup</h1>
-            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            <div style={{ padding: 3 }}>
-                {dataFiltered.map((d, i) => (
-                    <SearchResult value={d} desc={description} rxValue={rxValue} id={i}/>   
-                ))}
-            </div>
-        </div>
+        <Dashboard heading='Medication Information'>
+            <div>
+                <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <div style={{ padding: 3 }}>
+                    {dataFiltered.map((d, i) => (
+                        <SearchResult value={d} desc={description} rxValue={rxValue} id={i}/>   
+                    ))}
+                </div>
+            </div>  
+        </Dashboard>
+        
     );
 };
 
