@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import IconButton from '@mui/material/IconButton';
 import Dashboard from "./Dashboard";
+import axios from 'axios';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -22,26 +23,83 @@ function CustomTabPanel(props) {
         {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
       </div>
     );
-  }
+}
   
-  CustomTabPanel.propTypes = {
+CustomTabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
-  };
+};
 
 const DrugDetail = () => {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
+    const [drugData, setDrugData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Extract drug name from the URL path
+    const drugName = location.pathname.split('/').pop();
+
+    console.log("DrugDetail rendered with drug name:", drugName);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const navigate = useNavigate();
-
     const handleBack = () => {
-        navigate(-1); // go back
+        navigate(-1);
     };
+
+    useEffect(() => {
+        const fetchDrugData = async () => {
+            console.log("Fetching drug data for:", drugName);
+            const timeoutDuration = 10000; // 10 seconds
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Request timed out')), timeoutDuration)
+            );
+
+            try {
+                const encodedDrugName = encodeURIComponent(drugName);
+                console.log("Encoded drug name:", encodedDrugName);
+                const responsePromise = axios.get(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encodedDrugName}"&limit=1`);
+                const response = await Promise.race([responsePromise, timeoutPromise]);
+                console.log("API response:", response);
+                
+                if (response.data.results && response.data.results.length > 0) {
+                    setDrugData(response.data.results[0]);
+                } else {
+                    throw new Error("No data found for this drug");
+                }
+            } catch (error) {
+                console.error("Error fetching drug data:", error);
+                setError(error);
+            } finally {
+                console.log("Setting loading to false");
+                setLoading(false);
+            }
+        };
+
+        if (drugName) {
+            fetchDrugData();
+        } else {
+            console.log("No drug name provided");
+            setError(new Error("No drug name provided"));
+            setLoading(false);
+        }
+    }, [drugName]);
+
+    if (loading) return <Dashboard heading='Medication Information'><p>Loading...</p></Dashboard>;
+    if (error) return <Dashboard heading='Medication Information'><p>Error: {error.message}</p></Dashboard>;
+
+    const {
+        dosage_and_administration,
+        adverse_reactions,
+        drug_interactions,
+        indications_and_usage
+    } = drugData;
 
     return (
         <Dashboard heading='Medication Information'>
@@ -55,50 +113,24 @@ const DrugDetail = () => {
                         <Tab label="Dosage Guideline" value={0} />
                         <Tab label="Side Effect" value={1} />
                         <Tab label="Drug interaction" value={2} />
-                        <Tab label="Treatement indication" value={3} />
+                        <Tab label="Treatment indication" value={3} />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    ZOSYN® (piperacillin and tazobactam) Injection is supplied in GALAXY Containers as a frozen, iso-osmotic, sterile, non-pyrogenic solution in single-dose plastic containers:
-                    <br></br>
-                    2.25 g (piperacillin sodium equivalent to 2 g piperacillin and tazobactam sodium equivalent to 0.25 g tazobactam) in 50 mL.
-                    <br></br>
-                    3.375 g (piperacillin sodium equivalent to 3 g piperacillin and tazobactam sodium equivalent to 0.375 g tazobactam) in 50 mL.
-                    <br></br>
-                    4.5 g (piperacillin sodium equivalent to 4 g piperacillin and tazobactam sodium equivalent to 0.5 g tazobactam) in 100 mL.
+                    {dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    The following clinically significant adverse reactions are described elsewhere in the labeling:
-                    <li>Hypersensitivity Reactions</li>
-                    <li>QT Prolongation</li>
-                    <li>Serotonin Syndrome</li>
-                    <li>Myocardial Ischemia </li>
-                    <li>Masking of Progressive Ileus and Gastric Distension </li>
-
+                    {adverse_reactions ? adverse_reactions[0] : "No side effect information available"}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    Serotonergic Drugs: Combining Zofran with other serotonergic drugs (such as SSRIs, SNRIs, and MAOIs) can increase the risk of serotonin syndrome.
-                    <br></br>
-                    QT Prolonging Drugs: Drugs that prolong the QT interval, such as certain antiarrhythmics, antipsychotics, and antibiotics, can lead to an increased risk of cardiac arrhythmias when used with Zofran.
-                    <br></br>
-                    Apomorphine: This combination can cause severe hypotension and loss of consciousness.
+                    {drug_interactions ? drug_interactions[0] : "No drug interaction information available"}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
-                    Prevention of nausea and vomiting associated with:
-                    <li>Chemotherapy</li>
-                    <li>Radiation therapy</li>
-                    <li>Surgery</li>
-                    <br></br>
-                    Off-label uses may include treatment for:
-                    <li>Gastroenteritis-related nausea and vomiting</li>
-                    <li>Pregnancy-related nausea (morning sickness)</li>
-                    <li>Nausea and vomiting due to various medical conditions</li>
+                    {indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}
                 </CustomTabPanel>
             </Box>
         </Dashboard>
-       
-
-    )
-}
+    );
+};
 
 export default DrugDetail;
