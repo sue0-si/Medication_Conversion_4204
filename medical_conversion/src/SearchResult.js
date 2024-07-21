@@ -1,32 +1,29 @@
-import React from "react";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import { Typography } from "@mui/material";
-import DrugDetail from "./DrugDetail";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const SearchResult = (data) => {
-    const redirect = "/medication-information/" + data.value;
+const SearchResult = ({ value, desc, rxValue, onClick }) => {
+    console.log(`Rendering SearchResult - value: ${value}, desc: ${desc}, rxValue: ${rxValue}`);
+
     return (
-        <ListItem key={data.value.id}>
-            <ListItemButton component="a" href={redirect}>
-                
-                    <ListItemText primary={data.value} secondary={
-                        <React.Fragment>
-                            <Typography sx={{ display: 'inline' }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary">
-                                Good Rx Value: ${data.rxValue[data.id]}
-                            </Typography>
-                        </React.Fragment>
-                    } />
-                
-                <ListItemText primary={data.desc[data.id]} />
-            </ListItemButton>
-        </ListItem>
+        <div className="search-result" onClick={onClick} style={{ cursor: 'pointer', padding: '10px', border: '1px solid #ccc', margin: '5px', borderRadius: '5px' }}>
+            <h3>{value}</h3>
+            <p className="description">{desc}</p>
+            <p><strong>Rx Value:</strong> {rxValue}</p>
+        </div>
     );
+};
+
+SearchResult.propTypes = {
+    value: PropTypes.string.isRequired,
+    desc: PropTypes.string,
+    rxValue: PropTypes.string,
+    onClick: PropTypes.func
+};
+
+SearchResult.defaultProps = {
+    desc: 'Description not available',
+    rxValue: 'N/A',
+    onClick: () => {}
 };
 
 export default SearchResult;
