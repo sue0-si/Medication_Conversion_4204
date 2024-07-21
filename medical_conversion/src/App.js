@@ -1,6 +1,5 @@
 
 import './App.css';
-import NavBar from './NavBar.js';
 import * as React from 'react';
 import {
     BrowserRouter as Router,

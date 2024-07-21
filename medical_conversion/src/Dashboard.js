@@ -76,7 +76,7 @@ const defaultTheme = createTheme();
 //implementation: <Dashboard heading='PageTitle'> <children/> </Dashboard>
 
 export default function Dashboard({children, heading}) {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const toggleDrawer = () => {
         setOpen(!open);
     };
