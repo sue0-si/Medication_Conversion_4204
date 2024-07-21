@@ -15,7 +15,7 @@ function SearchBar({ setSearchQuery }) {
 
         event.preventDefault();
 
-        // 👇️ Redirect to /contacts
+        // 👇️ Redirect to results using medication name
         navigate('/medication-information/' + value);
     };
     return (

@@ -50,7 +50,8 @@ const DrugDetail = () => {
     };
 
     const handleBack = () => {
-        navigate(-1);
+        //return to search
+        navigate('/medication-information');
     };
 
     useEffect(() => {
@@ -106,7 +107,7 @@ const DrugDetail = () => {
             <Box sx={{ width: '100%', padding: 3 }}>
                 <IconButton onClick={handleBack}>
                     <ChevronLeftIcon />
-                    <p>Go Back</p>
+                    <p>Return To Search</p>
                 </IconButton>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="drug detail tab">
