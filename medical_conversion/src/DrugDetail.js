@@ -8,6 +8,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import IconButton from '@mui/material/IconButton';
 import Dashboard from "./Dashboard";
 import axios from 'axios';
+import DataTable from "./ApiDataTable.js";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -102,6 +103,9 @@ const DrugDetail = () => {
         indications_and_usage
     } = drugData;
 
+    let split_dosage_administration = dosage_and_administration[0].split('\u2022');
+    
+
     return (
         <Dashboard heading='Medication Information'>
             <Box sx={{ width: '100%', padding: 3 }}>
@@ -118,16 +122,20 @@ const DrugDetail = () => {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}
+                    {/*{dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}*/}
+                    <DataTable dataString={dosage_and_administration[0]}/>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    {adverse_reactions ? adverse_reactions[0] : "No side effect information available"}
+                    {/*{adverse_reactions ? adverse_reactions[0] : "No side effect information available"}*/}
+                    <DataTable dataString={adverse_reactions[0]} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    {drug_interactions ? drug_interactions[0] : "No drug interaction information available"}
+                    {/*{drug_interactions ? drug_interactions[0] : "No drug interaction information available"}*/}
+                    <DataTable dataString={drug_interactions[0]} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
-                    {indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}
+                    {/*{indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}*/}
+                    <DataTable dataString={indications_and_usage[0]} />
                 </CustomTabPanel>
             </Box>
         </Dashboard>
