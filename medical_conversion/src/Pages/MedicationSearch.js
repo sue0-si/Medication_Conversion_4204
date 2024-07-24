@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import SearchBar from "./SearchBar";
-import SearchResult from "./SearchResult";
-import Dashboard from "./Dashboard";
+import SearchBar from "../Components/SearchBar";
+import SearchResult from "../Components/SearchResult";
+import Dashboard from "../Components/Dashboard";
 import axios from 'axios';
 
 const filterData = (query, data) => {

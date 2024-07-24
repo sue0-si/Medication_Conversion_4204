@@ -6,13 +6,10 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import Dashboard from './Dashboard';
-import Copyright from './copyright';
-import Home from './Home';
-import MedicationLookup from './MedicationSearch';
-import DrugDetail from './DrugDetail.js';
-
-
+import Copyright from './Components/copyright';
+import Home from './Pages/Home';
+import MedicationLookup from './Pages/MedicationSearch';
+import DrugDetail from './Pages/DrugDetail.js';
 function App() {
     const [mode] = React.useState('light');
   return (

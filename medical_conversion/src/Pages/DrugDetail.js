@@ -6,9 +6,9 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import IconButton from '@mui/material/IconButton';
-import Dashboard from "./Dashboard";
 import axios from 'axios';
-import DataTable from "./ApiDataTable.js";
+import DataTable from "../Components/ApiDataTable.js";
+import Dashboard from "../Components/Dashboard.js";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -102,8 +102,7 @@ const DrugDetail = () => {
         drug_interactions,
         indications_and_usage
     } = drugData;
-
-    let split_dosage_administration = dosage_and_administration[0].split('\u2022');
+    
     
 
     return (

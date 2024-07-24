@@ -1,7 +1,7 @@
 // JavaScript source code
 import React from "react";
 
-import Dashboard from "./Dashboard";
+import Dashboard from "../Components/Dashboard";
 
 const Home = () => {
     return (
