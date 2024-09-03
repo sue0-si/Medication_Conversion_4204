@@ -36,11 +36,42 @@ const MedicationLookup = () => {
     const navigate = useNavigate();
 
     const data = [
-        "Morphine",
-        "Hydromorphone",
+        "Acetaminophen",
+        "Amoxicillin",
+        "Aspirin",
+        "Atorvastatin",
+        "Azithromycin",
+        "Captopril", "Ceftriaxone",
+        "Ciprofloxacin",
+        "Clindamycin",
+        "Clonidine",
+        "Dexamethasone",
+        "Digoxin",
+        "Diltiazem",
+        "Enalapril",
+        "Furosemide",
+        "Gabapentin",
+        "Glipizide",
+        "Heparin",
         "Hydrocodone",
+        "Ibuprofen",
+        "Insulin",
+        "Lisinopril",
+        "Losartan",
+        "Metformin",
+        "Metoprolol",
+        "Naproxen",
+        "Omeprazole",
+        "Ondansetron",
         "Oxycodone",
-        "Fentanyl"
+        "Prednisone",
+        "Ranitidine",
+        "Simvastatin",
+        "Spironolactone",
+        "Tramadol",
+        "Vancomycin",
+        "Warfarin"
+
     ];
 
     const rxValues = [

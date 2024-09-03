@@ -10,6 +10,8 @@ import Copyright from './Components/copyright';
 import Home from './Pages/Home';
 import MedicationLookup from './Pages/MedicationSearch';
 import DrugDetail from './Pages/DrugDetail.js';
+import PoIvConversion from './Pages/PoIvConversion';
+import ConversionResults from './Pages/ConversionResults';
 function App() {
     const [mode] = React.useState('light');
   return (
@@ -20,6 +22,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/medication-information" element={<MedicationLookup />} />
                   <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
+                  <Route path="/po-iv" element={<PoIvConversion />} />
+                  <Route path="/po-iv/:key" element={<ConversionResults/> } />
                   </Routes>
           </Router>
           <Copyright/>

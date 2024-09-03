@@ -145,14 +145,14 @@ export default function Dashboard({children, heading}) {
                                     <ListItemText primary="Medication Information" />
                             </ListItemButton>
                          </Link>
-
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <VaccinesIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="PO:IV Conversion" />
-                        </ListItemButton>
-
+                         <Link to='/po-iv'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <VaccinesIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="PO:IV Conversion" />
+                            </ListItemButton>
+                        </Link>
                         <ListItemButton>
                             <ListItemIcon>
                                 <BalanceIcon/>

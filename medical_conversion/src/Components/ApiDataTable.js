@@ -15,7 +15,7 @@ export default function DataTable({ dataString }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, index) => (
+                    {dataString.map((item, index) => (
                         <tr key={index}>
                             <td>{item}</td>
                         </tr>

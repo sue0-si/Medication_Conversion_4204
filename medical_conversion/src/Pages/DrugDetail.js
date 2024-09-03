@@ -66,8 +66,10 @@ const DrugDetail = () => {
             try {
                 const encodedDrugName = encodeURIComponent(drugName);
                 console.log("Encoded drug name:", encodedDrugName);
+                console.log(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encodedDrugName}"&limit=1`);
                 const responsePromise = axios.get(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encodedDrugName}"&limit=1`);
                 const response = await Promise.race([responsePromise, timeoutPromise]);
+                
                 console.log("API response:", response);
                 
                 if (response.data.results && response.data.results.length > 0) {
@@ -121,20 +123,20 @@ const DrugDetail = () => {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {/*{dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}*/}
-                    <DataTable dataString={dosage_and_administration[0]}/>
+                    {dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}
+                    {/*<DataTable dataString={dosage_and_administration[0]}/>*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    {/*{adverse_reactions ? adverse_reactions[0] : "No side effect information available"}*/}
-                    <DataTable dataString={adverse_reactions[0]} />
+                    {adverse_reactions ? adverse_reactions[0] : "No side effect information available"}
+                    {/*<DataTable dataString={adverse_reactions[0]} />*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    {/*{drug_interactions ? drug_interactions[0] : "No drug interaction information available"}*/}
-                    <DataTable dataString={drug_interactions[0]} />
+                    {drug_interactions ? drug_interactions[0] : "No drug interaction information available"}
+                    {/*<DataTable dataString={drug_interactions[0]} />*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
-                    {/*{indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}*/}
-                    <DataTable dataString={indications_and_usage[0]} />
+                    {indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}
+                    {/*<DataTable dataString={indications_and_usage[0]} />*/}
                 </CustomTabPanel>
             </Box>
         </Dashboard>
