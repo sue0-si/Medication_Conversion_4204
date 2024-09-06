@@ -1,15 +1,38 @@
-// JavaScript source code
-import React from "react";
-import Dashboard from "../Components/Dashboard";
-import MedInputForm from "../Components/MedInputForm";
+import { useLocation } from 'react-router-dom';
+import { Box, Typography } from '@mui/material';
+import Dashboard from '../Components/Dashboard';
 
-const ConversionResults = () => {
+function ConversionResults() {
+    const location = useLocation();
+    const { medicationData } = location.state || {}; // Access the passed form data
+
     return (
-        <div>
-            <Dashboard heading='Conversion Results'>
-            </Dashboard>
-        </div>
+        <Dashboard heading="Conversion Results">
+            <Box sx={{ mt: 4 }}>
+                <Typography variant="h4" gutterBottom>
+                    Conversion Results
+                </Typography>
+                {medicationData ? (
+                    <>
+                        <Typography variant="body1">
+                            Medication Name: {medicationData.name}
+                        </Typography>
+                        <Typography variant="body1">
+                            Dosage: {medicationData.dosage} {medicationData.dosageUnit}
+                        </Typography>
+                        <Typography variant="body1">
+                            Form: {medicationData.form}
+                        </Typography>
+                        <Typography variant="body1">
+                            Administrative: {medicationData.isAdministrative ? 'Yes' : 'No'}
+                        </Typography>
+                    </>
+                ) : (
+                    <Typography variant="body1">No data available.</Typography>
+                )}
+            </Box>
+        </Dashboard>
     );
-};
+}
 
 export default ConversionResults;
