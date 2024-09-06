@@ -2,6 +2,7 @@
 import { TextField, Button, Box, Checkbox, FormControlLabel, Select, MenuItem, FormControl, InputLabel, CircularProgress, Typography, InputAdornment, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PatientInfoForm from "./PatientInfoForm";
 
 function MedInputForm({ redirectOnSubmit }) {
     const [medicationData, setMedicationData] = useState({
@@ -12,6 +13,14 @@ function MedInputForm({ redirectOnSubmit }) {
         isAdministrative: false,  // Checkbox for administrative
         formula: ''  // Select box for different formulas
     });
+    const [patientData, setPatientData] = useState({
+        height: '',
+        weight: '',
+        gender: '',
+        organDamage: false,
+        disease: '',
+    });
+
 
     const [formulas, setFormulas] = useState([]);
     const [loadingFormulas, setLoadingFormulas] = useState(true);  // Track loading state for formulas
@@ -57,8 +66,12 @@ function MedInputForm({ redirectOnSubmit }) {
     // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Navigate to the ConversionResults page, passing form data via state
-        navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });
+        const dataToSubmit = {
+            ...medicationData,
+            patientData: medicationData.isAdministrative ? patientData : null,  // Include patient data if administrative
+        };
+
+        navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData: dataToSubmit } });
     };
 
     return (
@@ -150,26 +163,31 @@ function MedInputForm({ redirectOnSubmit }) {
                 }
                 label="Is this medication administrative?"
             />
-
+            {/* Show the PatientInfoForm if administrative is checked */}
+            {medicationData.isAdministrative && (
+                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
+            )}
             {/* Select Box for Formulas (with Loading State) */}
-            <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
-                <InputLabel>Choose a Formula</InputLabel>
-                {loadingFormulas ? (
-                    <CircularProgress />
-                ) : (
-                    <Select
-                        name="formula"
-                        value={medicationData.formula}
-                        onChange={handleChange}
-                    >
-                        {formulas.map((formula, index) => (
-                            <MenuItem key={index} value={formula}>
-                                {formula}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                )}
-            </FormControl>
+            {!error && (
+                <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
+                    <InputLabel>Choose a Formula</InputLabel>
+                    {loadingFormulas ? (
+                        <CircularProgress />
+                    ) : (
+                        <Select
+                            name="formula"
+                            value={medicationData.formula}
+                            onChange={handleChange}
+                        >
+                            {formulas.map((formula, index) => (
+                                <MenuItem key={index} value={formula}>
+                                    {formula}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    )}
+                </FormControl>
+            ) }
 
             {/* Display error message below the FormControl */}
             {error && (
