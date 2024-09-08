@@ -34,7 +34,10 @@ function ConversionResults() {
                                 <Typography variant="body1">Height: {medicationData.patientData.height} cm</Typography>
                                 <Typography variant="body1">Weight: {medicationData.patientData.weight} kg</Typography>
                                 <Typography variant="body1">Gender: {medicationData.patientData.gender}</Typography>
-                                <Typography variant="body1">Organ Damage: {medicationData.patientData.organDamage ? 'Yes' : 'No'}</Typography>
+                                <Typography variant="body1">Kidney Impairment: {medicationData.patientData.kidney ? 'Yes' : 'No'}</Typography>
+                                <Typography variant="body1">Liver Impairment: {medicationData.patientData.liver ? 'Yes' : 'No'}</Typography>
+                                <Typography variant="body1">Gastro Impairment: {medicationData.patientData.Gastro ? 'Yes' : 'No'}</Typography>
+
                                 <Typography variant="body1">Disease: {medicationData.patientData.disease}</Typography>
                             </>
                         )}
