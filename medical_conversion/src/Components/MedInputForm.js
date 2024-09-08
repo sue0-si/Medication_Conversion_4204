@@ -17,7 +17,9 @@ function MedInputForm({ redirectOnSubmit }) {
         height: '',
         weight: '',
         gender: '',
-        organDamage: false,
+        kidney: false,
+        liver: false,
+        gastro: false,
         disease: '',
     });
 

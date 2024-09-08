@@ -1,13 +1,30 @@
 import { TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
 
 function PatientInfoForm({ patientData, setPatientData }) {
+    useEffect(() => {
+        // Load patient data from local storage when component mounts
+        const storedData = localStorage.getItem("patientData");
+        if (storedData) {
+            const parsedData = JSON.parse(storedData);
+            // Merge stored data with initial patientData, preferring stored values
+            setPatientData(prevData => ({
+                ...prevData,
+                ...parsedData
+            }));
+        }
+    }, [setPatientData]);
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
-        setPatientData((prevData) => ({
-            ...prevData,
+        const newData = {
+            ...patientData,
             [name]: type === "checkbox" ? checked : value,
-        }));
+        };
+        setPatientData(newData);
+
+        // Save to local storage whenever data changes
+        localStorage.setItem("patientData", JSON.stringify(newData));
     };
 
     return (
@@ -15,7 +32,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Height (cm)"
                 name="height"
-                value={patientData.height}
+                value={patientData.height || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -24,7 +41,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Weight (kg)"
                 name="weight"
-                value={patientData.weight}
+                value={patientData.weight || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -34,7 +51,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 <InputLabel>Gender</InputLabel>
                 <Select
                     name="gender"
-                    value={patientData.gender}
+                    value={patientData.gender || ''}
                     onChange={handleChange}
                 >
                     <MenuItem value="male">Male</MenuItem>
@@ -45,17 +62,37 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <FormControlLabel
                 control={
                     <Checkbox
-                        name="organDamage"
-                        checked={patientData.organDamage}
+                        name="liver"
+                        checked={!!patientData.liver}
                         onChange={handleChange}
                     />
                 }
-                label="Has Organ Damage"
+                label="Liver Impairment"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        name="kidney"
+                        checked={!!patientData.kidney}
+                        onChange={handleChange}
+                    />
+                }
+                label="Kidney Impairment"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        name="gastro"
+                        checked={!!patientData.gastro}
+                        onChange={handleChange}
+                    />
+                }
+                label="GI Impairment"
             />
             <TextField
                 label="Existing Disease"
                 name="disease"
-                value={patientData.disease}
+                value={patientData.disease || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
