@@ -6,6 +6,15 @@ function ConversionResults() {
     const location = useLocation();
     const { medicationData } = location.state || {}; // Access the passed form data
 
+    const [patientData, setPatientData] = useState(null);
+
+    useEffect(() => {
+        // Load patient data from local storage when component mounts
+        const storedData = localStorage.getItem("patientData");
+        if (storedData) {
+            setPatientData(JSON.parse(storedData));
+        }
+    }, []);
     return (
         <Dashboard heading="Conversion Results">
             <Box sx={{ mt: 4 }}>
