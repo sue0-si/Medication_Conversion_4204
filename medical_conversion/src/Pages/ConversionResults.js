@@ -26,7 +26,29 @@ function ConversionResults() {
                         <Typography variant="body1">
                             Administrative: {medicationData.isAdministrative ? 'Yes' : 'No'}
                         </Typography>
+                        {medicationData.isAdministrative && medicationData.patientData && (
+                            <>
+                                <Typography variant="h6" gutterBottom>
+                                    Patient Information:
+                                </Typography>
+                                <Typography variant="body1">Height: {medicationData.patientData.height} cm</Typography>
+                                <Typography variant="body1">Weight: {medicationData.patientData.weight} kg</Typography>
+                                <Typography variant="body1">Gender: {medicationData.patientData.gender}</Typography>
+                                <Typography variant="body1">Organ Damage: {medicationData.patientData.organDamage ? 'Yes' : 'No'}</Typography>
+                                <Typography variant="body1">Disease: {medicationData.patientData.disease}</Typography>
+                            </>
+                        )}
+                        <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                            Conversion Formula:
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Formula Name:</strong> {medicationData.formula.formulaName}
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Formula:</strong> {medicationData.formula.formula}
+                        </Typography>
                     </>
+
                 ) : (
                     <Typography variant="body1">No data available.</Typography>
                 )}

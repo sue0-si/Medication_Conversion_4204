@@ -13,6 +13,19 @@ function MedInputForm({ redirectOnSubmit }) {
         formula: ''  // Select box for different formulas
     });
 
+    const [patientData, setPatientData] = useState({
+        height: '',
+        weight: '',
+        gender: '',
+        organDamage: false,
+        disease: '',
+    });
+    const [formulaData, setFormulaData] = useState({
+        formulaName: '',
+        formula: '',
+    });
+    
+
     const [formulas, setFormulas] = useState([]);
     const [loadingFormulas, setLoadingFormulas] = useState(true);  // Track loading state for formulas
     const [error, setError] = useState(null);  // Track error state
@@ -54,11 +67,28 @@ function MedInputForm({ redirectOnSubmit }) {
         }
     };
 
+    const handleFormulaChange = (e) => {
+        const { name, value } = e.target;
+        setFormulaData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
+
         // Navigate to the ConversionResults page, passing form data via state
         navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });
+
+        const dataToSubmit = {
+            ...medicationData,
+            patientData: medicationData.isAdministrative ? patientData : null,  // Include patient data if administrative
+            formula: formulaData,
+        };
+
+        navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData: dataToSubmit } });
     };
 
     return (
@@ -152,6 +182,7 @@ function MedInputForm({ redirectOnSubmit }) {
             />
 
             {/* Select Box for Formulas (with Loading State) */}
+
             <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
                 <InputLabel>Choose a Formula</InputLabel>
                 {loadingFormulas ? (
@@ -170,6 +201,48 @@ function MedInputForm({ redirectOnSubmit }) {
                     </Select>
                 )}
             </FormControl>
+
+            {!error && (
+                <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
+                    <InputLabel>Choose a Formula</InputLabel>
+                    {loadingFormulas ? (
+                        <CircularProgress />
+                    ) : (
+                        <Select
+                            name="formula"
+                            value={medicationData.formula}
+                            onChange={handleChange}
+                        >
+                            {formulas.map((formula, index) => (
+                                <MenuItem key={index} value={formula}>
+                                    {formula}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    )}
+                </FormControl>
+            )}
+
+            <TextField
+                label="Formula Name"
+                name="formulaName"
+                value={formulaData.formulaName}
+                onChange={handleFormulaChange}
+                fullWidth
+                margin="normal"
+                required
+            />
+            <TextField
+                label="Formula"
+                name="formula"
+                value={formulaData.formula}
+                onChange={handleFormulaChange}
+                fullWidth
+                margin="normal"
+                required
+                helperText="You can use special characters such as +, -, *, /, etc."
+            />
+
 
             {/* Display error message below the FormControl */}
             {error && (
