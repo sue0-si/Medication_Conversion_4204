@@ -8,5 +8,7 @@ Converting IV to Oral formulations
 - Optional field for patient data
   
 ### Bug Fixes
-### Known Issues
 
+### Known Issues
+- Comprehensive formula list (no existing APIs)
+- No centralized tabular data for drug warnings associated with specific patient history.
