@@ -1,50 +1,28 @@
-﻿import { useState, useEffect } from "react";
-import { TextField, Button, Box, Checkbox, FormControlLabel, Select, MenuItem, FormControl, InputLabel, CircularProgress, Typography, InputAdornment, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { useState, useEffect } from "react";
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PatientInfoForm from "./PatientInfoForm";
 
 function MedInputForm({ redirectOnSubmit }) {
     const [medicationData, setMedicationData] = useState({
         name: '',
-        dosage: '',
-        dosageUnit: 'mg', // Default unit is 'mg'
-        form: '',
-        isAdministrative: false,  // Checkbox for administrative
+        // dosage: '',  // Commenting out dosage-related functionality
+        // dosageUnit: 'mg', // Default unit is 'mg', commented out
+        route: '',  // Renamed from form to route for administrative method
+        // isAdministrative: false,  // Checkbox for administrative, commented out
         formula: ''  // Select box for different formulas
     });
-    const [patientData, setPatientData] = useState({
-        height: '',
-        weight: '',
-        gender: '',
-        kidney: false,
-        liver: false,
-        gastro: false,
-        disease: '',
-    });
-
-
-    const [patientData, setPatientData] = useState({
-        height: '',
-        weight: '',
-        gender: '',
-        organDamage: false,
-        disease: '',
-    });
-    const [formulaData, setFormulaData] = useState({
-        formulaName: '',
-        formula: '',
-    });
-    
 
     const [formulas, setFormulas] = useState([]);
-    const [loadingFormulas, setLoadingFormulas] = useState(true);  // Track loading state for formulas
-    const [error, setError] = useState(null);  // Track error state
+    const [loadingFormulas, setLoadingFormulas] = useState(true);
+    const [error, setError] = useState(null);
+    // const [dosages, setDosages] = useState([]); // State for storing API response data, commented out
+    // const [loadingDosages, setLoadingDosages] = useState(false); // Track loading state for dosages, commented out
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch formulas from the API (when implemented)
+        // Fetch formulas from the API (if needed)
         const fetchFormulas = async () => {
             try {
                 const response = await axios.get('/api/formulas');  // Replace with actual API endpoint
@@ -59,6 +37,28 @@ function MedInputForm({ redirectOnSubmit }) {
         fetchFormulas();
     }, []);
 
+    // Fetch dosages from DrugBank API based on medication name and route
+    // Commenting out fetchDosages function as dosage functionality is not required
+    /*
+    const fetchDosages = async () => {
+        setLoadingDosages(true);
+        try {
+            // Replace with actual DrugBank API endpoint and include authentication headers if necessary
+            const response = await axios.get(`https://api.drugbank.com/v1/us/product_concepts/search`, {
+                params: {
+                    name: medicationData.name,
+                    route: medicationData.route
+                }
+            });
+            setDosages(response.data);
+            setLoadingDosages(false);
+        } catch (error) {
+            setError('Error fetching dosages');
+            setLoadingDosages(false);
+        }
+    };
+    */
+
     // Single function to handle all form changes
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -68,38 +68,12 @@ function MedInputForm({ redirectOnSubmit }) {
         }));
     };
 
-    // Handle change for dosage unit (ToggleButtonGroup)
-    const handleDosageUnitChange = (event, newUnit) => {
-        if (newUnit !== null) {
-            setMedicationData((prevData) => ({
-                ...prevData,
-                dosageUnit: newUnit,
-            }));
-        }
-    };
-
-    const handleFormulaChange = (e) => {
-        const { name, value } = e.target;
-        setFormulaData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
     // Handle form submission
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-
+        // await fetchDosages(); // Fetch dosages before redirecting, commented out
         // Navigate to the ConversionResults page, passing form data via state
         navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });
-
-        const dataToSubmit = {
-            ...medicationData,
-            patientData: medicationData.isAdministrative ? patientData : null,  // Include patient data if administrative
-            formula: formulaData,
-        };
-
-        navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData: dataToSubmit } });
     };
 
     return (
@@ -113,54 +87,19 @@ function MedInputForm({ redirectOnSubmit }) {
                 fullWidth
                 margin="normal"
             />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                <TextField
-                    label="Dosage"
-                    name="dosage"
-                    value={medicationData.dosage}
-                    onChange={handleChange}
-                    required
-                    type="number"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <ToggleButtonGroup
-                                    value={medicationData.dosageUnit}
-                                    exclusive
-                                    onChange={handleDosageUnitChange}
-                                    aria-label="dosage unit"
-                                >
-                                    <ToggleButton value="mg" aria-label="milligrams">
-                                        mg
-                                    </ToggleButton>
-                                    <ToggleButton value="ml" aria-label="milliliters">
-                                        mL
-                                    </ToggleButton>
-                                    <ToggleButton value="g" aria-label="grams">
-                                        g
-                                    </ToggleButton>
-                                    <ToggleButton value="units" aria-label="units">
-                                        units
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </InputAdornment>
-                        ),
-                    }}
-                    fullWidth
-                    margin="normal"
-                />
-            </Box>
+
+            {/* Setting route using administrative method */}
             <FormControl fullWidth margin="normal">
                 <Typography variant="h6" gutterBottom>
                     Administration Method
                 </Typography>
                 <ToggleButtonGroup
-                    value={medicationData.form}
+                    value={medicationData.route}
                     exclusive
                     onChange={(event, newMethod) => {
                         setMedicationData((prevData) => ({
                             ...prevData,
-                            form: newMethod,
+                            route: newMethod,  // Using route instead of form
                         }));
                     }}
                     aria-label="administration method"
@@ -180,8 +119,8 @@ function MedInputForm({ redirectOnSubmit }) {
                 </ToggleButtonGroup>
             </FormControl>
 
-            {/* Checkbox for Administrative */}
-            <FormControlLabel
+            {/* Checkbox for Administrative - Commented out */}
+            {/* <FormControlLabel
                 control={
                     <Checkbox
                         name="isAdministrative"
@@ -190,53 +129,27 @@ function MedInputForm({ redirectOnSubmit }) {
                     />
                 }
                 label="Is this medication administrative?"
-            />
-            {/* Show the PatientInfoForm if administrative is checked */}
-            {medicationData.isAdministrative && (
-                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
-            )}
+            /> */}
+
             {/* Select Box for Formulas (with Loading State) */}
-            {!error && (
-                <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
-                    <InputLabel>Choose a Formula</InputLabel>
-                    {loadingFormulas ? (
-                        <CircularProgress />
-                    ) : (
-                        <Select
-                            name="formula"
-                            value={medicationData.formula}
-                            onChange={handleChange}
-                        >
-                            {formulas.map((formula, index) => (
-                                <MenuItem key={index} value={formula}>
-                                    {formula}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    )}
-                </FormControl>
-            )}
-
-            <TextField
-                label="Formula Name"
-                name="formulaName"
-                value={formulaData.formulaName}
-                onChange={handleFormulaChange}
-                fullWidth
-                margin="normal"
-                required
-            />
-            <TextField
-                label="Formula"
-                name="formula"
-                value={formulaData.formula}
-                onChange={handleFormulaChange}
-                fullWidth
-                margin="normal"
-                required
-                helperText="You can use special characters such as +, -, *, /, etc."
-            />
-
+            <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
+                <InputLabel>Choose a Formula</InputLabel>
+                {loadingFormulas ? (
+                    <CircularProgress />
+                ) : (
+                    <Select
+                        name="formula"
+                        value={medicationData.formula}
+                        onChange={handleChange}
+                    >
+                        {formulas.map((formula, index) => (
+                            <MenuItem key={index} value={formula}>
+                                {formula}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                )}
+            </FormControl>
 
             {/* Display error message below the FormControl */}
             {error && (
@@ -248,6 +161,18 @@ function MedInputForm({ redirectOnSubmit }) {
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
+
+            {/* Display dosage options from API, commented out */}
+            {/* {dosages.length > 0 && (
+                <Box sx={{ mt: 3 }}>
+                    <Typography variant="h6">Available Dosages:</Typography>
+                    <ul>
+                        {dosages.map((dosage, index) => (
+                            <li key={index}>{dosage.name} - {dosage.strengths}</li>
+                        ))}
+                    </ul>
+                </Box>
+            )} */}
         </Box>
     );
 }
