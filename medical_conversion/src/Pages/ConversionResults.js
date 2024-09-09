@@ -50,7 +50,20 @@ function ConversionResults() {
                                 <Typography variant="body1">Disease: {medicationData.patientData.disease}</Typography>
                             </>
                         )}
+                        <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                            Conversion Formula:
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Formula Name:</strong> {medicationData.formula.formulaName}
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Formula:</strong> {medicationData.formula.formula}
+                        </Typography>
+                                
+                            </>
+                        )}
                     </>
+
                 ) : (
                     <Typography variant="body1">No data available.</Typography>
                 )}
