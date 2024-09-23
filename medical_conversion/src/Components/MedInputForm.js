@@ -2,16 +2,9 @@ import { useState, useEffect } from "react";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PatientInfoForm from "./PatientInfoForm";
 
-function MedInputForm({ redirectOnSubmit }) {
-    const [medicationData, setMedicationData] = useState({
-        name: '',
-        // dosage: '',  // Commenting out dosage-related functionality
-        // dosageUnit: 'mg', // Default unit is 'mg', commented out
-        route: '',  // Renamed from form to route for administrative method
-        // isAdministrative: false,  // Checkbox for administrative, commented out
-        formula: ''  // Select box for different formulas
-    });
+function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData, onSubmit }) {
 
     const [formulas, setFormulas] = useState([]);
     const [loadingFormulas, setLoadingFormulas] = useState(true);
@@ -73,7 +66,8 @@ function MedInputForm({ redirectOnSubmit }) {
         event.preventDefault();
         // await fetchDosages(); // Fetch dosages before redirecting, commented out
         // Navigate to the ConversionResults page, passing form data via state
-        navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });
+        /*navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });*/
+        onSubmit();
     };
 
     return (
@@ -149,6 +143,10 @@ function MedInputForm({ redirectOnSubmit }) {
                         ))}
                     </Select>
                 )}
+            </FormControl>
+
+            <FormControl fullWidth margin="normal">
+                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
             </FormControl>
 
             {/* Display error message below the FormControl */}

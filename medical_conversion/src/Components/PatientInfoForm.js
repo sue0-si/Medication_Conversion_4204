@@ -1,19 +1,19 @@
 import { TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
-import { useEffect } from "react";
+import * as React from "react";
 
 function PatientInfoForm({ patientData, setPatientData }) {
-    useEffect(() => {
-        // Load patient data from local storage when component mounts
-        const storedData = localStorage.getItem("patientData");
-        if (storedData) {
-            const parsedData = JSON.parse(storedData);
-            // Merge stored data with initial patientData, preferring stored values
-            setPatientData(prevData => ({
-                ...prevData,
-                ...parsedData
-            }));
-        }
-    }, [setPatientData]);
+    //useEffect(() => {
+    //    // Load patient data from local storage when component mounts
+    //    const storedData = localStorage.getItem("patientData");
+    //    if (storedData) {
+    //        const parsedData = JSON.parse(storedData);
+    //        // Merge stored data with initial patientData, preferring stored values
+    //        setPatientData(prevData => ({
+    //            ...prevData,
+    //            ...parsedData
+    //        }));
+    //    }
+    //}, [setPatientData]);
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -24,15 +24,17 @@ function PatientInfoForm({ patientData, setPatientData }) {
         setPatientData(newData);
 
         // Save to local storage whenever data changes
-        localStorage.setItem("patientData", JSON.stringify(newData));
+        /*localStorage.setItem("patientData", JSON.stringify(newData));*/
     };
+
+    
 
     return (
         <div>
             <TextField
                 label="Height (cm)"
                 name="height"
-                value={patientData.height || ''}
+                value={patientData.height || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -41,7 +43,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Weight (kg)"
                 name="weight"
-                value={patientData.weight || ''}
+                value={patientData.weight || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
