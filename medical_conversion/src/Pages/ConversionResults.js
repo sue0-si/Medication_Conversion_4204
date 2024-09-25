@@ -1,6 +1,7 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
+import {useEffect, useState } from 'react'
 
 function ConversionResults() {
     const location = useLocation();
@@ -59,14 +60,13 @@ function ConversionResults() {
                         <Typography variant="body1">
                             <strong>Formula:</strong> {medicationData.formula.formula}
                         </Typography>
-                                
-                            </>
-                        )}
                     </>
-
                 ) : (
-                    <Typography variant="body1">No data available.</Typography>
-                )}
+                        <>
+                            <Typography variant="body1">No data available.</Typography>
+                        </>    
+                    )
+                }
             </Box>
         </Dashboard>
     );
