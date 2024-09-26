@@ -1,0 +1,38 @@
+{
+    "Bupivacaine": {
+        "class": "local anesthetic",
+        "Conversions": {
+            "Bupivacaine": 1.0,
+            "Lidocaine": 0.44,
+            "Mepivacaine": 0.45,
+            "Ropivacaine": 0.67
+        }
+    },
+    "Lidocaine": {
+        "class": "local anesthetic",
+        "Conversions": {
+            "Bupivacaine": 2.27,
+            "Lidocaine": 1.0,
+            "Mepivacaine": 0.98,
+            "Ropivacaine": 1.5
+        }
+    },
+    "Mepivacaine": {
+        "class": "local anesthetic",
+        "Conversions": {
+            "Bupivacaine": 2.22,
+            "Lidocaine": 1.02,
+            "Mepivacaine": 1.0,
+            "Ropivacaine": 1.36
+        }
+    },
+    "Ropivacaine": {
+        "class": "local anesthetic",
+        "Conversions": {
+            "Bupivacaine": 1.5,
+            "Lidocaine": 0.67,
+            "Mepivacaine": 0.74,
+            "Ropivacaine": 1.0
+        }
+    }
+}
