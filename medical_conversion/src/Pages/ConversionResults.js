@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
 import * as React from 'react';
@@ -46,6 +46,7 @@ function ConversionResults({medicationData,patientData}) {
                             <Typography variant="body1">Liver Impairment: {patientData.liver ? 'Yes' : 'No'}</Typography>
                             <Typography variant="body1">Gastro Impairment: {patientData.Gastro ? 'Yes' : 'No'}</Typography>
 
+
                             <Typography variant="body1">Disease: {patientData.disease}</Typography>
                         </>
                     )}
@@ -64,6 +65,7 @@ function ConversionResults({medicationData,patientData}) {
                 <Typography variant="body1">No data available.</Typography>
             )}
         </Box>
+
     );
 }
 
