@@ -16,3 +16,18 @@ N/A
 ### Known Issues
 - Comprehensive formula list (no existing APIs)
 - No centralized tabular data for drug warnings associated with specific patient history.
+
+## Version 0.2.0
+
+### Features
+- CSV tables to store known converison rates
+- Results UI for medication data, patient data, conversion info
+- Single page structure for forms and results
+  
+### Bug Fixes
+- removed unfinished additions to FormatForTable Tool
+- removed unused PatientVariableForm
+
+### Known Issues
+- Comprehensive formula list (no existing APIs)
+- No centralized tabular data for drug warnings associated with specific patient history.
