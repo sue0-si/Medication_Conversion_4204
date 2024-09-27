@@ -1,0 +1,106 @@
+{
+    "Betamethasone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 1.0,
+            "Cortisone": 33.33,
+            "Dexamethasone": 1.0,
+            "Hydrocortisone": 26.67,
+            "Methylprednisolone": 5.33,
+            "Prednisolone": 6.67,
+            "Prednisone": 6.67,
+            "Triamcinolone": 5.33
+        }
+    },
+    "Cortisone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.03,
+            "Cortisone": 1.0,
+            "Dexamethasone": 0.03,
+            "Hydrocortisone": 0.8,
+            "Methylprednisolone": 0.16,
+            "Prednisolone": 0.2,
+            "Prednisone": 0.2,
+            "Triamcinolone": 0.16
+        }
+    },
+    "Dexamethasone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 1.0,
+            "Cortisone": 33.33,
+            "Dexamethasone": 1.0,
+            "Hydrocortisone": 26.67,
+            "Methylprednisolone": 5.33,
+            "Prednisolone": 6.67,
+            "Prednisone": 6.67,
+            "Triamcinolone": 5.33
+        }
+    },
+    "Hydrocortisone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.0375,
+            "Cortisone": 1.25,
+            "Dexamethasone": 0.0375,
+            "Hydrocortisone": 1.0,
+            "Methylprednisolone": 0.2,
+            "Prednisolone": 0.25,
+            "Prednisone": 0.25,
+            "Triamcinolone": 0.2
+        }
+    },
+    "Methylprednisolone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.1875,
+            "Cortisone": 6.25,
+            "Dexamethasone": 0.1875,
+            "Hydrocortisone": 5.0,
+            "Methylprednisolone": 1.0,
+            "Prednisolone": 1.25,
+            "Prednisone": 1.25,
+            "Triamcinolone": 1.0
+        }
+    },
+    "Prednisolone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.15,
+            "Cortisone": 5.0,
+            "Dexamethasone": 0.15,
+            "Hydrocortisone": 4.0,
+            "Methylprednisolone": 0.8,
+            "Prednisolone": 1.0,
+            "Prednisone": 1.0,
+            "Triamcinolone": 0.8
+        }
+    },
+    "Prednisone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.15,
+            "Cortisone": 5.0,
+            "Dexamethasone": 0.15,
+            "Hydrocortisone": 4.0,
+            "Methylprednisolone": 0.8,
+            "Prednisolone": 1.0,
+            "Prednisone": 1.0,
+            "Triamcinolone": 0.8
+        }
+    },
+    "Triamcinolone": {
+        "class": "steroid",
+        "Conversions": {
+            "Betamethasone": 0.1875,
+            "Cortisone": 6.25,
+            "Dexamethasone": 0.1875,
+            "Hydrocortisone": 5.0,
+            "Methylprednisolone": 1.0,
+            "Prednisolone": 1.25,
+            "Prednisone": 1.25,
+            "Triamcinolone": 1.0
+        }
+    }
+}
