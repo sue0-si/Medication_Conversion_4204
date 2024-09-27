@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
 import * as React from 'react';
 
-function ConversionResults({medicationData,patientData}) {
+function ConversionResults({medicationData,patientData,resultsData}) {
     const location = useLocation();
 
     //const [patientData, setPatientData] = React.useState(null);
@@ -22,19 +22,25 @@ function ConversionResults({medicationData,patientData}) {
             </Typography>
             {medicationData ? (
                 <>
-                    <Typography variant="body1">
-                        Medication Name: {medicationData.name}
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Conversion Information:
                     </Typography>
                     <Typography variant="body1">
-                        Dosage: {medicationData.dosage} {medicationData.dosageUnit}
+                        Medication Name: <strong>{medicationData.name}</strong>
                     </Typography>
                     <Typography variant="body1">
-                        Form: {medicationData.form}
+                        Dosage: <strong>{medicationData.dosage} {medicationData.dosageUnit}</strong>
                     </Typography>
                     <Typography variant="body1">
-                        Administrative: {medicationData.isAdministrative ? 'Yes' : 'No'}
+                        Form: <strong>{medicationData.route}</strong>
                     </Typography>
-                    {patientData != null && (
+                    <Typography variant="body1">
+                        Target Medication: <strong>{medicationData.target}</strong>
+                    </Typography>
+                    <Typography variant="body1">
+                        Target Form: <strong>{medicationData.targetRoute}</strong>
+                    </Typography>
+                    {patientData.name != null && (
                         <>
                             <Typography variant="h6" gutterBottom>
                                 Patient Information:
@@ -54,10 +60,20 @@ function ConversionResults({medicationData,patientData}) {
                         Conversion Formula:
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Formula Name:</strong> {medicationData.formulaName}
+                        Formula Name: <strong>{medicationData.formulaName}</strong>
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Formula:</strong> {medicationData.formula}
+                        Formula: <strong>{medicationData.formula}</strong>
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Conversion Results: 
+                    </Typography>
+                    <Typography variant="body1">
+                        Medication Name: <strong>{resultsData.medName}</strong>
+                    </Typography>
+                    <Typography variant="body1">
+                        Dosage: <strong>{resultsData.dosage} {resultsData.dosageUnit}</strong>
                     </Typography>
                 </>
 

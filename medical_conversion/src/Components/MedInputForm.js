@@ -3,16 +3,20 @@ import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Circ
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PatientInfoForm from "./PatientInfoForm";
+import { defaultPatientData } from "../Tools/Defaults";
 
-function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData, onSubmit }) {
+function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData, onSubmit}) {
 
     const [formulas, setFormulas] = useState([]);
     const [loadingFormulas, setLoadingFormulas] = useState(true);
     const [error, setError] = useState(null);
+    const [addPatient, setAddPatient] = useState(false);
     // const [dosages, setDosages] = useState([]); // State for storing API response data, commented out
     // const [loadingDosages, setLoadingDosages] = useState(false); // Track loading state for dosages, commented out
 
-    const navigate = useNavigate();
+    const navigate = useNavigate
+
+
 
     useEffect(() => {
         // Fetch formulas from the API (if needed)
@@ -23,12 +27,21 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                 setLoadingFormulas(false);
             } catch (error) {
                 setError('Error fetching conversion formulas');
+                setFormulas(["Standard Formula"]);
                 setLoadingFormulas(false);
             }
         };
 
         fetchFormulas();
     }, []);
+
+    const handlePatientChange = () => {
+        setAddPatient(prevState => !prevState);
+        if (!addPatient) {
+            setPatientData(defaultPatientData);
+        }
+    };
+    
 
     // Fetch dosages from DrugBank API based on medication name and route
     // Commenting out fetchDosages function as dosage functionality is not required
@@ -113,27 +126,60 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                 </ToggleButtonGroup>
             </FormControl>
 
-            {/* Checkbox for Administrative - Commented out */}
-            {/* <FormControlLabel
-                control={
-                    <Checkbox
-                        name="isAdministrative"
-                        checked={medicationData.isAdministrative}
-                        onChange={handleChange}
-                    />
-                }
-                label="Is this medication administrative?"
-            /> */}
+            <TextField
+                label="Desired Medication"
+                name="target"
+                value={medicationData.target}
+                onChange={handleChange}
+                required
+                fullWidth
+                margin="normal"
+            />
+
+            {/* Setting route using administrative method */}
+            <FormControl fullWidth margin="normal">
+                <Typography variant="h6" gutterBottom>
+                    Desired Administration Method
+                </Typography>
+                <ToggleButtonGroup
+                    value={medicationData.targetRoute}
+                    exclusive
+                    onChange={(event, newMethod) => {
+                        setMedicationData((prevData) => ({
+                            ...prevData,
+                            targetRoute: newMethod,  // Using route instead of form
+                        }));
+                    }}
+                    aria-label="target administration method"
+                >
+                    <ToggleButton value="oral" aria-label="oral">
+                        Oral
+                    </ToggleButton>
+                    <ToggleButton value="iv-push" aria-label="iv push">
+                        IV Push
+                    </ToggleButton>
+                    <ToggleButton value="iv-infusion" aria-label="iv infusion">
+                        IV Infusion
+                    </ToggleButton>
+                    <ToggleButton value="iv-bolus" aria-label="iv bolus">
+                        IV Bolus
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </FormControl>
+
+            
 
             {/* Select Box for Formulas (with Loading State) */}
             <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
-                <InputLabel>Choose a Formula</InputLabel>
+                <Typography variant="h6" gutterBottom>
+                    Choose a Formula
+                </Typography>
                 {loadingFormulas ? (
                     <CircularProgress />
                 ) : (
                     <Select
-                        name="formula"
-                        value={medicationData.formula}
+                        name="formulaName"
+                        value={medicationData.formulaName}
                         onChange={handleChange}
                     >
                         {formulas.map((formula, index) => (
@@ -145,9 +191,15 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                 )}
             </FormControl>
 
-            <FormControl fullWidth margin="normal">
+            {/*toggle button for adding patient data*/ }
+            <button onClick={handlePatientChange}>
+                {addPatient ? 'Remove' : 'Add'} Patient
+            </button>
+
+            {addPatient && (
                 <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
-            </FormControl>
+            )}
+
 
             {/* Display error message below the FormControl */}
             {error && (
