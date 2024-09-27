@@ -2,6 +2,7 @@ import { useLocation} from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
 import {useEffect, useState } from 'react'
+import Administration from '../Components/Administration';
 
 function ConversionResults() {
     const location = useLocation();
@@ -60,6 +61,7 @@ function ConversionResults() {
                         <Typography variant="body1">
                             <strong>Formula:</strong> {medicationData.formula.formula}
                         </Typography>
+                        <Administration props={medicationData}/>
                     </>
                 ) : (
                         <>
@@ -68,6 +70,7 @@ function ConversionResults() {
                     )
                 }
             </Box>
+            
         </Dashboard>
     );
 }
