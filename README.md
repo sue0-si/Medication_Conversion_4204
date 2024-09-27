@@ -29,5 +29,4 @@ N/A
 - removed unused PatientVariableForm
 
 ### Known Issues
-- Comprehensive formula list (no existing APIs)
-- No centralized tabular data for drug warnings associated with specific patient history.
+N/A
