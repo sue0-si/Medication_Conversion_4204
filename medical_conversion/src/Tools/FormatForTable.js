@@ -12,8 +12,6 @@ export default function DataTable(dataString) {
     var data;
     if (dataString.includes('\u2022')) {
         data = dataString.split('\u2022');
-    } else if () {
-
     }
     var heading = data.shift().slice(2);
 

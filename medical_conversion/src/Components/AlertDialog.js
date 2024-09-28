@@ -45,14 +45,14 @@ const styles = {
     }
   };
 
-export default function AlertDialog() {
+export default function AlertDialog(warning) {
     return(
         <div style={styles.container}>
             <div style={styles.alignContainer}>
                 <WarningIcon style={styles.icon}></WarningIcon>
                 <span style={styles.text}>Caution</span>
             </div>
-            <span style={styles.spanText}>The calculated dosage would cause an overdose. </span>
+            <span style={styles.spanText}>{warning}</span>
             <div style={styles.buttonContainer}>
               <button style={styles.button}>Okay</button>
             </div>

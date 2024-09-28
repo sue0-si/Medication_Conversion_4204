@@ -1,19 +1,19 @@
 import { TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
-import { useEffect } from "react";
+import * as React from "react";
 
 function PatientInfoForm({ patientData, setPatientData }) {
-    useEffect(() => {
-        // Load patient data from local storage when component mounts
-        const storedData = localStorage.getItem("patientData");
-        if (storedData) {
-            const parsedData = JSON.parse(storedData);
-            // Merge stored data with initial patientData, preferring stored values
-            setPatientData(prevData => ({
-                ...prevData,
-                ...parsedData
-            }));
-        }
-    }, [setPatientData]);
+    //useEffect(() => {
+    //    // Load patient data from local storage when component mounts
+    //    const storedData = localStorage.getItem("patientData");
+    //    if (storedData) {
+    //        const parsedData = JSON.parse(storedData);
+    //        // Merge stored data with initial patientData, preferring stored values
+    //        setPatientData(prevData => ({
+    //            ...prevData,
+    //            ...parsedData
+    //        }));
+    //    }
+    //}, [setPatientData]);
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -24,15 +24,17 @@ function PatientInfoForm({ patientData, setPatientData }) {
         setPatientData(newData);
 
         // Save to local storage whenever data changes
-        localStorage.setItem("patientData", JSON.stringify(newData));
+        /*localStorage.setItem("patientData", JSON.stringify(newData));*/
     };
+
+    
 
     return (
         <div>
             <TextField
                 label="Height (cm)"
                 name="height"
-                value={patientData.height || ''}
+                value={patientData.height || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -41,7 +43,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Weight (kg)"
                 name="weight"
-                value={patientData.weight || ''}
+                value={patientData.weight || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -102,3 +104,52 @@ function PatientInfoForm({ patientData, setPatientData }) {
 }
 
 export default PatientInfoForm;
+
+
+//alternate format for rendering, could be more efficient so id like to keep it here to try to make work wiht single page functionality
+//import { TextField } from "@mui/material";
+//import React from "react";
+
+//const styles = {
+//    container: {
+//        display: "flex",
+//        flexDirection: "column",
+//        margin:"1em"
+//    },
+//    column: {
+//        display: "flex",
+//        alignItems: "center"
+//    },
+//    text: {
+//        margin: "2em",
+//        width: "16em",
+//    }
+//};
+
+//const variableList = [
+//    {label: "Age", name: "age", type:"number"},
+//    {label: "Race", name: "race", type:"text"},
+//    {label: "Gender", name: "gender", type:"text"},
+//    {label: "Marital Status", name: "marital status", type:"text"},
+//    {label: "Body Mass Index (BMI)", name: "BMI", type:"number"},
+//    {label: "Comorbidity", name: "comorbidity", type:"number"},
+//    {label: "Length of Stay (LOS)", name: "Length of Stay", type:"number"},
+//    {label: "Surgical Service", name: "service", type:"text"},
+//];
+
+//export default function PatientVariableForm() {
+
+//    return(
+//        <div style={styles.container}>
+//            <h3>Patient Variable</h3>
+//            {
+//                variableList.map((field, index) => (
+//                    <div key={index} style={styles.column}>
+//                        <span style={styles.text}>{field.label}</span>
+//                        <TextField label={field.label} margin="normal" name={field.name} type={field.type}></TextField>
+//                    </div>
+//                ))
+//            }
+//        </div>
+//    );
+//};
