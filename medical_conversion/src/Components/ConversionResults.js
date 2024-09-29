@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
 import * as React from 'react';
 import AlertDialog from './AlertDialog';
+import Administration from './Administration';
 
 function ConversionResults({medicationData,patientData,resultsData}) {
     const location = useLocation();
@@ -89,7 +90,7 @@ function ConversionResults({medicationData,patientData,resultsData}) {
                     </Typography>
 
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Warnigns:
+                        Warnings:
                     </Typography>
                     {resultsData.warnings !== undefined && resultsData.warnings.length !== 0 && (
                         <>
@@ -115,6 +116,7 @@ function ConversionResults({medicationData,patientData,resultsData}) {
                             ))}
                         </>
                     )}
+                    <Administration props={resultsData}></Administration>
                 </>
 
             ) : (
