@@ -52,8 +52,8 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                     aria-label="administration method"
                 >
                     <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-                    <ToggleButton value="iv-push" aria-label="iv push">IV Push</ToggleButton>
-                    <ToggleButton value="iv-infusion" aria-label="iv infusion">IV Infusion</ToggleButton>
+                    <ToggleButton value="iv" aria-label="iv">IV</ToggleButton>
+                    <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
                 </ToggleButtonGroup>
             </FormControl>
 

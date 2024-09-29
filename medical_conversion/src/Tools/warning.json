@@ -1,0 +1,69 @@
+{
+    "drugs": [
+        {
+            "drug_name": "Alprazolam",
+            "warnings": [
+                {
+                    "patient_info": {
+                        "age": { "min": 0, "max": 18 }
+                    },
+                    "warning_message": "Safety and efficacy have not been established in patients younger than 18 years."
+                },
+                {
+                    "patient_info": "general",
+                    "warning_message": "Patients should avoid drinking alcohol or taking other drugs that may cause sleepiness or dizziness while taking this drug until they talk to their healthcare provider."
+                },
+                {
+                    "patient_info": "general",
+                    "warning_message": "Patients should avoid drinking alcohol or taking other drugs that may cause sleepiness or dizziness while taking this drug until they talk to their healthcare provider."
+                }
+            ]
+        },
+        {
+            "drug_name": "Morphine",
+            "warnings": [
+                {
+                    "patient_info": "general",
+                    "warning_message": "Contraindicated in patients allergic to penicillin."
+                }, 
+                {
+                    "patient_info": {
+                        "age": { "min": 0, "max": 18 }
+                    }, 
+                    "warning_message": "Accidental ingestion of just 1 dose can result in a fatal overdose of morphine." 
+                }, 
+                {
+                    "patient_info": "general",
+                    "warning_message": "dosing errors due to confusion between mg and mL, and other morphine sulfate Oral Solutions of different concentrations can result in accidental overdose and death."
+                }
+            ]
+        },
+        {
+            "drug_name": "Oxycodone",
+            "warnings": [
+                {
+                    "patient_info": {
+                        "age": {"min": 59, "max": 120}
+                    }, 
+                    "warning_message": "Oxycodone can slow or stop patient's breathing"
+                }, {
+                    "patient_info": {
+                        "condition": "asthma"
+                    },
+                    "warning_message": "Patient should not have Oxycodone"
+                }
+            ]
+        }, 
+        {
+            "drug_name": "Betamethasone",
+            "warnings": [
+                {
+                    "patient_info": {
+                        "age": {"min": 0, "max": 12}
+                    }, 
+                    "warning_message": "Safety and efficacy of betamethasone dipropionate have not been established in patients younger than 12 years."
+                }
+            ]
+        }
+    ]
+}
