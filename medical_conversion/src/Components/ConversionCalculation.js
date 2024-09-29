@@ -12,12 +12,13 @@ function ConversionCalculation({ medicationData, patientData, setResultsData, on
                     medName: medicationData.name,
                     dosage: medicationData.dosage,
                     dosageUnit: medicationData.dosageUnit,
+                    warnings: ["Tests Warning One", "Test Warning Two"]
                 }));
                 onCalculationComplete();
             } else {
                 setResultsData((prevData) => ({
                     ...prevData,
-                    error: "No Medication Data Given",
+                    error: "No Medication Data Given"
                 }));
             }
         }, 3000); // 3-second delay

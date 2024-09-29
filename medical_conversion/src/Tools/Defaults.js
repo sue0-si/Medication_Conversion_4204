@@ -25,5 +25,6 @@ export const defaultResultsData = {
     dosage: 0,
     dosageUnit: '',
     route: '',
-    error: "None"
+    error: "None",
+    warnings: []
 }
