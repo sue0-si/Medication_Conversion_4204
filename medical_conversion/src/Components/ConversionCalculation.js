@@ -1,42 +1,108 @@
-// JavaScript source code
 import * as React from "react";
-import CircularProgress from '@mui/material/CircularProgress';
-function ConversionCalculation({ medicationData, patientData, setResultsData, onCalculationComplete }) {
+import opioidRouteConversions from '../Tools/opioidRouteConversions';
+import steroids from '../Tools/steroids.json';
+import opioids from '../Tools/opioids.json';
+import benzodiazepine from '../Tools/benzodiazepine.json';
+import localAnesthetics from '../Tools/local_anesthetics.json';
+import { drugClassMap } from './drugClassMap';  // Correct import
+
+function ConversionResults({ medicationData }) {
+    const [results, setResults] = React.useState(null);
+    const [error, setError] = React.useState(null);
 
     React.useEffect(() => {
-        const timer = setTimeout(() => {
-            if (medicationData != null) {
-                // Perform calculation after the delay
-                setResultsData((prevData) => ({
-                    ...prevData,
-                    medName: medicationData.name,
-                    dosage: medicationData.dosage,
-                    dosageUnit: medicationData.dosageUnit,
-                    warnings: ["Tests Warning One", "Test Warning Two"]
-                }));
-                onCalculationComplete();
-            } else {
-                setResultsData((prevData) => ({
-                    ...prevData,
-                    error: "No Medication Data Given"
-                }));
-            }
-        }, 3000); // 3-second delay
+        if (!medicationData || !medicationData.name) {
+            setError("No valid medication data provided.");
+            return;
+        }
 
-        // Cleanup timeout when the component is unmounted
-        return () => clearTimeout(timer);
-    }, [medicationData, patientData, setResultsData, onCalculationComplete]);
+        const calculateConversion = () => {
+            const normalizedDrugName = medicationData.name.charAt(0).toUpperCase() + medicationData.name.slice(1).toLowerCase();
+            const normalizedDrugNameTarget = medicationData.target.charAt(0).toUpperCase() + medicationData.target.slice(1).toLowerCase();
+
+            const firstDrugClass = drugClassMap[normalizedDrugName];
+            const secondDrugClass = drugClassMap[normalizedDrugNameTarget];
+
+            if (!firstDrugClass || !secondDrugClass) {
+                setError("Invalid drug classes");
+                return;
+            }
+
+            if (firstDrugClass === 'opioid' && secondDrugClass === 'opioid') {
+                const firstAdminType = medicationData.route;
+                const targetAdminType = medicationData.targetRoute;
+                const conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType];
+
+                if (conversionRatio != null) {
+                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
+                    setResults({
+                        medName: medicationData.name,
+                        dosage: convertedDosage,
+                        dosageUnit: medicationData.dosageUnit,
+                    });
+                } else {
+                    setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
+                }
+            } else {
+                let conversionData;
+
+                switch (firstDrugClass) {
+                    case 'steroid':
+                        conversionData = steroids;
+                        break;
+                    case 'opioid':
+                        conversionData = opioids;
+                        break;
+                    case 'benzodiazepine':
+                        conversionData = benzodiazepine;
+                        break;
+                    case 'local anesthetic':
+                        conversionData = localAnesthetics;
+                        break;
+                    default:
+                        setError("No valid drug class found");
+                        return;
+                }
+
+                const firstDrug = normalizedDrugName;
+                const secondDrug = normalizedDrugNameTarget;
+                const firstDrugConversions = conversionData[firstDrug]?.Conversions;
+
+                if (!firstDrugConversions) {
+                    setError("No conversion data found");
+                    return;
+                }
+
+                const conversionRatio = firstDrugConversions[secondDrug] || null;
+                if (conversionRatio != null) {
+                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
+                    setResults({
+                        medName: medicationData.name,
+                        dosage: convertedDosage,
+                        dosageUnit: medicationData.dosageUnit,
+                    });
+                } else {
+                    setError("No conversion found");
+                }
+            }
+        };
+
+        calculateConversion();
+    }, [medicationData]);
 
     return (
-        <box style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '80vh'
-        }}>
-            <CircularProgress />
-        </box>
+        <div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {results && (
+                <div>
+                    <h2>Conversion Results</h2>
+                    <p>Medication: {results.medName}</p>
+                    <p>Converted Dosage: {results.dosage}</p>
+                    <p>Dosage Unit: {results.dosageUnit}</p>
+                </div>
+            )}
+        </div>
     );
 }
 
-export default ConversionCalculation;
+export default ConversionResults;

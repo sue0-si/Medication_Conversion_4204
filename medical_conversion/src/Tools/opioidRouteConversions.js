@@ -1,30 +1,30 @@
-    // Import the opioids JSON file
-const opioids = require('../tools/opioids.json');
+import opioids from './opioids.json';
 
-// Initialize the object to store route conversions
+// Create an empty map for storing conversions
 const opioidRouteConversions = {};
 
-// Helper function to add route conversions for each drug
-function addRouteConversions(drugData, drugName) {
-    const routeConversions = drugData["route_conversions"];
-    if (routeConversions) {
+// Function to add route conversions for a drug, making route names lowercase
+const addRouteConversions = (drugName, conversions) => {
+    if (!opioidRouteConversions[drugName]) {
         opioidRouteConversions[drugName] = {};
-
-        // Loop through each route conversion and store them
-        Object.keys(routeConversions).forEach((route) => {
-            const [firstAdminType, targetAdminType] = route.split('_to_');
-            if (!opioidRouteConversions[drugName][firstAdminType]) {
-                opioidRouteConversions[drugName][firstAdminType] = {};
-            }
-            opioidRouteConversions[drugName][firstAdminType][targetAdminType] = routeConversions[route];
-        });
     }
-}
 
-// Loop through the opioids JSON and populate the route conversion structure
+    Object.keys(conversions).forEach((route) => {
+        // Split route, lowercase both parts
+        const [fromRoute, toRoute] = route.split('_to_').map(r => r.toLowerCase());
+        
+        if (!opioidRouteConversions[drugName][fromRoute]) {
+            opioidRouteConversions[drugName][fromRoute] = {};
+        }
+        
+        // Store the conversion ratio under the lowercase route names
+        opioidRouteConversions[drugName][fromRoute][toRoute] = conversions[route];
+    });
+};
+
+// Process each opioid and add its route conversions
 Object.keys(opioids).forEach((drugName) => {
-    addRouteConversions(opioids[drugName], drugName);
+    addRouteConversions(drugName, opioids[drugName].route_conversions);
 });
 
-// Export the drug route conversion structure for use in other parts of the app
-module.exports = opioidRouteConversions;
+export default opioidRouteConversions;

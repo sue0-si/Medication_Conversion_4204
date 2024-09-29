@@ -1,7 +1,7 @@
-const opioids = require('../tools/opioids.json');
-const steroids = require('../tools/steroids.json');
-const benzodiazepines = require('../tools/benzodiazepine.json');
-const localAnesthetics = require('../tools/local_anesthetics.json');
+const opioids = require('../Tools/opioids.json');
+const steroids = require('../Tools/steroids.json');
+const benzodiazepines = require('../Tools/benzodiazepine.json');
+const localAnesthetics = require('../Tools/local_anesthetics.json');
 
 // Initialize an empty object to store the mapping
 const drugClassMap = {};
