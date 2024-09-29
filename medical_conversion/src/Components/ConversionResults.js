@@ -2,9 +2,21 @@ import { useLocation} from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Dashboard from '../Components/Dashboard';
 import * as React from 'react';
+import AlertDialog from './AlertDialog';
 
 function ConversionResults({medicationData,patientData,resultsData}) {
     const location = useLocation();
+
+    const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
+
+    const toggleWarning = (index) => {
+        if (collapsedWarnings.includes(index)) {
+            setCollapsedWarnings(collapsedWarnings.filter((i) => i !== index));
+        } else {
+            setCollapsedWarnings([...collapsedWarnings, index]);
+        }
+    };
+
 
     //const [patientData, setPatientData] = React.useState(null);
 
@@ -75,6 +87,34 @@ function ConversionResults({medicationData,patientData,resultsData}) {
                     <Typography variant="body1">
                         Dosage: <strong>{resultsData.dosage} {resultsData.dosageUnit}</strong>
                     </Typography>
+
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Warnigns:
+                    </Typography>
+                    {resultsData.warnings !== undefined && resultsData.warnings.length !== 0 && (
+                        <>
+                            {resultsData.warnings.map((warning, index) => (
+                                collapsedWarnings.includes(index) ? (
+                                    <div key={index}>
+                                        <button style={{
+                                            marginTop: '1rem', // add some spacing
+                                            backgroundColor: '#f44336', // similar red to the "Okay" button
+                                            color: '#ffffff', // make text white for better visibility
+                                            border: 'none', // ensure no border for a consistent look
+                                            cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                            }}
+                                            onClick={() => toggleWarning(index)}>Expand Warning</button>
+                                    </div>
+                                ) : (
+                                    <AlertDialog
+                                        key={index}
+                                        warning={warning}
+                                        onOkay={() => toggleWarning(index)}
+                                    />
+                                )
+                            ))}
+                        </>
+                    )}
                 </>
 
             ) : (

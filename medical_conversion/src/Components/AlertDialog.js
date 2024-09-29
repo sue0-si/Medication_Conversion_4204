@@ -45,7 +45,7 @@ const styles = {
     }
   };
 
-export default function AlertDialog(warning) {
+export default function AlertDialog({ warning, onOkay }) {
     return(
         <div style={styles.container}>
             <div style={styles.alignContainer}>
@@ -54,7 +54,7 @@ export default function AlertDialog(warning) {
             </div>
             <span style={styles.spanText}>{warning}</span>
             <div style={styles.buttonContainer}>
-              <button style={styles.button}>Okay</button>
+                <button style={styles.button} onClick={onOkay}>Okay</button>
             </div>
         </div>
     );
