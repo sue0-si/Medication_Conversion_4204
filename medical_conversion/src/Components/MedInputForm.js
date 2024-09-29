@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import ConversionResults from './ConversionResults';  // Import ConversionResults component
 
-function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData }) {
+import { useNavigate } from 'react-router-dom';
+
+function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, patientData, setPatientData }) {
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -17,6 +19,8 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
         event.preventDefault();
         if (medicationData && medicationData.name) {
             setSubmittedData(medicationData);  // Store form data for passing to ConversionResults
+
+            navigate(redirectOnSubmit + medicationData.name , { state: { medicationData, patientData } });
         }
     };
 
@@ -115,11 +119,6 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
-
-            {/* Pass form data to ConversionResults after submission */}
-            {submittedData && (
-                <ConversionResults medicationData={submittedData} />
-            )}
         </Box>
     );
 }
