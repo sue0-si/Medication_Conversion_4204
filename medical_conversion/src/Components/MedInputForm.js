@@ -18,7 +18,7 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
 
 
 
-    useEffect(() => {
+   /* useEffect(() => {
         // Fetch formulas from the API (if needed)
         const fetchFormulas = async () => {
             try {
@@ -33,7 +33,7 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
         };
 
         fetchFormulas();
-    }, []);
+    }, []);*/
 
     const handlePatientChange = () => {
         setAddPatient(prevState => !prevState);
@@ -155,15 +155,13 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                     <ToggleButton value="oral" aria-label="oral">
                         Oral
                     </ToggleButton>
-                    <ToggleButton value="iv-push" aria-label="iv push">
-                        IV Push
+                    <ToggleButton value="iv" aria-label="iv push">
+                        IV
                     </ToggleButton>
-                    <ToggleButton value="iv-infusion" aria-label="iv infusion">
-                        IV Infusion
+                    <ToggleButton value="sc" aria-label="iv infusion">
+                        SC
                     </ToggleButton>
-                    <ToggleButton value="iv-bolus" aria-label="iv bolus">
-                        IV Bolus
-                    </ToggleButton>
+                    
                 </ToggleButtonGroup>
             </FormControl>
 
