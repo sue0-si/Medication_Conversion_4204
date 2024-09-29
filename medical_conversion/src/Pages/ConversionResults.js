@@ -7,12 +7,12 @@ import localAnesthetics from '../Tools/local_anesthetics.json';
 import { drugClassMap } from '../Components/drugClassMap';  // Correct import
 import Administration from '../Components/Administration';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
-
+import { defaultResultsData } from '../Tools/Defaults'
 import { useLocation } from 'react-router-dom';
 import Dashboard from "../Components/Dashboard";
 
 function ConversionResults() {
-    const [results, setResults] = React.useState(null);
+    const [results, setResults] = React.useState(defaultResultsData);
     const [error, setError] = React.useState(null);
     const location = useLocation();
     const { medicationData } = location.state || {};
@@ -217,7 +217,7 @@ function ConversionResults() {
                             <TableBody>
                                 <TableRow>
                                     <TableCell>Medication Name:</TableCell>
-                                    <TableCell><strong>{results.Medname}</strong></TableCell>
+                                    <TableCell><strong>{results.medName}</strong></TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Dosage:</TableCell>
