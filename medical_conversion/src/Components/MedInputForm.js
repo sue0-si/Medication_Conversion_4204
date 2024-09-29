@@ -1,71 +1,10 @@
-import { useState, useEffect } from "react";
-import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import PatientInfoForm from "./PatientInfoForm";
-import { defaultPatientData } from "../Tools/Defaults";
+import { useState } from "react";
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import ConversionResults from './ConversionResults';  // Import ConversionResults component
 
-function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData, onSubmit}) {
+function MedInputForm({ medicationData, setMedicationData, patientData, setPatientData }) {
+    const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
 
-    const [formulas, setFormulas] = useState([]);
-    const [loadingFormulas, setLoadingFormulas] = useState(true);
-    const [error, setError] = useState(null);
-    const [addPatient, setAddPatient] = useState(false);
-    // const [dosages, setDosages] = useState([]); // State for storing API response data, commented out
-    // const [loadingDosages, setLoadingDosages] = useState(false); // Track loading state for dosages, commented out
-
-    const navigate = useNavigate
-
-
-
-   /* useEffect(() => {
-        // Fetch formulas from the API (if needed)
-        const fetchFormulas = async () => {
-            try {
-                const response = await axios.get('/api/formulas');  // Replace with actual API endpoint
-                setFormulas(response.data);  // Assuming API returns an array of formulas
-                setLoadingFormulas(false);
-            } catch (error) {
-                setError('Error fetching conversion formulas');
-                setFormulas(["Standard Formula"]);
-                setLoadingFormulas(false);
-            }
-        };
-
-        fetchFormulas();
-    }, []);*/
-
-    const handlePatientChange = () => {
-        setAddPatient(prevState => !prevState);
-        if (!addPatient) {
-            setPatientData(defaultPatientData);
-        }
-    };
-    
-
-    // Fetch dosages from DrugBank API based on medication name and route
-    // Commenting out fetchDosages function as dosage functionality is not required
-    /*
-    const fetchDosages = async () => {
-        setLoadingDosages(true);
-        try {
-            // Replace with actual DrugBank API endpoint and include authentication headers if necessary
-            const response = await axios.get(`https://api.drugbank.com/v1/us/product_concepts/search`, {
-                params: {
-                    name: medicationData.name,
-                    route: medicationData.route
-                }
-            });
-            setDosages(response.data);
-            setLoadingDosages(false);
-        } catch (error) {
-            setError('Error fetching dosages');
-            setLoadingDosages(false);
-        }
-    };
-    */
-
-    // Single function to handle all form changes
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         setMedicationData((prevData) => ({
@@ -74,13 +13,11 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
         }));
     };
 
-    // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // await fetchDosages(); // Fetch dosages before redirecting, commented out
-        // Navigate to the ConversionResults page, passing form data via state
-        /*navigate(`/po-iv/` + redirectOnSubmit, { state: { medicationData } });*/
-        onSubmit();
+        if (medicationData && medicationData.name) {
+            setSubmittedData(medicationData);  // Store form data for passing to ConversionResults
+        }
     };
 
     return (
@@ -95,7 +32,6 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                 margin="normal"
             />
 
-            {/* Setting route using administrative method */}
             <FormControl fullWidth margin="normal">
                 <Typography variant="h6" gutterBottom>
                     Administration Method
@@ -106,23 +42,14 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                     onChange={(event, newMethod) => {
                         setMedicationData((prevData) => ({
                             ...prevData,
-                            route: newMethod,  // Using route instead of form
+                            route: newMethod,
                         }));
                     }}
                     aria-label="administration method"
                 >
-                    <ToggleButton value="oral" aria-label="oral">
-                        Oral
-                    </ToggleButton>
-                    <ToggleButton value="iv-push" aria-label="iv push">
-                        IV Push
-                    </ToggleButton>
-                    <ToggleButton value="iv-infusion" aria-label="iv infusion">
-                        IV Infusion
-                    </ToggleButton>
-                    <ToggleButton value="iv-bolus" aria-label="iv bolus">
-                        IV Bolus
-                    </ToggleButton>
+                    <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
+                    <ToggleButton value="iv-push" aria-label="iv push">IV Push</ToggleButton>
+                    <ToggleButton value="iv-infusion" aria-label="iv infusion">IV Infusion</ToggleButton>
                 </ToggleButtonGroup>
             </FormControl>
 
@@ -136,7 +63,6 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                 margin="normal"
             />
 
-            {/* Setting route using administrative method */}
             <FormControl fullWidth margin="normal">
                 <Typography variant="h6" gutterBottom>
                     Desired Administration Method
@@ -147,80 +73,53 @@ function MedInputForm({ medicationData, setMedicationData, patientData, setPatie
                     onChange={(event, newMethod) => {
                         setMedicationData((prevData) => ({
                             ...prevData,
-                            targetRoute: newMethod,  // Using route instead of form
+                            targetRoute: newMethod,
                         }));
                     }}
                     aria-label="target administration method"
                 >
-                    <ToggleButton value="oral" aria-label="oral">
-                        Oral
-                    </ToggleButton>
-                    <ToggleButton value="iv" aria-label="iv push">
-                        IV
-                    </ToggleButton>
-                    <ToggleButton value="sc" aria-label="iv infusion">
-                        SC
-                    </ToggleButton>
-                    
+                    <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
+                    <ToggleButton value="iv" aria-label="iv push">IV</ToggleButton>
+                    <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
                 </ToggleButtonGroup>
             </FormControl>
 
-            
+            {/* Dosage Input Field */}
+            <TextField
+                label="Dosage"
+                name="dosage"
+                value={medicationData.dosage}
+                onChange={handleChange}
+                required
+                fullWidth
+                margin="normal"
+                type="number"
+            />
 
-            {/* Select Box for Formulas (with Loading State) */}
-            <FormControl fullWidth margin="normal" disabled={loadingFormulas}>
-                <Typography variant="h6" gutterBottom>
-                    Choose a Formula
-                </Typography>
-                {loadingFormulas ? (
-                    <CircularProgress />
-                ) : (
-                    <Select
-                        name="formulaName"
-                        value={medicationData.formulaName}
-                        onChange={handleChange}
-                    >
-                        {formulas.map((formula, index) => (
-                            <MenuItem key={index} value={formula}>
-                                {formula}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                )}
+            {/* Dosage Unit Selection */}
+            <FormControl fullWidth margin="normal">
+                <InputLabel>Dosage Unit</InputLabel>
+                <Select
+                    name="dosageUnit"
+                    value={medicationData.dosageUnit}
+                    onChange={handleChange}
+                    required
+                >
+                    <MenuItem value="mg">mg</MenuItem>
+                    <MenuItem value="mL">mL</MenuItem>
+                    <MenuItem value="g">g</MenuItem>
+                    <MenuItem value="units">units</MenuItem>
+                </Select>
             </FormControl>
-
-            {/*toggle button for adding patient data*/ }
-            <button onClick={handlePatientChange}>
-                {addPatient ? 'Remove' : 'Add'} Patient
-            </button>
-
-            {addPatient && (
-                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
-            )}
-
-
-            {/* Display error message below the FormControl */}
-            {error && (
-                <Typography color="error" sx={{ mt: 1 }}>
-                    {error}
-                </Typography>
-            )}
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
 
-            {/* Display dosage options from API, commented out */}
-            {/* {dosages.length > 0 && (
-                <Box sx={{ mt: 3 }}>
-                    <Typography variant="h6">Available Dosages:</Typography>
-                    <ul>
-                        {dosages.map((dosage, index) => (
-                            <li key={index}>{dosage.name} - {dosage.strengths}</li>
-                        ))}
-                    </ul>
-                </Box>
-            )} */}
+            {/* Pass form data to ConversionResults after submission */}
+            {submittedData && (
+                <ConversionResults medicationData={submittedData} />
+            )}
         </Box>
     );
 }
