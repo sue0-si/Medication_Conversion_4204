@@ -5,6 +5,7 @@ import opioids from '../Tools/opioids.json';
 import benzodiazepine from '../Tools/benzodiazepine.json';
 import localAnesthetics from '../Tools/local_anesthetics.json';
 import { drugClassMap } from './drugClassMap';  // Correct import
+import Administration from './Administration';
 
 function ConversionResults({ medicationData }) {
     const [results, setResults] = React.useState(null);

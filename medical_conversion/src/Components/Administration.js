@@ -10,6 +10,9 @@ const sampleData = [
     {usage: "Fever", directions: "400 mg IV once, then 100 to 400 mg every 4 to 6 hours IV as needed", comments: "Patients should be well hydrated to reduce the risk of renal adverse events. IV doses should be infused over at least 30 minutes."}
 ]
 
+const usageList = sampleData.map((item) => item.usage);
+
+
 function Administration(props) {
     
     return(
@@ -23,7 +26,8 @@ function Administration(props) {
                     </Typography>
 
                     <Typography variant="body1">
-                        Usual Adult Dose for: Dysmenorrhea, Osteoarthritis, Rheumatoid Arthritis, Pain, Fever
+                        
+                        Usual Adult Dose for: {usageList.join(', ')}
                     </Typography>
 
 
