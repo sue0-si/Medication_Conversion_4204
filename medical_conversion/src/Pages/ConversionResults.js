@@ -10,6 +10,7 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import { defaultResultsData } from '../Tools/Defaults'
 import { useLocation } from 'react-router-dom';
 import Dashboard from "../Components/Dashboard";
+import AlertDialog from "../Components/AlertDialog";
 
 function ConversionResults() {
     const [results, setResults] = React.useState(defaultResultsData);
@@ -17,11 +18,21 @@ function ConversionResults() {
     const location = useLocation();
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
+    const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
+
+    const toggleWarning = (index) => {
+        if (collapsedWarnings.includes(index)) {
+            setCollapsedWarnings(collapsedWarnings.filter((i) => i !== index));
+        } else {
+            setCollapsedWarnings([...collapsedWarnings, index]);
+        }
+    };
     React.useEffect(() => {
         if (!medicationData || !medicationData.name) {
             setError("No valid medication data provided.");
             return;
         }
+
 
         const calculateConversion = () => {
             const normalizedDrugName = medicationData.name.charAt(0).toUpperCase() + medicationData.name.slice(1).toLowerCase();
@@ -210,7 +221,7 @@ function ConversionResults() {
 
                     {/* Conversion Results Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Conversion Results:
+                        Calculated Dosage:
                     </Typography>
                     <TableContainer component={Paper} sx={{ mb: 4 }}>
                         <Table>
@@ -227,53 +238,53 @@ function ConversionResults() {
                         </Table>
                     </TableContainer>
 
-                    {/* Warnings Section */}
-                    {/*<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>*/}
-                    {/*    Warnings:*/}
-                    {/*</Typography>*/}
-                    {/*{resultsData.warnings !== undefined && resultsData.warnings.length !== 0 && (*/}
-                    {/*    <TableContainer component={Paper}>*/}
-                    {/*        <Table>*/}
-                    {/*            <TableHead>*/}
-                    {/*                <TableRow>*/}
-                    {/*                    <TableCell><strong>Warning</strong></TableCell>*/}
-                    {/*                </TableRow>*/}
-                    {/*            </TableHead>*/}
-                    {/*            <TableBody>*/}
-                    {/*                {resultsData.warnings.map((warning, index) => (*/}
-                    {/*                    <TableRow key={index}>*/}
-                    {/*                        <TableCell align='center'>*/}
-                    {/*                            <div key={index} align='center'> {collapsedWarnings.includes(index) ?*/}
-                    {/*                                <button style={{*/}
-                    {/*                                    marginTop: '1rem', // add some spacing*/}
-                    {/*                                    backgroundColor: '#f44336', // similar red to the "Okay" button*/}
-                    {/*                                    color: '#ffffff', // make text white for better visibility*/}
-                    {/*                                    border: 'none', // ensure no border for a consistent look*/}
-                    {/*                                    cursor: 'pointer' // give a pointer cursor to indicate clickability*/}
-                    {/*                                }}*/}
-                    {/*                                    onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog*/}
-                    {/*                                    warning={warning}*/}
-                    {/*                                    onOkay={() => toggleWarning(index)} />*/}
-                    {/*                            }</div>*/}
-                    {/*                        </TableCell>*/}
-                    {/*                        */}{/*<TableCell align="right">*/}
-                    {/*                        */}{/*    <div key={index}>*/}
-                    {/*                        */}{/*        <button style={{*/}
-                    {/*                        */}{/*            marginTop: '1rem', // add some spacing*/}
-                    {/*                        */}{/*            backgroundColor: '#f44336', // similar red to the "Okay" button*/}
-                    {/*                        */}{/*            color: '#ffffff', // make text white for better visibility*/}
-                    {/*                        */}{/*            border: 'none', // ensure no border for a consistent look*/}
-                    {/*                        */}{/*            cursor: 'pointer' // give a pointer cursor to indicate clickability*/}
-                    {/*                        */}{/*            }}*/}
-                    {/*                        */}{/*            onClick={() => toggleWarning(index)}>Expand Warning</button>*/}
-                    {/*                        */}{/*    </div>*/}
-                    {/*                        */}{/*</TableCell>*/}
-                    {/*                    </TableRow>*/}
-                    {/*                ))}*/}
-                    {/*            </TableBody>*/}
-                    {/*        </Table>*/}
-                    {/*    </TableContainer>*/}
-                    {/*)}*/}
+                     {/*Warnings Section */}
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Warnings:
+                    </Typography>
+                    {(results.warnings !== undefined && results.warnings.length !== 0) && (
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell><strong>Warning</strong></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {results.warnings.map((warning, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell align='center'>
+                                                <div key={index} align='center'> {collapsedWarnings.includes(index) ?
+                                                    <button style={{
+                                                        marginTop: '1rem', // add some spacing
+                                                        backgroundColor: '#f44336', // similar red to the "Okay" button
+                                                        color: '#ffffff', // make text white for better visibility
+                                                        border: 'none', // ensure no border for a consistent look
+                                                        cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                                    }}
+                                                        onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog
+                                                        warning={warning}
+                                                        onOkay={() => toggleWarning(index)} />
+                                                }</div>
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <div key={index}>
+                                                    <button style={{
+                                                        marginTop: '1rem', // add some spacing
+                                                        backgroundColor: '#f44336', // similar red to the "Okay" button
+                                                        color: '#ffffff', // make text white for better visibility
+                                                        border: 'none', // ensure no border for a consistent look
+                                                        cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                                        }}
+                                                        onClick={() => toggleWarning(index)}>Expand Warning</button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    ) || (<p>No Warnings</p>)}
                 </Box>
             </Dashboard>
         </div>
