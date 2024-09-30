@@ -20,6 +20,17 @@ function ConversionResults() {
     const { patientData } = location.state || {};
     const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
 
+    const capitalizeFirstLetter = (string) => {
+        if (!string) return ""; // Handle undefined or empty string
+    
+        // Handle special cases for "iv" and "sc"
+        if (string.toLowerCase() === "iv") return "IV";
+        if (string.toLowerCase() === "sc") return "SC";
+    
+        // Default capitalization for other strings
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+
     const toggleWarning = (index) => {
         if (collapsedWarnings.includes(index)) {
             setCollapsedWarnings(collapsedWarnings.filter((i) => i !== index));
@@ -143,7 +154,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Form:</TableCell>
-                                    <TableCell><strong>{medicationData.route}</strong></TableCell>
+                                    <TableCell><strong>{capitalizeFirstLetter(medicationData.route)}</strong></TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Target Medication:</TableCell>
@@ -151,7 +162,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Target Form:</TableCell>
-                                    <TableCell><strong>{medicationData.targetRoute}</strong></TableCell>
+                                    <TableCell><strong>{capitalizeFirstLetter(medicationData.targetRoute)}</strong></TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
