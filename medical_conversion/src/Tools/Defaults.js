@@ -8,7 +8,8 @@ export const defaultMedicationData = {
     targetRoute: '', // desired method of administration
     // isAdministrative: false,  // Checkbox for administrative, commented out
     formulaName: '',
-    formula: ''  // Select box for different formulas
+    formula: '',  // Select box for different formulas
+    patient: false
 };
 
 export const defaultPatientData = {
@@ -26,5 +27,7 @@ export const defaultResultsData = {
     dosageUnit: '',
     route: '',
     error: "None",
+    conversionFormula: '',
+    formulaName: '',
     warnings: []
 }

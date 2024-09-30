@@ -21,7 +21,7 @@ N/A
 
 ### Features
 - CSV tables to store known converison rates
-- Results UI for medication data, patient data, conversion info
+- Results UI for medication data, patient data, conversion info, warnings, and administration instructions
 - Single page structure for forms and results
   
 ### Bug Fixes
@@ -29,4 +29,5 @@ N/A
 - removed unused PatientVariableForm
 
 ### Known Issues
-N/A
+- dependant on CSV for calculations
+- API services yet to be linked

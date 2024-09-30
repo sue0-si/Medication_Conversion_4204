@@ -2,10 +2,12 @@ import { useState } from "react";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 import { useNavigate } from 'react-router-dom';
+import PatientInfoForm from "./PatientInfoForm";
 
 function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, patientData, setPatientData }) {
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
     const navigate = useNavigate();
+    const [showPatientForm, setShowPatientForm] = useState(false);
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -15,6 +17,21 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
         }));
     };
 
+    const handleClick = () => {
+        setShowPatientForm(!showPatientForm)
+        if (showPatientForm) {
+            setMedicationData((prevData) => ({
+                ...prevData,
+                patient: true
+            }));
+        } else {
+            setMedicationData((prevData) => ({
+                ...prevData,
+                patient: false
+            }));
+        }
+        
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (medicationData && medicationData.name) {
@@ -116,6 +133,18 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                 </Select>
             </FormControl>
 
+            <FormControl fullWidth margin="normal">
+            <Box>
+                <button type="button" onClick={handleClick}>
+                {showPatientForm ? "Remove Patient" : "Add Patient"}
+                </button>
+
+            {/* Conditionally render the PatientInfo form */}
+            {showPatientForm && (
+                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
+                    )}
+                </Box>
+            </FormControl>
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
