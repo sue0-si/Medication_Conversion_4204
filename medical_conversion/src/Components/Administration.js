@@ -1,53 +1,48 @@
 import React from "react";
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Paper } from '@mui/material';
 import { Link } from "react-router-dom";
 
-const sampleData = [
-    {usage: "Dysmenorrhea", directions: "200 to 400 mg orally every 4 hours as needed", comments: "Treatment should begin at the earliest onset of pain"}, 
-    {usage: "Osteoarthritis", directions: "Initial dose: 200 mg orally every 4 to 6 hours; may increase to 400 mg orally every 4 to 6 hours as needed", comments: "In chronic conditions, a therapeutic response may be seen in a few days to a week but most often is observed by 2 weeks; after a satisfactory response has been achieved, review and adjust dose to achieve the lowest dose that yields acceptable control."}, 
-    {usage: "Rheumatoid Arthritis", directions: "Initial dose: 200 mg orally every 4 to 6 hours; may increase to 400 mg orally every 4 to 6 hours as needed", comments: "In chronic conditions, a therapeutic response may be seen in a few days to a week but most often is observed by 2 weeks; after a satisfactory response has been achieved, review and adjust dose to achieve the lowest dose that yields acceptable control."}, 
-    {usage: "Pain", directions: "400 to 800 mg IV every 6 hours as needed", comments: "Patients should be well hydrated prior to IV infusion to reduce the risk of renal adverse events; doses should be infused over at least 30 minutes."},
-    {usage: "Fever", directions: "400 mg IV once, then 100 to 400 mg every 4 to 6 hours IV as needed", comments: "Patients should be well hydrated to reduce the risk of renal adverse events. IV doses should be infused over at least 30 minutes."}
-]
-
-const usageList = sampleData.map((item) => item.usage);
 
 
-function Administration(props) {
+
+function Administration({ targetRoute }) {
     
-    return(
+    return (
+        <Box component={Paper} sx={{ p: 2 }}>
+            {targetRoute?.toLowerCase() === "iv" && (
+                <Typography variant="body1" gutterBottom>
+                    IV (intravenous) administration should be performed by a healthcare professional. The medication
+                    should be delivered slowly over the prescribed period to avoid adverse reactions. Ensure proper
+                    dilution of the medication in a compatible solution before administration. Monitor the patient for
+                    any signs of discomfort or allergic reactions during and after the administration. Always adhere to
+                    the recommended dosage guidelines, and never exceed the maximum daily limit.
+                </Typography>
+            )}
 
-        <Box sx={{ mt: 4 }}>
-            {/* <p>{sampleData[1].directions}</p> */}
-            {props ? (
-                <div>
-                    <Typography variant="body1">
-                        
-                        Usual Adult Dose for: {usageList.join(', ')}
-                    </Typography>
+            {targetRoute?.toLowerCase() === "sc" && (
+                <Typography variant="body1" gutterBottom>
+                    SC (subcutaneous) administration involves injecting the medication under the skin. It is important
+                    to rotate injection sites to prevent skin irritation. Always clean the injection site before
+                    administering the medication. Ensure the syringe and needle are sterile to avoid infection. Follow
+                    the prescribed dosage guidelines, and report any unusual reactions to your healthcare provider
+                    immediately.
+                </Typography>
+            )}
 
+            {targetRoute?.toLowerCase() === "oral" && (
+                <Typography variant="body1" gutterBottom>
+                    Oral administration requires taking the medication by mouth. It is recommended to take the medication
+                    with a full glass of water, and in some cases, with food to prevent stomach upset. Do not crush or
+                    chew extended-release tablets unless instructed by a healthcare provider. Follow the prescribed
+                    dosage, and if you miss a dose, take it as soon as possible unless it’s almost time for the next dose.
+                </Typography>
+            )}
 
-                    {/* {sampleData.map((name, index) => (
-                        <Link href="#" key={index}>{name.IV}</Link>
-                    ))} */}
-                    
-                        {sampleData.map((name, index) => (
-                            //    <Typography variant="heading" key={index}>
-                            //         Usual Adult Dosage for {name}
-                            //    </Typography> 
-                            // <p key={index}>
-                            //     Usual Adult Dosage for {name.directions}
-                            // </p>
-                            <Box sx={{ mt: 4 }} key={index}>
-                                <Typography variant="h5">Usual Adult Dosage for {name.usage}</Typography>
-                                <Typography variant="body1">{name.directions}</Typography>
-                                <Typography variant="body1">{name.comments}</Typography>
-                            </Box>
-                            
-                        ))}
-                </div>
-            ) : (null)
-            }
+            {!["iv", "sc", "oral"].includes(targetRoute?.toLowerCase()) && (
+                <Typography variant="body1" gutterBottom>
+                    No specific administration instructions available for the selected route.
+                </Typography>
+            )}
         </Box>
     );
 
