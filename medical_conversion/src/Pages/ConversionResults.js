@@ -10,6 +10,8 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import { defaultResultsData } from '../Tools/Defaults'
 import { useLocation } from 'react-router-dom';
 import Dashboard from "../Components/Dashboard";
+import AlertDialog from "../Components/AlertDialog";
+import warningData from '../Tools/warning.json'
 
 function ConversionResults() {
     const [results, setResults] = React.useState(defaultResultsData);
@@ -17,6 +19,17 @@ function ConversionResults() {
     const location = useLocation();
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
+
+    const drugsMatch = warningData.drugs
+        .filter(drug => drug.drug_name === medicationData.name)
+        .map(drug => drug.drug_name);
+
+    const [close, isClose] = React.useState(false)
+
+    const handleClick = () => {
+        isClose(true)
+    }
+
     React.useEffect(() => {
         if (!medicationData || !medicationData.name) {
             setError("No valid medication data provided.");
@@ -227,6 +240,15 @@ function ConversionResults() {
                         </Table>
                     </TableContainer>
 
+                    {
+                        close == false && (
+                        drugsMatch.length > 0 ? drugsMatch.map((warning, index) => (
+                            <AlertDialog warning={warning} onOkay={handleClick}></AlertDialog>
+                        )) : <AlertDialog warning={"Underdosing / Overdosing could lead to death or severe/permanent disability"} onOkay={handleClick}></AlertDialog>
+                    )}
+
+                    <Administration props={medicationData}></Administration>
+
                     {/* Warnings Section */}
                     {/*<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>*/}
                     {/*    Warnings:*/}
@@ -276,6 +298,7 @@ function ConversionResults() {
                     {/*)}*/}
                 </Box>
             </Dashboard>
+            
         </div>
     );
 }
