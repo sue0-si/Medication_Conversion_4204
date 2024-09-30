@@ -22,10 +22,6 @@ function Administration(props) {
             {props ? (
                 <div>
                     <Typography variant="body1">
-                        <strong>Caution:</strong> Underdosing / Overdosing could lead to death or severe/permanent disability
-                    </Typography>
-
-                    <Typography variant="body1">
                         
                         Usual Adult Dose for: {usageList.join(', ')}
                     </Typography>
