@@ -19,6 +19,26 @@ function ConversionResults() {
     const location = useLocation();
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
+    const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
+
+    const capitalizeFirstLetter = (string) => {
+    if (!string) return ""; // Handle undefined or empty string
+
+    // Handle special cases for "iv" and "sc"
+    if (string.toLowerCase() === "iv") return "IV";
+    if (string.toLowerCase() === "sc") return "SC";
+
+    // Default capitalization for other strings
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+
+    const toggleWarning = (index) => {
+        if (collapsedWarnings.includes(index)) {
+            setCollapsedWarnings(collapsedWarnings.filter((i) => i !== index));
+        } else {
+            setCollapsedWarnings([...collapsedWarnings, index]);
+        }
+    };
 
     const drugsMatch = warningData.drugs
         .filter(drug => drug.drug_name === medicationData.name)
@@ -35,6 +55,7 @@ function ConversionResults() {
             setError("No valid medication data provided.");
             return;
         }
+
 
         const calculateConversion = () => {
             const normalizedDrugName = medicationData.name.charAt(0).toUpperCase() + medicationData.name.slice(1).toLowerCase();
@@ -66,6 +87,7 @@ function ConversionResults() {
                         medName: medicationData.name,
                         dosage: convertedDosage,
                         dosageUnit: medicationData.dosageUnit,
+                        conversionFormula: `${medicationData.dosage} * ${conversionRatio} = ${convertedDosage}`
                     });
                 } else {
                     setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
@@ -145,7 +167,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Form:</TableCell>
-                                    <TableCell><strong>{medicationData.route}</strong></TableCell>
+                                    <TableCell><strong>{capitalizeFirstLetter(medicationData.route)}</strong></TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Target Medication:</TableCell>
@@ -153,7 +175,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Target Form:</TableCell>
-                                    <TableCell><strong>{medicationData.targetRoute}</strong></TableCell>
+                                    <TableCell><strong>{capitalizeFirstLetter(medicationData.targetRoute)}</strong></TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -215,7 +237,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
-                                    <TableCell><strong>{medicationData.formula}</strong></TableCell>
+                                    <TableCell><strong>{results.conversionFormula}</strong></TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -223,7 +245,7 @@ function ConversionResults() {
 
                     {/* Conversion Results Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Conversion Results:
+                        Calculated Dosage:
                     </Typography>
                     <TableContainer component={Paper} sx={{ mb: 4 }}>
                         <Table>
@@ -249,53 +271,93 @@ function ConversionResults() {
 
                     <Administration props={medicationData}></Administration>
 
-                    {/* Warnings Section */}
-                    {/*<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>*/}
-                    {/*    Warnings:*/}
-                    {/*</Typography>*/}
-                    {/*{resultsData.warnings !== undefined && resultsData.warnings.length !== 0 && (*/}
-                    {/*    <TableContainer component={Paper}>*/}
-                    {/*        <Table>*/}
-                    {/*            <TableHead>*/}
-                    {/*                <TableRow>*/}
-                    {/*                    <TableCell><strong>Warning</strong></TableCell>*/}
-                    {/*                </TableRow>*/}
-                    {/*            </TableHead>*/}
-                    {/*            <TableBody>*/}
-                    {/*                {resultsData.warnings.map((warning, index) => (*/}
-                    {/*                    <TableRow key={index}>*/}
-                    {/*                        <TableCell align='center'>*/}
-                    {/*                            <div key={index} align='center'> {collapsedWarnings.includes(index) ?*/}
-                    {/*                                <button style={{*/}
-                    {/*                                    marginTop: '1rem', // add some spacing*/}
-                    {/*                                    backgroundColor: '#f44336', // similar red to the "Okay" button*/}
-                    {/*                                    color: '#ffffff', // make text white for better visibility*/}
-                    {/*                                    border: 'none', // ensure no border for a consistent look*/}
-                    {/*                                    cursor: 'pointer' // give a pointer cursor to indicate clickability*/}
-                    {/*                                }}*/}
-                    {/*                                    onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog*/}
-                    {/*                                    warning={warning}*/}
-                    {/*                                    onOkay={() => toggleWarning(index)} />*/}
-                    {/*                            }</div>*/}
-                    {/*                        </TableCell>*/}
-                    {/*                        */}{/*<TableCell align="right">*/}
-                    {/*                        */}{/*    <div key={index}>*/}
-                    {/*                        */}{/*        <button style={{*/}
-                    {/*                        */}{/*            marginTop: '1rem', // add some spacing*/}
-                    {/*                        */}{/*            backgroundColor: '#f44336', // similar red to the "Okay" button*/}
-                    {/*                        */}{/*            color: '#ffffff', // make text white for better visibility*/}
-                    {/*                        */}{/*            border: 'none', // ensure no border for a consistent look*/}
-                    {/*                        */}{/*            cursor: 'pointer' // give a pointer cursor to indicate clickability*/}
-                    {/*                        */}{/*            }}*/}
-                    {/*                        */}{/*            onClick={() => toggleWarning(index)}>Expand Warning</button>*/}
-                    {/*                        */}{/*    </div>*/}
-                    {/*                        */}{/*</TableCell>*/}
-                    {/*                    </TableRow>*/}
-                    {/*                ))}*/}
-                    {/*            </TableBody>*/}
-                    {/*        </Table>*/}
-                    {/*    </TableContainer>*/}
-                    {/*)}*/}
+                     {/*Warnings Section */}
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Warnings:
+                    </Typography>
+                    {(results.warnings !== undefined && results.warnings.length !== 0) && (
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell><strong>Warning</strong></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {results.warnings.map((warning, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell align='center'>
+                                                <div key={index} align='center'> {collapsedWarnings.includes(index) ?
+                                                    <button style={{
+                                                        marginTop: '1rem', // add some spacing
+                                                        backgroundColor: '#f44336', // similar red to the "Okay" button
+                                                        color: '#ffffff', // make text white for better visibility
+                                                        border: 'none', // ensure no border for a consistent look
+                                                        cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                                    }}
+                                                        onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog
+                                                        warning={warning}
+                                                        onOkay={() => toggleWarning(index)} />
+                                                }</div>
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <div key={index}>
+                                                    <button style={{
+                                                        marginTop: '1rem', // add some spacing
+                                                        backgroundColor: '#f44336', // similar red to the "Okay" button
+                                                        color: '#ffffff', // make text white for better visibility
+                                                        border: 'none', // ensure no border for a consistent look
+                                                        cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                                        }}
+                                                        onClick={() => toggleWarning(index)}>Expand Warning</button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    ) || (<p>No Warnings</p>)}
+                    {/* Administration Instructions Section */}
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Administration Instructions:
+                    </Typography>
+                    <Box component={Paper} sx={{ p: 2 }}>
+                        {medicationData?.targetRoute?.toLowerCase() === "iv" && (
+                            <Typography variant="body1" gutterBottom>
+                                IV (intravenous) administration should be performed by a healthcare professional. The medication
+                                should be delivered slowly over the prescribed period to avoid adverse reactions. Ensure proper
+                                dilution of the medication in a compatible solution before administration. Monitor the patient for
+                                any signs of discomfort or allergic reactions during and after the administration. Always adhere to
+                                the recommended dosage guidelines, and never exceed the maximum daily limit.
+                            </Typography>
+                        )}
+
+                        {medicationData?.targetRoute?.toLowerCase() === "sc" && (
+                            <Typography variant="body1" gutterBottom>
+                                SC (subcutaneous) administration involves injecting the medication under the skin. It is important
+                                to rotate injection sites to prevent skin irritation. Always clean the injection site before
+                                administering the medication. Ensure the syringe and needle are sterile to avoid infection. Follow
+                                the prescribed dosage guidelines, and report any unusual reactions to your healthcare provider
+                                immediately.
+                            </Typography>
+                        )}
+
+                        {medicationData?.targetRoute?.toLowerCase() === "oral" && (
+                            <Typography variant="body1" gutterBottom>
+                                Oral administration requires taking the medication by mouth. It is recommended to take the medication
+                                with a full glass of water, and in some cases, with food to prevent stomach upset. Do not crush or
+                                chew extended-release tablets unless instructed by a healthcare provider. Follow the prescribed
+                                dosage, and if you miss a dose, take it as soon as possible unless it’s almost time for the next dose.
+                            </Typography>
+                        )}
+
+                        {!["iv", "sc", "oral"].includes(medicationData?.targetRoute?.toLowerCase()) && (
+                            <Typography variant="body1" gutterBottom>
+                                No specific administration instructions available for the selected route.
+                            </Typography>
+                        )}
+                    </Box>
                 </Box>
             </Dashboard>
             
