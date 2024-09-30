@@ -21,15 +21,15 @@ function ConversionResults() {
     const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
 
     const capitalizeFirstLetter = (string) => {
-        if (!string) return ""; // Handle undefined or empty string
-    
-        // Handle special cases for "iv" and "sc"
-        if (string.toLowerCase() === "iv") return "IV";
-        if (string.toLowerCase() === "sc") return "SC";
-    
-        // Default capitalization for other strings
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    };
+    if (!string) return ""; // Handle undefined or empty string
+
+    // Handle special cases for "iv" and "sc"
+    if (string.toLowerCase() === "iv") return "IV";
+    if (string.toLowerCase() === "sc") return "SC";
+
+    // Default capitalization for other strings
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
 
     const toggleWarning = (index) => {
         if (collapsedWarnings.includes(index)) {
@@ -75,6 +75,7 @@ function ConversionResults() {
                         medName: medicationData.name,
                         dosage: convertedDosage,
                         dosageUnit: medicationData.dosageUnit,
+                        conversionFormula: `${medicationData.dosage} * ${conversionRatio} = ${convertedDosage}`
                     });
                 } else {
                     setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
@@ -224,7 +225,7 @@ function ConversionResults() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
-                                    <TableCell><strong>{medicationData.formula}</strong></TableCell>
+                                    <TableCell><strong>{results.conversionFormula}</strong></TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
