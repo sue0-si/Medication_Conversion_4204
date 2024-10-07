@@ -153,12 +153,14 @@ export default function Dashboard({children, heading}) {
                                 <ListItemText primary="PO:IV Conversion" />
                             </ListItemButton>
                         </Link>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <BalanceIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Alt. Medication Conversion" />
-                        </ListItemButton>
+                        <Link to='/alt'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <BalanceIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Alt. Medication Conversion" />
+                            </ListItemButton>
+                        </Link>
 
                         <ListItemButton>
                             <ListItemIcon>
