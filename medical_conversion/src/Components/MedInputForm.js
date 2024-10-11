@@ -4,7 +4,7 @@ import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typo
 import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
 
-function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, patientData, setPatientData }) {
+function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, patientData, setPatientData, formtype }) {
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
     const navigate = useNavigate();
     const [showPatientForm, setShowPatientForm] = useState(false);
@@ -43,108 +43,127 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
 
     return (
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <TextField
-                label="Medication Name"
-                name="name"
-                value={medicationData.name}
-                onChange={handleChange}
-                required
-                fullWidth
-                margin="normal"
-            />
+            {/*PO-IV Form*/}
+            {formtype === "po-iv" && (
+                <>
+                    <TextField
+                        label="Medication Name"
+                        name="name"
+                        value={medicationData.name}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
+                    <FormControl fullWidth margin="normal">
+                        <Typography variant="h6" gutterBottom>
+                            Administration Method
+                        </Typography>
+                        <ToggleButtonGroup
+                            value={medicationData.route}
+                            exclusive
+                            onChange={(event, newMethod) => {
+                                setMedicationData((prevData) => ({
+                                    ...prevData,
+                                    route: newMethod,
+                                }));
+                            }}
+                            aria-label="administration method"
+                        >
+                            <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
+                            <ToggleButton value="iv" aria-label="iv">IV</ToggleButton>
+                            <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
+                        </ToggleButtonGroup>
+                    </FormControl>
+
+                    <TextField
+                        label="Desired Medication"
+                        name="target"
+                        value={medicationData.target}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+
+                    <FormControl fullWidth margin="normal">
+                        <Typography variant="h6" gutterBottom>
+                            Desired Administration Method
+                        </Typography>
+                        <ToggleButtonGroup
+                            value={medicationData.targetRoute}
+                            exclusive
+                            onChange={(event, newMethod) => {
+                                setMedicationData((prevData) => ({
+                                    ...prevData,
+                                    targetRoute: newMethod,
+                                }));
+                            }}
+                            aria-label="target administration method"
+                        >
+                            <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
+                            <ToggleButton value="iv" aria-label="iv push">IV</ToggleButton>
+                            <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
+                        </ToggleButtonGroup>
+                    </FormControl>
+
+                    {/* Dosage Input Field */}
+                    <TextField
+                        label="Dosage"
+                        name="dosage"
+                        value={medicationData.dosage}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                        type="number"
+                    />
+
+                    {/* Dosage Unit Selection */}
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Dosage Unit</InputLabel>
+                        <Select
+                            name="dosageUnit"
+                            value={medicationData.dosageUnit}
+                            onChange={handleChange}
+                            required
+                        >
+                            <MenuItem value="mg">mg</MenuItem>
+                            <MenuItem value="mL">mL</MenuItem>
+                            <MenuItem value="g">g</MenuItem>
+                            <MenuItem value="units">units</MenuItem>
+                        </Select>
+                    </FormControl>
+               </>
+            )}
+            {/*ALT form*/ }
+            {formtype === 'alt' && (
+                <>
+                    <TextField
+                        label="Medication Name"
+                        name="name"
+                        value={medicationData.name}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                </>
+            )}
+
+            {/*add patient section*/}
             <FormControl fullWidth margin="normal">
-                <Typography variant="h6" gutterBottom>
-                    Administration Method
-                </Typography>
-                <ToggleButtonGroup
-                    value={medicationData.route}
-                    exclusive
-                    onChange={(event, newMethod) => {
-                        setMedicationData((prevData) => ({
-                            ...prevData,
-                            route: newMethod,
-                        }));
-                    }}
-                    aria-label="administration method"
-                >
-                    <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-                    <ToggleButton value="iv" aria-label="iv">IV</ToggleButton>
-                    <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
-                </ToggleButtonGroup>
-            </FormControl>
+                <Box>
+                    <button type="button" onClick={handleClick}>
+                    {showPatientForm ? "Remove Patient" : "Add Patient"}
+                    </button>
 
-            <TextField
-                label="Desired Medication"
-                name="target"
-                value={medicationData.target}
-                onChange={handleChange}
-                required
-                fullWidth
-                margin="normal"
-            />
-
-            <FormControl fullWidth margin="normal">
-                <Typography variant="h6" gutterBottom>
-                    Desired Administration Method
-                </Typography>
-                <ToggleButtonGroup
-                    value={medicationData.targetRoute}
-                    exclusive
-                    onChange={(event, newMethod) => {
-                        setMedicationData((prevData) => ({
-                            ...prevData,
-                            targetRoute: newMethod,
-                        }));
-                    }}
-                    aria-label="target administration method"
-                >
-                    <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-                    <ToggleButton value="iv" aria-label="iv push">IV</ToggleButton>
-                    <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
-                </ToggleButtonGroup>
-            </FormControl>
-
-            {/* Dosage Input Field */}
-            <TextField
-                label="Dosage"
-                name="dosage"
-                value={medicationData.dosage}
-                onChange={handleChange}
-                required
-                fullWidth
-                margin="normal"
-                type="number"
-            />
-
-            {/* Dosage Unit Selection */}
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Dosage Unit</InputLabel>
-                <Select
-                    name="dosageUnit"
-                    value={medicationData.dosageUnit}
-                    onChange={handleChange}
-                    required
-                >
-                    <MenuItem value="mg">mg</MenuItem>
-                    <MenuItem value="mL">mL</MenuItem>
-                    <MenuItem value="g">g</MenuItem>
-                    <MenuItem value="units">units</MenuItem>
-                </Select>
-            </FormControl>
-
-            <FormControl fullWidth margin="normal">
-            <Box>
-                <button type="button" onClick={handleClick}>
-                {showPatientForm ? "Remove Patient" : "Add Patient"}
-                </button>
-
-            {/* Conditionally render the PatientInfo form */}
-            {showPatientForm && (
-                <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
-                    )}
+                    {/* Conditionally render the PatientInfo form */}
+                    {showPatientForm && ( <PatientInfoForm patientData={patientData} setPatientData={setPatientData} /> )}
                 </Box>
             </FormControl>
+            {/*submit button*/}
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>

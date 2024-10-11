@@ -13,7 +13,7 @@ import Dashboard from "../Components/Dashboard";
 import AlertDialog from "../Components/AlertDialog";
 import warningData from '../Tools/warning.json'
 
-function ConversionResults() {
+function ConversionResults({ resultsType }) {
     const [results, setResults] = React.useState(defaultResultsData);
     const [error, setError] = React.useState(null);
     const location = useLocation();
