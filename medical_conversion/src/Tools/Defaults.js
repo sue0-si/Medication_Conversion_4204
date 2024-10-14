@@ -5,7 +5,7 @@ export const defaultMedicationData = {
     dosageUnit: 'mg', // Default unit is 'mg', commented out
     target: '', // name of drug to convert to
     route: '',  // Renamed from form to route for administrative method
-    targetRoute: '', // desired method of administration
+    targetRoute: '', // desired method of administration (PO-IV onv.)
     // isAdministrative: false,  // Checkbox for administrative, commented out
     formulaName: '',
     formula: '',  // Select box for different formulas
