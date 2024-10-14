@@ -178,10 +178,15 @@ function ConversionResults({ resultsType }) {
                                     <TableCell>Target Medication:</TableCell>
                                     <TableCell><strong>{medicationData.target}</strong></TableCell>
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell>Target Form:</TableCell>
-                                    <TableCell><strong>{capitalizeFirstLetter(medicationData.targetRoute)}</strong></TableCell>
-                                </TableRow>
+                                {resultsType === 'po-iv' && (
+                                    <>
+                                        <TableRow>
+                                            <TableCell>Target Form:</TableCell>
+                                            <TableCell><strong>{capitalizeFirstLetter(medicationData.targetRoute)}</strong></TableCell>
+                                        </TableRow>
+                                    </>
+                                )}
+                                
                             </TableBody>
                         </Table>
                     </TableContainer>
