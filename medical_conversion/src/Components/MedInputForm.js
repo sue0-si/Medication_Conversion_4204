@@ -36,7 +36,9 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
         event.preventDefault();
         if (medicationData && medicationData.name) {
             setSubmittedData(medicationData);  // Store form data for passing to ConversionResults
-
+            if (formtype == 'alt') {
+                navigate(redirectOnSubmit + medicationData.name , { state: { medicationData, patientData } });
+            }
             navigate(redirectOnSubmit + medicationData.name , { state: { medicationData, patientData } });
         }
     };
