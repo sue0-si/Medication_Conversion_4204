@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup, Autocomplete } from "@mui/material";
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup, Autocomplete, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 
 import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
@@ -10,6 +10,8 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
     const navigate = useNavigate();
     const [showPatientForm, setShowPatientForm] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [openErrorDialog, setOpenErrorDialog] = useState(false);  // For controlling pop-up dialog
     const [altMedOptions, setAltMedOptions] = useState(["Please input medication name to see alternative options"]); // var for alternative medications with default
     const [formulaOptions, setFormulaOptions] = useState([]);
 
@@ -67,13 +69,32 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
         }
         
     };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (medicationData && medicationData.name) {
-            setSubmittedData(medicationData);  // Store form data for passing to ConversionResults
 
-            navigate(redirectOnSubmit + medicationData.name , { state: { medicationData, patientData } });
+        // Validate required fields
+        const validationErrors = {};
+        if (!medicationData.name) validationErrors.name = "Medication name is required.";
+        if (!medicationData.dosage) validationErrors.dosage = "Dosage is required.";
+        if (!medicationData.dosageUnit) validationErrors.dosageUnit = "Dosage unit is required.";
+        if (!medicationData.route) validationErrors.route = "Administration route is required.";
+        if (!medicationData.target) validationErrors.target = "Target medication is required.";
+        if (!medicationData.targetRoute && formtype === 'po-iv') validationErrors.targetRoute = "Target administration method is required.";
+
+        // Set errors if there are any
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            setOpenErrorDialog(true);  // Open error dialog if there are validation errors
+            return;
         }
+
+        setSubmittedData(medicationData);
+        navigate(redirectOnSubmit + medicationData.name, { state: { medicationData, patientData } });
+    };
+
+    const handleCloseDialog = () => {
+        setOpenErrorDialog(false);  // Close the error dialog
     };
 
     //set alt med options for alt med conversion
@@ -274,6 +295,29 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
+
+            {/* Error Dialog */}
+            <Dialog
+                open={openErrorDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="error-dialog-title"
+                aria-describedby="error-dialog-description"
+            >
+                <DialogTitle id="error-dialog-title">Submission Errors</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="error-dialog-description">
+                        Please fix the following errors before submitting:
+                        <ul>
+                            {Object.values(errors).map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">Close</Button>
+                </DialogActions>
+            </Dialog>
         </FormControl>
     );
 }
