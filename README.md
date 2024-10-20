@@ -36,9 +36,10 @@ N/A
 
 ### Features
 - added Alternative Medication Conversion tool page
+- form submission errors pop-up
 
   
 ### Bug Fixes
+- fixed form validation errors and ensured all fields are required
 
 ### Known Issues
-- only medication name field seems to be required despite all fields being labeled required
