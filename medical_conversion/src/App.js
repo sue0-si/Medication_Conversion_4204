@@ -21,8 +21,8 @@ function App() {
           {/*<NavBar mode={mode} />*/}
           <Router>
               <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/medication-information" element={<MedicationLookup />} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/medication-information" element={<MedicationLookup />} />
                   <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
                   <Route path="/po-iv" element={<PoIvConversion />} />
                   <Route path="/po-iv/:medicationName" element={<ConversionResults resultsType={"po-iv"} />} />

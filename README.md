@@ -31,3 +31,15 @@ N/A
 ### Known Issues
 - dependant on CSV for calculations
 - API services yet to be linked
+
+## Version 0.3.0
+
+### Features
+- added Alternative Medication Conversion tool page
+- form submission errors pop-up
+
+  
+### Bug Fixes
+- fixed form validation errors and ensured all fields are required
+
+### Known Issues
