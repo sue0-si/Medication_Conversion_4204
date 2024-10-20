@@ -16,11 +16,14 @@ import warningData from '../Tools/warning.json'
 
 const AltConversionResult = () => {
     const [results, setResults] = React.useState(defaultResultsData);
+    const [results2, setResults2] = React.useState(defaultResultsData);
     const [error, setError] = React.useState(null);
     const location = useLocation();
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
     const navigate = useNavigate();
+    const keys = [];
+    const drugConversion = [];
 
     const handleBackButton = () => {
         navigate('/alt');
@@ -56,35 +59,12 @@ const AltConversionResult = () => {
 
             // Debugging logs to see if the values are correct
             console.log(`Looking up conversion for drug: ${normalizedDrugName}`);
-            console.log(`From route: ${firstAdminType}, to route: ${targetAdminType}`);
-
+            
             const firstDrugClass = drugClassMap[normalizedDrugName];
             if (!firstDrugClass) {
                 setError("Invalid drug class");
                 return;
             }
-
-            if (firstDrugClass === 'opioid') {
-                // Use opioid route conversions
-                const conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType];
-
-                // Debugging logs to check if the conversion is found
-                console.log(`Conversion ratio found: ${conversionRatio}`);
-
-                if (conversionRatio != null) {
-                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
-                    setResults({
-                        medName: medicationData.target,
-                        dosage: convertedDosage,
-                        dosageUnit: medicationData.dosageUnit,
-                        conversionFormula: `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
-                        warnings: drugsMatch,
-                        formulaName: medicationData.formulaName !== '' ? "Standard Ratio" : medicationData.formulaName
-                    });
-                } else {
-                    setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
-                }
-            } else {
                 let conversionData;
 
                 switch (firstDrugClass) {
@@ -104,37 +84,40 @@ const AltConversionResult = () => {
                         setError("No valid drug class found");
                         return;
                 }
-
-                const firstDrug = normalizedDrugName;
-                const secondDrug = normalizedDrugNameTarget;
-                const firstDrugConversions = conversionData[firstDrug]?.Conversions;
-
-                if (!firstDrugConversions) {
-                    setError("No conversion data found");
-                    return;
+                
+                for (const key in conversionData) {
+                    if (key != capitalizeFirstLetter(medicationData.name)) {
+                        keys.push(key);
+                    }
                 }
-
-                const conversionRatio = firstDrugConversions[secondDrug] || null;
-                if (conversionRatio != null) {
-                    console.log(`Steroid conversion ratio found: ${conversionRatio}`);
-                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
-                    setResults({
-                        medName: medicationData.name,
-                        dosage: convertedDosage,
-                        dosageUnit: medicationData.dosageUnit,
-                        conversionFormula: `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
-                        warnings: drugsMatch,
-                        formulaName: medicationData.formulaName !== '' ? "Standard Ratio" : medicationData.formulaName
-                    });
-                } else {
-                    setError("No conversion found");
-                }
-            }
-            
+  
+                for (let i = 0; i < keys.length; i++) {
+                    const converted = conversionData[medicationData.name]?.Conversions[keys[i]];
+                    drugConversion.push(converted);
+ 
+                }     
+                console.log(drugConversion)
+                setResults({
+                    medName: keys[0],
+                    dosage: drugConversion[0] === null ? drugConversion[0][1] : drugConversion[0],
+                    dosageUnit: medicationData.dosageUnit,
+                    conversionFormula: '',
+                    warnings: drugsMatch,
+                    formulaName: ''
+                });
+                setResults2({
+                    medName: keys[1],
+                    dosage: drugConversion[1],
+                    dosageUnit: medicationData.dosageUnit,
+                    conversionFormula: '',
+                    warnings: drugsMatch,
+                    formulaName: ''
+                });       
         };
 
         calculateConversion();
     }, [medicationData]);
+
     
     return (
         <div>
@@ -145,15 +128,18 @@ const AltConversionResult = () => {
                 <Typography variant="h4" gutterBottom>
                 Conversion Results
                 </Typography>
+
                 <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
                 Calculated Dosage:
             </Typography>
+
+
             <TableContainer component={Paper} sx={{ mb: 4 }}>
                 <Table>
                     <TableBody>
                         <TableRow>
                             <TableCell>Medication Name:</TableCell>
-                            <TableCell><strong>{medicationData.name}</strong></TableCell>
+                            <TableCell><strong>{results.medName}</strong></TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Dosage:</TableCell>
@@ -162,8 +148,23 @@ const AltConversionResult = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            
 
+            <TableContainer component={Paper} sx={{ mb: 4 }}>
+                <Table>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>Medication Name:</TableCell>
+                            <TableCell><strong>{results2.medName}</strong></TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Dosage:</TableCell>
+                            <TableCell><strong>{results2.dosage} {results.dosageUnit}</strong></TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            
             </Dashboard>
         </div>
     );
