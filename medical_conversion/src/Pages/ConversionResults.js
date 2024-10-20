@@ -6,9 +6,10 @@ import benzodiazepine from '../Tools/benzodiazepine.json';
 import localAnesthetics from '../Tools/local_anesthetics.json';
 import { drugClassMap } from '../Components/drugClassMap';  // Correct import
 import Administration from '../Components/Administration';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { defaultResultsData } from '../Tools/Defaults'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Dashboard from "../Components/Dashboard";
 import AlertDialog from "../Components/AlertDialog";
 import warningData from '../Tools/warning.json'
@@ -20,6 +21,11 @@ function ConversionResults({ resultsType }) {
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
     const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
+    const navigate = useNavigate();
+
+    const handleBackButton = () => {
+        navigate('/po-iv');
+    };
 
     const capitalizeFirstLetter = (string) => {
     if (!string) return ""; // Handle undefined or empty string
@@ -213,11 +219,15 @@ function ConversionResults({ resultsType }) {
     return (
         <div>
         <Dashboard heading='Conversion Results'>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-                <Box sx={{ mt: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Conversion Results
-                    </Typography>
+        <IconButton onClick={handleBackButton}> 
+                <ArrowBackIcon></ArrowBackIcon>
+            </IconButton>
+            {error ? <p style={{ color: 'red' }}>{error}</p> : <div></div>}
+            <Box sx={{ mt: 4 }}>
+            
+            <Typography variant="h4" gutterBottom>
+                Conversion Results
+            </Typography>
 
                     {/* Conversion Information Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
@@ -255,48 +265,48 @@ function ConversionResults({ resultsType }) {
                         </Table>
                     </TableContainer>
 
-                    {/* Patient Information Section (if available) */}
-                    {medicationData.patient && (
-                        <>
-                            <Typography variant="h6" gutterBottom>
-                                Patient Information:
-                            </Typography>
-                            <TableContainer component={Paper} sx={{ mb: 4 }}>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell>Height:</TableCell>
-                                            <TableCell>{patientData.height} cm</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Weight:</TableCell>
-                                            <TableCell>{patientData.weight} kg</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Gender:</TableCell>
-                                            <TableCell>{patientData.gender}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Kidney Impairment:</TableCell>
-                                            <TableCell>{patientData.kidney ? 'Yes' : 'No'}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Liver Impairment:</TableCell>
-                                            <TableCell>{patientData.liver ? 'Yes' : 'No'}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Gastro Impairment:</TableCell>
-                                            <TableCell>{patientData.Gastro ? 'Yes' : 'No'}</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Disease:</TableCell>
-                                            <TableCell>{patientData.disease}</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </>
-                    )}
+            {/* Patient Information Section (if available) */}
+            {medicationData.patient && (
+                <>
+                    <Typography variant="h6" gutterBottom>
+                        Patient Information:
+                    </Typography>
+                    <TableContainer component={Paper} sx={{ mb: 4 }}>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Height:</TableCell>
+                                    <TableCell>{patientData.height} cm</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Weight:</TableCell>
+                                    <TableCell>{patientData.weight} kg</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Gender:</TableCell>
+                                    <TableCell>{patientData.gender}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Kidney Impairment:</TableCell>
+                                    <TableCell>{patientData.kidney ? 'Yes' : 'No'}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Liver Impairment:</TableCell>
+                                    <TableCell>{patientData.liver ? 'Yes' : 'No'}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Gastro Impairment:</TableCell>
+                                    <TableCell>{patientData.Gastro ? 'Yes' : 'No'}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Disease:</TableCell>
+                                    <TableCell>{patientData.disease}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </>
+            )}
 
                     {/* Conversion Formula Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
@@ -317,75 +327,76 @@ function ConversionResults({ resultsType }) {
                         </Table>
                     </TableContainer>
 
-                    {/* Conversion Results Section */}
-                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Calculated Dosage:
-                    </Typography>
-                    <TableContainer component={Paper} sx={{ mb: 4 }}>
-                        <Table>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>Medication Name:</TableCell>
-                                    <TableCell><strong>{results.medName}</strong></TableCell>
+            {/* Conversion Results Section */}
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                Calculated Dosage:
+            </Typography>
+            <TableContainer component={Paper} sx={{ mb: 4 }}>
+                <Table>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>Medication Name:</TableCell>
+                            <TableCell><strong>{results.medName}</strong></TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>Dosage:</TableCell>
+                            <TableCell><strong>{results.dosage} {results.dosageUnit}</strong></TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            {/*{*/}
+            {/*    close == false && (*/}
+            {/*    drugsMatch.length > 0 ? drugsMatch.map((warning, index) => (*/}
+            {/*        <AlertDialog warning={warning} onOkay={handleClick}></AlertDialog>*/}
+            {/*    )) : <AlertDialog warning={"Underdosing / Overdosing could lead to death or severe/permanent disability"} onOkay={handleClick}></AlertDialog>*/}
+            {/*)}*/}
+
+            
+
+             {/*Warnings Section */}
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                Warnings:
+            </Typography>
+            {(results.warnings !== undefined && results.warnings.length !== 0) && (
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><strong>Warning</strong></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {results.warnings.map((warning, index) => (
+                                <TableRow key={index}>
+                                    <TableCell align='center'>
+                                        <div key={index} align='center'> {collapsedWarnings.includes(index) ?
+                                            <button style={{
+                                                marginTop: '1rem', // add some spacing
+                                                backgroundColor: '#f44336', // similar red to the "Okay" button
+                                                color: '#ffffff', // make text white for better visibility
+                                                border: 'none', // ensure no border for a consistent look
+                                                cursor: 'pointer' // give a pointer cursor to indicate clickability
+                                            }}
+                                                onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog
+                                                warning={warning}
+                                                onOkay={() => toggleWarning(index)} />
+                                        }</div>
+                                    </TableCell>
                                 </TableRow>
-                                <TableRow>
-                                    <TableCell>Dosage:</TableCell>
-                                    <TableCell><strong>{results.dosage} {results.dosageUnit}</strong></TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                    {/*{*/}
-                    {/*    close == false && (*/}
-                    {/*    drugsMatch.length > 0 ? drugsMatch.map((warning, index) => (*/}
-                    {/*        <AlertDialog warning={warning} onOkay={handleClick}></AlertDialog>*/}
-                    {/*    )) : <AlertDialog warning={"Underdosing / Overdosing could lead to death or severe/permanent disability"} onOkay={handleClick}></AlertDialog>*/}
-                    {/*)}*/}
-
-                    
-
-                     {/*Warnings Section */}
-                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Warnings:
-                    </Typography>
-                    {(results.warnings !== undefined && results.warnings.length !== 0) && (
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell><strong>Warning</strong></TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {results.warnings.map((warning, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell align='center'>
-                                                <div key={index} align='center'> {collapsedWarnings.includes(index) ?
-                                                    <button style={{
-                                                        marginTop: '1rem', // add some spacing
-                                                        backgroundColor: '#f44336', // similar red to the "Okay" button
-                                                        color: '#ffffff', // make text white for better visibility
-                                                        border: 'none', // ensure no border for a consistent look
-                                                        cursor: 'pointer' // give a pointer cursor to indicate clickability
-                                                    }}
-                                                        onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog
-                                                        warning={warning}
-                                                        onOkay={() => toggleWarning(index)} />
-                                                }</div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    ) || (<p>No Warnings</p>)}
-                    {/* Administration Instructions Section */}
-                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Administration Instructions:
-                    </Typography>
-                    <Administration targetRoute={medicationData?.targetRoute}></Administration>
-                </Box>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            ) || (<p>No Warnings</p>)}
+            {/* Administration Instructions Section */}
+            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                Administration Instructions:
+            </Typography>
+            <Administration targetRoute={medicationData?.targetRoute}></Administration>
+        </Box>
+                
             </Dashboard>
             
         </div>

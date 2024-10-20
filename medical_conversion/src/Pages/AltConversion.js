@@ -16,7 +16,7 @@ const AltConversion = () => {
     return (
         <div>
             <Dashboard heading='Alternative Medication Conversion'>
-                < MedInputForm redirectOnSubmit={"/alt/"} medicationData={medicationData} setMedicationData={setMedicationData}
+                <MedInputForm redirectOnSubmit={"/alt/"} medicationData={medicationData} setMedicationData={setMedicationData}
                     patientData={patientData} setPatientData={setPatientData} formtype={"alt"} />
             </Dashboard>
         </div>
