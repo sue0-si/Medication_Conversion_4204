@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, ToggleButton, ToggleButtonGroup, Autocomplete } from "@mui/material";
 
 import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
+import SelectFormula from "./SelectFormula";
+import { extractFormulaOptions } from "../Tools/formulaOptions";
 
 function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, patientData, setPatientData, formtype }) {
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
     const navigate = useNavigate();
     const [showPatientForm, setShowPatientForm] = useState(false);
     const [altMedOptions, setAltMedOptions] = useState(["Please input medication name to see alternative options"]); // var for alternative medications with default
+    const [formulaOptions, setFormulaOptions] = useState([]);
 
+    // Load formula options on component mount
+    useEffect(() => {
+        const allOptions = extractFormulaOptions();
+        setFormulaOptions(allOptions);   // Set only the formula names for the combo box
+        console.log("Fetched Formula Options:", allOptions);
+    }, []);
+
+    const getFilteredOptions = () => {
+        const filtered = formulaOptions.filter(option => {
+            const isRelevantMedication = option.formulaName.toLowerCase().includes(medicationData.name?.toLowerCase());
+            const isRelevantRoute = !medicationData.route || option.formulaName.toLowerCase().includes(medicationData.route?.toLowerCase());
+            return isRelevantMedication && isRelevantRoute;  // Optionally add other filters
+        });
+
+        // Log the filtered options
+        console.log("Filtered Formula Options:", filtered);
+        return filtered;
+    };
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -55,6 +76,7 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
         }
     };
 
+    //set alt med options for alt med conversion
     const setAltOptions = () => {
         if (medicationData.name != null) {
             //insert api call here
@@ -65,7 +87,7 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
     }
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <FormControl component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
 
             {/*PO-IV form*/}
             {formtype === 'po-iv' && (
@@ -97,6 +119,7 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                         margin="normal"
                     />
 
+                    
                     <Autocomplete
                         label="Desired Medication Name"
                         freeSolo
@@ -119,13 +142,13 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                         onChange={(event, newValue) => {
                             if (typeof newValue === 'string') {
                                 setMedicationData((prevData) => ({
-                                    prevData,
+                                    ...prevData,
                                     target: newValue,
                                 }));
                             } else if (newValue && newValue.inputValue) {
                                 // Create a new value from the user input
                                 setMedicationData((prevData) => ({
-                                    prevData,
+                                    ...prevData,
                                     target: newValue.inputValue,
                                 }));
                             }
@@ -134,6 +157,7 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                             <TextField {...params} label="Desired Medication Name" variant="outlined" />
                         )}
                     />
+                    
                 </>
             )}
 
@@ -225,7 +249,15 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                     <MenuItem value="units">units</MenuItem>
                 </Select>
             </FormControl>
-               
+
+            {/*Formulae selection*/}
+
+            <SelectFormula
+                label="Conversion Formula"
+                options={getFilteredOptions()}  // Provide dynamically loaded formula options
+                medicationData={medicationData}
+                setMedicationData={setMedicationData}
+            />
 
             {/*add patient section*/}
             <FormControl fullWidth margin="normal">
@@ -242,197 +274,8 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 Submit
             </Button>
-        </Box>
+        </FormControl>
     );
-
-    //return (
-    //    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-    //        {/*PO-IV Form*/}
-    //        {formtype === "po-iv" && (
-    //            <>
-    //                <TextField
-    //                    label="Medication Name"
-    //                    name="name"
-    //                    value={medicationData.name}
-    //                    onChange={handleChange}
-    //                    required
-    //                    fullWidth
-    //                    margin="normal"
-    //                />
-
-    //                <FormControl fullWidth margin="normal">
-    //                    <Typography variant="h6" gutterBottom>
-    //                        Administration Method
-    //                    </Typography>
-    //                    <ToggleButtonGroup
-    //                        value={medicationData.route}
-    //                        exclusive
-    //                        onChange={(event, newMethod) => {
-    //                            setMedicationData((prevData) => ({
-    //                                ...prevData,
-    //                                route: newMethod,
-    //                            }));
-    //                        }}
-    //                        aria-label="administration method"
-    //                    >
-    //                        <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-    //                        <ToggleButton value="iv" aria-label="iv">IV</ToggleButton>
-    //                        <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
-    //                    </ToggleButtonGroup>
-    //                </FormControl>
-
-    //                <TextField
-    //                    label="Desired Medication"
-    //                    name="target"
-    //                    value={medicationData.target}
-    //                    onChange={handleChange}
-    //                    required
-    //                    fullWidth
-    //                    margin="normal"
-    //                />
-
-    //                <FormControl fullWidth margin="normal">
-    //                    <Typography variant="h6" gutterBottom>
-    //                        Desired Administration Method
-    //                    </Typography>
-    //                    <ToggleButtonGroup
-    //                        value={medicationData.targetRoute}
-    //                        exclusive
-    //                        onChange={(event, newMethod) => {
-    //                            setMedicationData((prevData) => ({
-    //                                ...prevData,
-    //                                targetRoute: newMethod,
-    //                            }));
-    //                        }}
-    //                        aria-label="target administration method"
-    //                    >
-    //                        <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-    //                        <ToggleButton value="iv" aria-label="iv push">IV</ToggleButton>
-    //                        <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
-    //                    </ToggleButtonGroup>
-    //                </FormControl>
-
-    //                {/* Dosage Input Field */}
-    //                <TextField
-    //                    label="Dosage"
-    //                    name="dosage"
-    //                    value={medicationData.dosage}
-    //                    onChange={handleChange}
-    //                    required
-    //                    fullWidth
-    //                    margin="normal"
-    //                    type="number"
-    //                />
-
-    //                {/* Dosage Unit Selection */}
-    //                <FormControl fullWidth margin="normal">
-    //                    <InputLabel>Dosage Unit</InputLabel>
-    //                    <Select
-    //                        name="dosageUnit"
-    //                        value={medicationData.dosageUnit}
-    //                        onChange={handleChange}
-    //                        required
-    //                    >
-    //                        <MenuItem value="mg">mg</MenuItem>
-    //                        <MenuItem value="mL">mL</MenuItem>
-    //                        <MenuItem value="g">g</MenuItem>
-    //                        <MenuItem value="units">units</MenuItem>
-    //                    </Select>
-    //                </FormControl>
-    //           </>
-    //        )}
-    //        {/*ALT form*/ }
-    //        {formtype === 'alt' && (
-    //            <>
-    //                <TextField
-    //                    label="Medication Name"
-    //                    name="name"
-    //                    value={medicationData.name}
-    //                    onChange={handleMedicationNameChange}
-    //                    required
-    //                    fullWidth
-    //                    margin="normal"
-    //                />
-
-    //                <Autocomplete
-    //                    label="Desired Medication Name"
-    //                    freeSolo
-    //                    options={altMedOptions}
-    //                    value={medicationData.tagetName}
-    //                    onChange={handleChange}
-    //                    renderInput={(params) => (
-    //                        <TextField {...params} label="Select or enter value" variant="outlined" />
-    //                    )}
-    //                />
-
-    //                <FormControl fullWidth margin="normal">
-    //                    <Typography variant="h6" gutterBottom>
-    //                        Administration Method
-    //                    </Typography>
-    //                    <ToggleButtonGroup
-    //                        value={medicationData.route}
-    //                        exclusive
-    //                        onChange={(event, newMethod) => {
-    //                            setMedicationData((prevData) => ({
-    //                                ...prevData,
-    //                                route: newMethod,
-    //                            }));
-    //                        }}
-    //                        aria-label="administration method"
-    //                    >
-    //                        <ToggleButton value="oral" aria-label="oral">Oral</ToggleButton>
-    //                        <ToggleButton value="iv" aria-label="iv">IV</ToggleButton>
-    //                        <ToggleButton value="sc" aria-label="sc">SC</ToggleButton>
-    //                    </ToggleButtonGroup>
-    //                </FormControl>
-
-    //                <TextField
-    //                    label="Dosage"
-    //                    name="dosage"
-    //                    value={medicationData.dosage}
-    //                    onChange={handleChange}
-    //                    required
-    //                    fullWidth
-    //                    margin="normal"
-    //                    type="number"
-    //                />
-
-    //                {/* Dosage Unit Selection */}
-    //                <FormControl fullWidth margin="normal">
-    //                    <InputLabel>Dosage Unit</InputLabel>
-    //                    <Select
-    //                        name="dosageUnit"
-    //                        value={medicationData.dosageUnit}
-    //                        onChange={handleChange}
-    //                        required
-    //                    >
-    //                        <MenuItem value="mg">mg</MenuItem>
-    //                        <MenuItem value="mL">mL</MenuItem>
-    //                        <MenuItem value="g">g</MenuItem>
-    //                        <MenuItem value="units">units</MenuItem>
-    //                    </Select>
-    //                </FormControl>
-
-    //            </>
-    //        )}
-
-    //        {/*add patient section*/}
-    //        <FormControl fullWidth margin="normal">
-    //            <Box>
-    //                <button type="button" onClick={handleClick}>
-    //                {showPatientForm ? "Remove Patient" : "Add Patient"}
-    //                </button>
-
-    //                {/* Conditionally render the PatientInfo form */}
-    //                {showPatientForm && ( <PatientInfoForm patientData={patientData} setPatientData={setPatientData} /> )}
-    //            </Box>
-    //        </FormControl>
-    //        {/*submit button*/}
-    //        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-    //            Submit
-    //        </Button>
-    //    </Box>
-    //);
 }
 
 export default MedInputForm;

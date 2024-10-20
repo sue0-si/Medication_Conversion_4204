@@ -49,102 +49,166 @@ function ConversionResults({ resultsType }) {
     const handleClick = () => {
         isClose(true)
     }
-
     React.useEffect(() => {
         if (!medicationData || !medicationData.name) {
             setError("No valid medication data provided.");
             return;
         }
 
-
         const calculateConversion = () => {
             const normalizedDrugName = medicationData.name.charAt(0).toUpperCase() + medicationData.name.slice(1).toLowerCase();
-            const normalizedDrugNameTarget = medicationData.target.charAt(0).toUpperCase() + medicationData.target.slice(1).toLowerCase();  // Corrected normalization
-
+            const normalizedDrugNameTarget = medicationData.target.charAt(0).toUpperCase() + medicationData.target.slice(1).toLowerCase();
             const firstAdminType = medicationData.route;
-            const targetAdminType = medicationData.targetRoute;
+            const targetAdminType = medicationData.targetRoute || medicationData.route;
 
-            // Debugging logs to see if the values are correct
-            console.log(`Looking up conversion for drug: ${normalizedDrugName}`);
-            console.log(`From route: ${firstAdminType}, to route: ${targetAdminType}`);
+            let conversionRatio = 1;  // Default ratio
+            let convertedDosage = medicationData.dosage;  // Initialize with original dosage
 
-            const firstDrugClass = drugClassMap[normalizedDrugName];
-            if (!firstDrugClass) {
-                setError("Invalid drug class");
-                return;
-            }
-
-            if (firstDrugClass === 'opioid') {
-                // Use opioid route conversions
-                const conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType];
-
-                // Debugging logs to check if the conversion is found
-                console.log(`Conversion ratio found: ${conversionRatio}`);
-
-                if (conversionRatio != null) {
-                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
-                    setResults({
-                        medName: medicationData.target,
-                        dosage: convertedDosage,
-                        dosageUnit: medicationData.dosageUnit,
-                        conversionFormula: `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
-                        warnings: drugsMatch,
-                        formulaName: medicationData.formulaName !== '' ? "Standard Ratio" : medicationData.formulaName
-                    });
-                } else {
-                    setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
-                }
+            // 1. Use custom formula if available
+            if (medicationData.formula && medicationData.formula.conversionRatio) {
+                conversionRatio = medicationData.formula.conversionRatio;
+                console.log("Using custom formula with conversion ratio:", conversionRatio);
             } else {
-                let conversionData;
+                // 2. Apply default logic based on drug class
+                const firstDrugClass = drugClassMap[normalizedDrugName];
+                if (!firstDrugClass) {
+                    setError("Invalid drug class");
+                    return;
+                }
 
+                // Existing logic for opioids or other drug classes
                 switch (firstDrugClass) {
-                    case 'steroid':
-                        conversionData = steroids;
-                        break;
                     case 'opioid':
-                        conversionData = opioids;
+                        conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType] || 1;
+                        break;
+                    case 'steroid':
+                        conversionRatio = steroids?.[normalizedDrugName]?.Conversions?.[normalizedDrugNameTarget] || 1;
                         break;
                     case 'benzodiazepine':
-                        conversionData = benzodiazepine;
+                        conversionRatio = benzodiazepine?.[normalizedDrugName]?.Conversions?.[normalizedDrugNameTarget] || 1;
                         break;
                     case 'local anesthetic':
-                        conversionData = localAnesthetics;
+                        conversionRatio = localAnesthetics?.[normalizedDrugName]?.Conversions?.[normalizedDrugNameTarget] || 1;
                         break;
                     default:
                         setError("No valid drug class found");
                         return;
                 }
-
-                const firstDrug = normalizedDrugName;
-                const secondDrug = normalizedDrugNameTarget;
-                const firstDrugConversions = conversionData[firstDrug]?.Conversions;
-
-                if (!firstDrugConversions) {
-                    setError("No conversion data found");
-                    return;
-                }
-
-                const conversionRatio = firstDrugConversions[secondDrug] || null;
-                if (conversionRatio != null) {
-                    console.log(`Steroid conversion ratio found: ${conversionRatio}`);
-                    const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
-                    setResults({
-                        medName: medicationData.name,
-                        dosage: convertedDosage,
-                        dosageUnit: medicationData.dosageUnit,
-                        conversionFormula: `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
-                        warnings: drugsMatch,
-                        formulaName: medicationData.formulaName !== '' ? "Standard Ratio" : medicationData.formulaName
-                    });
-                } else {
-                    setError("No conversion found");
-                }
             }
-            
+
+            // Perform conversion using the chosen ratio
+            convertedDosage = medicationData.dosage * conversionRatio;
+
+            // Set results, including conversion formula and name
+            const conversionFormulaText = `${medicationData.dosage}${medicationData.dosageUnit} of ${medicationData.name} * ${conversionRatio} = ${convertedDosage}${medicationData.dosageUnit} of ${medicationData.target}`;
+            setResults({
+                medName: medicationData.target,
+                dosage: Math.round(convertedDosage * 100) / 100,
+                dosageUnit: medicationData.dosageUnit,
+                conversionFormula: conversionFormulaText,
+                warnings: [],  // Add warnings if needed
+                formulaName: medicationData.formulaName || "Standard Ratio",
+            });
         };
 
         calculateConversion();
     }, [medicationData]);
+
+    //React.useEffect(() => {
+    //    if (!medicationData || !medicationData.name) {
+    //        setError("No valid medication data provided.");
+    //        return;
+    //    }
+
+
+    //    const calculateConversion = () => {
+    //        const normalizedDrugName = medicationData.name.charAt(0).toUpperCase() + medicationData.name.slice(1).toLowerCase();
+    //        const normalizedDrugNameTarget = medicationData.target.charAt(0).toUpperCase() + medicationData.target.slice(1).toLowerCase();  // Corrected normalization
+
+    //        const firstAdminType = medicationData.route;
+    //        const targetAdminType = (medicationData.targetRoute == null ? medicationData.route : medicationData.targetRoute);
+
+    //        // Debugging logs to see if the values are correct
+    //        console.log(`Looking up conversion for drug: ${normalizedDrugName}`);
+    //        console.log(`From route: ${firstAdminType}, to route: ${targetAdminType}`);
+
+    //        const firstDrugClass = drugClassMap[normalizedDrugName];
+    //        if (!firstDrugClass) {
+    //            setError("Invalid drug class");
+    //            return;
+    //        }
+
+    //        if (firstDrugClass === 'opioid') {
+    //            // Use opioid route conversions
+    //            const conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType];
+
+    //            // Debugging logs to check if the conversion is found
+    //            console.log(`Conversion ratio found: ${conversionRatio}`);
+
+    //            if (conversionRatio != null) {
+    //                const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
+    //                setResults({
+    //                    medName: medicationData.target,
+    //                    dosage: convertedDosage,
+    //                    dosageUnit: medicationData.dosageUnit,
+    //                    conversionFormula: medicationData.formula !== {} ? medicationData.formula : `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
+    //                    warnings: drugsMatch,
+    //                    formulaName: medicationData.formulaName !== '' ? medicationData.formulaName : "Standard Ratio"
+    //                });
+    //            } else {
+    //                setError(`No conversion available from ${firstAdminType} to ${targetAdminType}`);
+    //            }
+    //        } else {
+    //            let conversionData;
+
+    //            switch (firstDrugClass) {
+    //                case 'steroid':
+    //                    conversionData = steroids;
+    //                    break;
+    //                case 'opioid':
+    //                    conversionData = opioids;
+    //                    break;
+    //                case 'benzodiazepine':
+    //                    conversionData = benzodiazepine;
+    //                    break;
+    //                case 'local anesthetic':
+    //                    conversionData = localAnesthetics;
+    //                    break;
+    //                default:
+    //                    setError("No valid drug class found");
+    //                    return;
+    //            }
+
+    //            const firstDrug = normalizedDrugName;
+    //            const secondDrug = normalizedDrugNameTarget;
+    //            const firstDrugConversions = conversionData[firstDrug]?.Conversions;
+
+    //            if (!firstDrugConversions) {
+    //                setError("No conversion data found");
+    //                return;
+    //            }
+
+    //            const conversionRatio = firstDrugConversions[secondDrug] || null;
+    //            if (conversionRatio != null) {
+    //                console.log(`Steroid conversion ratio found: ${conversionRatio}`);
+    //                const convertedDosage = Math.round((medicationData.dosage * conversionRatio) * 100) / 100;
+    //                setResults({
+    //                    medName: medicationData.name,
+    //                    dosage: convertedDosage,
+    //                    dosageUnit: medicationData.dosageUnit,
+    //                    conversionFormula: medicationData.formula !== {} ? medicationData.formula : `${medicationData.dosage}${medicationData.dosageUnit} ${medicationData.name} * ${conversionRatio} (Effective Dosage Ratio) = ${convertedDosage}${medicationData.dosageUnit} ${medicationData.target}`,
+    //                    warnings: drugsMatch,
+    //                    formulaName: medicationData.formulaName !== '' ? medicationData.formulaName : "Standard Ratio"
+    //                });
+    //            } else {
+    //                setError("No conversion found");
+    //            }
+    //        }
+            
+    //    };
+
+    //    calculateConversion();
+    //}, [medicationData]);
 
     return (
         <div>
@@ -243,7 +307,7 @@ function ConversionResults({ resultsType }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell>Formula Name:</TableCell>
-                                    <TableCell><strong>Standard Conversion Ratio</strong></TableCell>
+                                    <TableCell><strong>{results.formulaName || medicationData.formulaName}</strong></TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
