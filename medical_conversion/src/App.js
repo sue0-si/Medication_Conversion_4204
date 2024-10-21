@@ -12,6 +12,8 @@ import MedicationLookup from './Pages/MedicationSearch';
 import DrugDetail from './Pages/DrugDetail.js';
 import PoIvConversion from './Pages/PoIvConversion';
 import ConversionResults from './Pages/ConversionResults';
+import AltConversion from './Pages/AltConversion';
+import AltConversionResult from './Pages/AltConversionResult.js';
 function App() {
     const [mode] = React.useState('light');
   return (
@@ -19,11 +21,13 @@ function App() {
           {/*<NavBar mode={mode} />*/}
           <Router>
               <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/medication-information" element={<MedicationLookup />} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/medication-information" element={<MedicationLookup />} />
                   <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
                   <Route path="/po-iv" element={<PoIvConversion />} />
-                  <Route path="/po-iv/:key" element={<ConversionResults/> } />
+                  <Route path="/po-iv/:medicationName" element={<ConversionResults resultsType={"po-iv"} />} />
+                  <Route path="/alt" element={<AltConversion />} />
+                  <Route path="/alt/:medicationName" element={<ConversionResults resultsType={"alt"}/> } />
                   </Routes>
           </Router>
           <Copyright/>

@@ -1,0 +1,371 @@
+{
+    "Morphine": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": 2.0,
+            "Oral_to_IV": 3.0,
+            "SC_to_Oral": 0.5,
+            "SC_to_IV": 1.5,
+            "IV_to_Oral": 0.33,
+            "IV_to_SC": 0.67
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (SC)": 2.0,
+                "Morphine (IV)": 3.0,
+                "Diamorphine (SC)": 3.0,
+                "Oxycodone (Oral)": 2.0,
+                "Oxycodone (SC)": 3.0,
+                "Codeine (Oral)": 12.0,
+                "Dihydrocodeine (Oral)": 9.62,
+                "Tramadol (Oral)": 10.0,
+                "Fentanyl (Patch)": 0.008,
+                "Buprenorphine (Patch)": 0.009,
+                "Alfentanil (SC)": 0.033,
+                "Fentanyl (SC)": 0.0067,
+                "Fentanyl (IV)": 0.0033,
+                "Hydromorphone (Oral)": 0.13,
+                "Hydromorphone (SC)": 0.07
+            },
+            "SC": {
+                "Morphine (Oral)": 0.5,
+                "Morphine (IV)": 1.5,
+                "Diamorphine (SC)": 1.5,
+                "Oxycodone (Oral)": 1.0,
+                "Oxycodone (SC)": 1.5,
+                "Codeine (Oral)": 6.0,
+                "Dihydrocodeine (Oral)": 4.81,
+                "Tramadol (Oral)": 5.0,
+                "Fentanyl (Patch)": 0.004,
+                "Buprenorphine (Patch)": 0.0045,
+                "Alfentanil (SC)": 0.017,
+                "Fentanyl (SC)": 0.0033,
+                "Fentanyl (IV)": 0.0017,
+                "Hydromorphone (Oral)": 0.067,
+                "Hydromorphone (SC)": 0.033
+            },
+            "IV": {
+                "Morphine (Oral)": 0.33,
+                "Morphine (SC)": 0.67,
+                "Diamorphine (SC)": 1.0,
+                "Oxycodone (Oral)": 0.67,
+                "Oxycodone (SC)": 1.0,
+                "Codeine (Oral)": 4.0,
+                "Dihydrocodeine (Oral)": 3.21,
+                "Tramadol (Oral)": 3.33,
+                "Fentanyl (Patch)": 0.0027,
+                "Buprenorphine (Patch)": 0.003,
+                "Alfentanil (SC)": 0.011,
+                "Fentanyl (SC)": 0.0022,
+                "Fentanyl (IV)": 0.0011,
+                "Hydromorphone (Oral)": 0.044,
+                "Hydromorphone (SC)": 0.022
+            }
+        }
+    },
+    "Diamorphine": {
+        "class": "opioid",
+        "route_conversions": {
+            "SC_to_Oral": null,
+            "SC_to_IV": null
+        },
+        "Conversions": {
+            "SC": {
+                "Morphine (Oral)": 0.33,
+                "Morphine (SC)": 0.67,
+                "Morphine (IV)": 1.0,
+                "Oxycodone (Oral)": 0.67,
+                "Oxycodone (SC)": 1.0,
+                "Codeine (Oral)": 4.0,
+                "Dihydrocodeine (Oral)": 3.21,
+                "Tramadol (Oral)": 3.33,
+                "Fentanyl (Patch)": 0.0027,
+                "Buprenorphine (Patch)": 0.003,
+                "Alfentanil (SC)": 0.011,
+                "Fentanyl (SC)": 0.0022,
+                "Fentanyl (IV)": 0.0011,
+                "Hydromorphone (Oral)": 0.044,
+                "Hydromorphone (SC)": 0.022
+            }
+        }
+    },
+    "Oxycodone": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": 1.5,
+            "Oral_to_IV": null,
+            "SC_to_Oral": 0.67,
+            "SC_to_IV": null
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (Oral)": 0.5,
+                "Morphine (SC)": 1.0,
+                "Morphine (IV)": 1.5,
+                "Diamorphine (SC)": 1.5,
+                "Oxycodone (SC)": 1.5,
+                "Codeine (Oral)": 6.0,
+                "Dihydrocodeine (Oral)": 4.81,
+                "Tramadol (Oral)": 5.0,
+                "Fentanyl (Patch)": 0.004,
+                "Buprenorphine (Patch)": 0.0045,
+                "Alfentanil (SC)": 0.017,
+                "Fentanyl (SC)": 0.0033,
+                "Fentanyl (IV)": 0.0017,
+                "Hydromorphone (Oral)": 0.067,
+                "Hydromorphone (SC)": 0.033
+            },
+            "SC": {
+                "Morphine (Oral)": 0.33,
+                "Morphine (SC)": 0.67,
+                "Morphine (IV)": 1.0,
+                "Diamorphine (SC)": 1.0,
+                "Oxycodone (Oral)": 0.67,
+                "Codeine (Oral)": 4.0,
+                "Dihydrocodeine (Oral)": 3.21,
+                "Tramadol (Oral)": 3.33,
+                "Fentanyl (Patch)": 0.0027,
+                "Buprenorphine (Patch)": 0.003,
+                "Alfentanil (SC)": 0.011,
+                "Fentanyl (SC)": 0.0022,
+                "Fentanyl (IV)": 0.0011,
+                "Hydromorphone (Oral)": 0.044,
+                "Hydromorphone (SC)": 0.022
+            }
+        }
+    },
+    "Codeine": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": null,
+            "Oral_to_IV": null
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (Oral)": 0.083,
+                "Morphine (SC)": 0.167,
+                "Morphine (IV)": 0.25,
+                "Diamorphine (SC)": 0.25,
+                "Oxycodone (Oral)": 0.167,
+                "Oxycodone (SC)": 0.25,
+                "Dihydrocodeine (Oral)": 0.8,
+                "Tramadol (Oral)": 0.83,
+                "Fentanyl (Patch)": 0.00067,
+                "Buprenorphine (Patch)": 0.00075,
+                "Alfentanil (SC)": 0.0028,
+                "Fentanyl (SC)": 0.00056,
+                "Fentanyl (IV)": 0.00028,
+                "Hydromorphone (Oral)": 0.011,
+                "Hydromorphone (SC)": 0.0056
+            }
+        }
+    },
+    "Dihydrocodeine": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": null,
+            "Oral_to_IV": null
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (Oral)": 0.104,
+                "Morphine (SC)": 0.208,
+                "Morphine (IV)": 0.312,
+                "Diamorphine (SC)": 0.312,
+                "Oxycodone (Oral)": 0.208,
+                "Oxycodone (SC)": 0.312,
+                "Codeine (Oral)": 1.25,
+                "Tramadol (Oral)": 1.04,
+                "Fentanyl (Patch)": 0.00083,
+                "Buprenorphine (Patch)": 0.00092,
+                "Alfentanil (SC)": 0.0035,
+                "Fentanyl (SC)": 0.00069,
+                "Fentanyl (IV)": 0.00035,
+                "Hydromorphone (Oral)": 0.013,
+                "Hydromorphone (SC)": 0.0069
+            }
+        }
+    },
+    "Tramadol": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": null,
+            "Oral_to_IV": null
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (Oral)": 0.1,
+                "Morphine (SC)": 0.2,
+                "Morphine (IV)": 0.3,
+                "Diamorphine (SC)": 0.3,
+                "Oxycodone (Oral)": 0.2,
+                "Oxycodone (SC)": 0.3,
+                "Codeine (Oral)": 1.0,
+                "Dihydrocodeine (Oral)": 0.96,
+                "Fentanyl (Patch)": 0.0008,
+                "Buprenorphine (Patch)": 0.0009,
+                "Alfentanil (SC)": 0.0033,
+                "Fentanyl (SC)": 0.00067,
+                "Fentanyl (IV)": 0.00033,
+                "Hydromorphone (Oral)": 0.013,
+                "Hydromorphone (SC)": 0.0067
+            }
+        }
+    },
+    "Fentanyl": {
+        "class": "opioid",
+        "route_conversions": {
+            "SC_to_Oral": null,
+            "SC_to_IV": 0.5,
+            "IV_to_Oral": null,
+            "IV_to_SC": 2.0
+        },
+        "Conversions": {
+            "Patch": {
+                "Morphine (Oral)": 125.0,
+                "Morphine (SC)": 250.0,
+                "Morphine (IV)": 375.0,
+                "Diamorphine (SC)": 375.0,
+                "Oxycodone (Oral)": 250.0,
+                "Oxycodone (SC)": 375.0,
+                "Codeine (Oral)": 1500.0,
+                "Dihydrocodeine (Oral)": 1153.85,
+                "Tramadol (Oral)": 1250.0,
+                "Buprenorphine (Patch)": 1.07,
+                "Alfentanil (SC)": 4.17,
+                "Fentanyl (SC)": 0.833,
+                "Fentanyl (IV)": 0.417,
+                "Hydromorphone (Oral)": 16.67,
+                "Hydromorphone (SC)": 8.33
+            },
+            "SC": {
+                "Morphine (Oral)": 150.0,
+                "Morphine (SC)": 300.0,
+                "Morphine (IV)": 450.0,
+                "Diamorphine (SC)": 450.0,
+                "Oxycodone (Oral)": 300.0,
+                "Oxycodone (SC)": 450.0,
+                "Codeine (Oral)": 1800.0,
+                "Dihydrocodeine (Oral)": 1384.62,
+                "Tramadol (Oral)": 1500.0,
+                "Fentanyl (Patch)": 1.2,
+                "Buprenorphine (Patch)": 1.3,
+                "Alfentanil (SC)": 5.0,
+                "Fentanyl (IV)": 0.5,
+                "Hydromorphone (Oral)": 20.0,
+                "Hydromorphone (SC)": 10.0
+            },
+            "IV": {
+                "Morphine (Oral)": 300.0,
+                "Morphine (SC)": 600.0,
+                "Morphine (IV)": 900.0,
+                "Diamorphine (SC)": 900.0,
+                "Oxycodone (Oral)": 600.0,
+                "Oxycodone (SC)": 900.0,
+                "Codeine (Oral)": 3600.0,
+                "Dihydrocodeine (Oral)": 2769.23,
+                "Tramadol (Oral)": 3000.0,
+                "Fentanyl (Patch)": 2.4,
+                "Buprenorphine (Patch)": 2.6,
+                "Alfentanil (SC)": 10.0,
+                "Fentanyl (SC)": 2.0,
+                "Hydromorphone (Oral)": 40.0,
+                "Hydromorphone (SC)": 20.0
+            }
+        }
+    },
+    "Buprenorphine": {
+        "class": "opioid",
+        "route_conversions": {},
+        "Conversions": {
+            "Patch": {
+                "Morphine (Oral)": 107.0,
+                "Morphine (SC)": 214.0,
+                "Morphine (IV)": 321.0,
+                "Diamorphine (SC)": 321.0,
+                "Oxycodone (Oral)": 214.0,
+                "Oxycodone (SC)": 321.0,
+                "Codeine (Oral)": 1285.71,
+                "Dihydrocodeine (Oral)": 988.46,
+                "Tramadol (Oral)": 1071.43,
+                "Fentanyl (Patch)": 0.93,
+                "Alfentanil (SC)": 3.89,
+                "Fentanyl (SC)": 0.778,
+                "Fentanyl (IV)": 0.389,
+                "Hydromorphone (Oral)": 15.0,
+                "Hydromorphone (SC)": 7.5
+            }
+        }
+    },
+    "Alfentanil": {
+        "class": "opioid",
+        "route_conversions": {
+            "SC_to_Oral": null,
+            "SC_to_IV": null
+        },
+        "Conversions": {
+            "SC": {
+                "Morphine (Oral)": 30.0,
+                "Morphine (SC)": 60.0,
+                "Morphine (IV)": 90.0,
+                "Diamorphine (SC)": 90.0,
+                "Oxycodone (Oral)": 60.0,
+                "Oxycodone (SC)": 90.0,
+                "Codeine (Oral)": 360.0,
+                "Dihydrocodeine (Oral)": 276.92,
+                "Tramadol (Oral)": 300.0,
+                "Fentanyl (Patch)": 0.24,
+                "Buprenorphine (Patch)": 0.26,
+                "Fentanyl (SC)": 0.2,
+                "Fentanyl (IV)": 0.1,
+                "Hydromorphone (Oral)": 4.0,
+                "Hydromorphone (SC)": 2.0
+            }
+        }
+    },
+    "Hydromorphone": {
+        "class": "opioid",
+        "route_conversions": {
+            "Oral_to_SC": 0.5,
+            "Oral_to_IV": null,
+            "SC_to_Oral": 2.0,
+            "SC_to_IV": null
+        },
+        "Conversions": {
+            "Oral": {
+                "Morphine (Oral)": 7.5,
+                "Morphine (SC)": 15.0,
+                "Morphine (IV)": 22.5,
+                "Diamorphine (SC)": 22.5,
+                "Oxycodone (Oral)": 15.0,
+                "Oxycodone (SC)": 22.5,
+                "Codeine (Oral)": 90.0,
+                "Dihydrocodeine (Oral)": 69.23,
+                "Tramadol (Oral)": 75.0,
+                "Fentanyl (Patch)": 0.06,
+                "Buprenorphine (Patch)": 0.067,
+                "Alfentanil (SC)": 0.25,
+                "Fentanyl (SC)": 0.05,
+                "Fentanyl (IV)": 0.025,
+                "Hydromorphone (SC)": 0.5
+            },
+            "SC": {
+                "Morphine (Oral)": 15.0,
+                "Morphine (SC)": 30.0,
+                "Morphine (IV)": 45.0,
+                "Diamorphine (SC)": 45.0,
+                "Oxycodone (Oral)": 30.0,
+                "Oxycodone (SC)": 45.0,
+                "Codeine (Oral)": 180.0,
+                "Dihydrocodeine (Oral)": 138.46,
+                "Tramadol (Oral)": 150.0,
+                "Fentanyl (Patch)": 0.12,
+                "Buprenorphine (Patch)": 0.13,
+                "Alfentanil (SC)": 0.5,
+                "Fentanyl (SC)": 0.1,
+                "Fentanyl (IV)": 0.05,
+                "Hydromorphone (Oral)": 2.0
+            }
+        }
+    }
+}

@@ -1,0 +1,162 @@
+{
+    "Diazepam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 1.0,
+            "Alprazolam (Xanax)": 0.5,
+            "Clonazepam (Klonopin)": 0.25,
+            "Lorazepam (Ativan)": 1.0,
+            "Oxazepam": 0.5,
+            "Temazepam": 0.5,
+            "Triazolam": 0.25,
+            "Flurazepam": 0.25,
+            "Chlordiazepoxide": 0.1,
+            "Midazolam": 0.25
+        }
+    },
+    "Alprazolam": {
+        "class": "benzodiazepine",
+        "brand_name": "Xanax",
+        "Conversions": {
+            "Diazepam": 2.0,
+            "Alprazolam (Xanax)": 1.0,
+            "Clonazepam (Klonopin)": 0.5,
+            "Lorazepam (Ativan)": 2.0,
+            "Oxazepam": 1.0,
+            "Temazepam": 1.0,
+            "Triazolam": 0.5,
+            "Flurazepam": 0.5,
+            "Chlordiazepoxide": 0.2,
+            "Midazolam": 0.5
+        }
+    },
+    "Clonazepam": {
+        "class": "benzodiazepine",
+        "brand_name": "Klonopin",
+        "Conversions": {
+            "Diazepam": 4.0,
+            "Alprazolam (Xanax)": 2.0,
+            "Clonazepam (Klonopin)": 1.0,
+            "Lorazepam (Ativan)": 4.0,
+            "Oxazepam": 2.0,
+            "Temazepam": 2.0,
+            "Triazolam": 1.0,
+            "Flurazepam": 1.0,
+            "Chlordiazepoxide": 0.4,
+            "Midazolam": 1.0
+        }
+    },
+    "Lorazepam": {
+        "class": "benzodiazepine",
+        "brand_name": "Ativan",
+        "Conversions": {
+            "Diazepam": 1.0,
+            "Alprazolam (Xanax)": 0.5,
+            "Clonazepam (Klonopin)": 0.25,
+            "Lorazepam (Ativan)": 1.0,
+            "Oxazepam": 0.5,
+            "Temazepam": 0.5,
+            "Triazolam": 0.25,
+            "Flurazepam": 0.25,
+            "Chlordiazepoxide": 0.1,
+            "Midazolam": 0.25
+        }
+    },
+    "Oxazepam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 2.0,
+            "Alprazolam (Xanax)": 1.0,
+            "Clonazepam (Klonopin)": 0.5,
+            "Lorazepam (Ativan)": 2.0,
+            "Oxazepam": 1.0,
+            "Temazepam": 1.0,
+            "Triazolam": 0.5,
+            "Flurazepam": 0.5,
+            "Chlordiazepoxide": 0.2,
+            "Midazolam": 0.5
+        }
+    },
+    "Temazepam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 2.0,
+            "Alprazolam (Xanax)": 1.0,
+            "Clonazepam (Klonopin)": 0.5,
+            "Lorazepam (Ativan)": 2.0,
+            "Oxazepam": 1.0,
+            "Temazepam": 1.0,
+            "Triazolam": 0.5,
+            "Flurazepam": 0.5,
+            "Chlordiazepoxide": 0.2,
+            "Midazolam": 0.5
+        }
+    },
+    "Triazolam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 4.0,
+            "Alprazolam (Xanax)": 2.0,
+            "Clonazepam (Klonopin)": 1.0,
+            "Lorazepam (Ativan)": 4.0,
+            "Oxazepam": 2.0,
+            "Temazepam": 2.0,
+            "Triazolam": 1.0,
+            "Flurazepam": 1.0,
+            "Chlordiazepoxide": 0.4,
+            "Midazolam": 1.0
+        }
+    },
+    "Flurazepam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 4.0,
+            "Alprazolam (Xanax)": 2.0,
+            "Clonazepam (Klonopin)": 1.0,
+            "Lorazepam (Ativan)": 4.0,
+            "Oxazepam": 2.0,
+            "Temazepam": 2.0,
+            "Triazolam": 1.0,
+            "Flurazepam": 1.0,
+            "Chlordiazepoxide": 0.4,
+            "Midazolam": 1.0
+        }
+    },
+    "Chlordiazepoxide": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 10.0,
+            "Alprazolam (Xanax)": 5.0,
+            "Clonazepam (Klonopin)": 2.5,
+            "Lorazepam (Ativan)": 10.0,
+            "Oxazepam": 5.0,
+            "Temazepam": 5.0,
+            "Triazolam": 2.5,
+            "Flurazepam": 2.5,
+            "Chlordiazepoxide": 1.0,
+            "Midazolam": 2.5
+        }
+    },
+    "Midazolam": {
+        "class": "benzodiazepine",
+        "brand_name": null,
+        "Conversions": {
+            "Diazepam": 4.0,
+            "Alprazolam (Xanax)": 2.0,
+            "Clonazepam (Klonopin)": 1.0,
+            "Lorazepam (Ativan)": 4.0,
+            "Oxazepam": 2.0,
+            "Temazepam": 2.0,
+            "Triazolam": 1.0,
+            "Flurazepam": 1.0,
+            "Chlordiazepoxide": 0.4,
+            "Midazolam": 1.0
+        }
+    }
+}
