@@ -64,6 +64,17 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <FormControlLabel
                 control={
                     <Checkbox
+                        name="pregnant"
+                        checked={!!patientData.pregnant}
+                        onChange={handleChange}
+                        disabled={patientData.gender !== 'female'}
+                    />
+                }
+                label="Pregnant"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
                         name="liver"
                         checked={!!patientData.liver}
                         onChange={handleChange}
@@ -104,6 +115,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
 }
 
 export default PatientInfoForm;
+
 
 
 //alternate format for rendering, could be more efficient so id like to keep it here to try to make work wiht single page functionality
