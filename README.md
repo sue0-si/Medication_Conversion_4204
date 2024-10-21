@@ -5,7 +5,7 @@ Converting IV to Oral formulations and vice versa.
 
 ## Version 0.1.0
 
-### Features
+### New Features
 - Alert dialog component when the conversion result has a potential health hazard
 - Input field to enter medication information
 - Optional field for patient data
@@ -19,7 +19,7 @@ N/A
 
 ## Version 0.2.0
 
-### Features
+### New Features
 - CSV tables to store known converison rates
 - Results UI for medication data, patient data, conversion info, warnings, and administration instructions
 - Single page structure for forms and results
@@ -34,7 +34,7 @@ N/A
 
 ## Version 0.3.0
 
-### Features
+### New Features
 - added Alternative Medication Conversion tool page
 - form submission errors pop-up
 
@@ -43,3 +43,4 @@ N/A
 - fixed form validation errors and ensured all fields are required
 
 ### Known Issues
+- N/A
