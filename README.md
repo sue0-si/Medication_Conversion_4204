@@ -41,6 +41,7 @@ N/A
   
 ### Bug Fixes
 - fixed form validation errors and ensured all fields are required
+- restored previous sprint works and merged into main
 
 ### Known Issues
 - N/A
