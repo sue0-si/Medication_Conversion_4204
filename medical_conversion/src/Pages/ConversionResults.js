@@ -21,6 +21,8 @@ function ConversionResults({ resultsType }) {
     const { medicationData } = location.state || {};
     const { patientData } = location.state || {};
     const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
+    const [warningIndex, setWarningIndex] = React.useState(0); 
+    const [showGeneralWarning, setShowGeneralWarning] = React.useState(true); 
     const navigate = useNavigate();
 
     const handleBackButton = () => {
@@ -38,17 +40,63 @@ function ConversionResults({ resultsType }) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
-    const toggleWarning = (index) => {
+    /*const toggleWarning = (index) => {
         if (collapsedWarnings.includes(index)) {
             setCollapsedWarnings(collapsedWarnings.filter((i) => i !== index));
         } else {
             setCollapsedWarnings([...collapsedWarnings, index]);
+        }
+    };*/
+
+    const toggleWarning = () => {
+        if (showGeneralWarning && specificWarnings.length > 0) {
+            // Switch from general to specific warnings
+            setShowGeneralWarning(false);
+            setWarningIndex(0);
+        } else if (!showGeneralWarning && warningIndex < specificWarnings.length - 1) {
+            // Show the next specific warning
+            setWarningIndex(warningIndex + 1);
+        } else {
+            // Reset to general warning if no more specific warnings are left
+            setShowGeneralWarning(true);
+            setWarningIndex(0);
         }
     };
 
     const drugsMatch = warningData.drugs
         .filter(drug => drug.drug_name === medicationData.name)
         .map(drug => drug.drug_name);
+
+
+    const drugEntry = warningData.drugs.find(drug => drug.drug_name === medicationData.name);
+
+    const isWarningPresent = !!drugEntry;
+
+    const generalWarning = drugEntry
+        ? drugEntry.warnings.find(warning => warning.patient_info === "general")?.warning_message || null
+        : null;
+
+    // Function to check for patient-specific warnings
+    const patientSpecificWarnings = () => {
+        if (!drugEntry || !patientData) return [];
+
+        return drugEntry.warnings
+            .filter(warning => {
+                const patientInfo = warning.patient_info;
+
+                if (patientInfo.age) {
+                    const { min, max } = patientInfo.age;
+                    if (patientData.age < min || patientData.age > max) return false;
+                }
+                if (patientInfo.gender && patientInfo.gender !== patientData.gender) return false;
+                if (patientInfo.condition && !patientData.disease.includes(patientInfo.condition)) return false;
+
+                return true;
+            })
+            .map(warning => warning.warning_message);
+    };
+
+    const specificWarnings = patientSpecificWarnings();
 
     const [close, isClose] = React.useState(false)
 
@@ -102,6 +150,8 @@ function ConversionResults({ resultsType }) {
                 }
             }
 
+            // Retrieve and Display Warning
+
             // Perform conversion using the chosen ratio
             convertedDosage = medicationData.dosage * conversionRatio;
 
@@ -112,7 +162,7 @@ function ConversionResults({ resultsType }) {
                 dosage: Math.round(convertedDosage * 100) / 100,
                 dosageUnit: medicationData.dosageUnit,
                 conversionFormula: conversionFormulaText,
-                warnings: [],  // Add warnings if needed
+                warnings: specificWarnings,  // Add warnings if needed
                 formulaName: medicationData.formulaName || "Standard Ratio",
             });
         };
@@ -355,41 +405,57 @@ function ConversionResults({ resultsType }) {
 
             
 
-             {/*Warnings Section */}
-            <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                Warnings:
-            </Typography>
-            {(results.warnings !== undefined && results.warnings.length !== 0) && (
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell><strong>Warning</strong></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {results.warnings.map((warning, index) => (
-                                <TableRow key={index}>
-                                    <TableCell align='center'>
-                                        <div key={index} align='center'> {collapsedWarnings.includes(index) ?
-                                            <button style={{
-                                                marginTop: '1rem', // add some spacing
-                                                backgroundColor: '#f44336', // similar red to the "Okay" button
-                                                color: '#ffffff', // make text white for better visibility
-                                                border: 'none', // ensure no border for a consistent look
-                                                cursor: 'pointer' // give a pointer cursor to indicate clickability
-                                            }}
-                                                onClick={() => toggleWarning(index)}>Expand Warning</button> : <AlertDialog
-                                                warning={warning}
-                                                onOkay={() => toggleWarning(index)} />
-                                        }</div>
-                                    </TableCell>
+            {/* Warning Section */}
+            <Typography variant="h6" gutterBottom>
+                        Warnings:
+                    </Typography>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell><strong>Warning</strong></TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            ) || (<p>No Warnings</p>)}
+                            </TableHead>
+                            <TableBody>
+                                {showGeneralWarning && generalWarning ? (
+                                    <TableRow>
+                                        <TableCell align='center'>
+                                            <AlertDialog
+                                                warning={generalWarning}
+                                                onOkay={toggleWarning}
+                                            />
+                                            {specificWarnings.length > 0 && (
+                                                <Button 
+                                                    onClick={toggleWarning} 
+                                                    style={{ 
+                                                        marginTop: '1rem', 
+                                                        backgroundColor: '#f44336', 
+                                                        color: '#ffffff'
+                                                    }}>
+                                                    Show Patient Specific Warnings
+                                                </Button>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ) : specificWarnings.length > 0 ? (
+                                    <TableRow>
+                                        <TableCell align='center'>
+                                            <AlertDialog
+                                                warning={specificWarnings[warningIndex]}
+                                                onOkay={toggleWarning}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    <TableRow>
+                                        <TableCell align='center'>
+                                            No Warnings
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
             {/* Administration Instructions Section */}
             <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
                 Administration Instructions:
