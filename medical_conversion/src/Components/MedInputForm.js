@@ -165,12 +165,14 @@ function MedInputForm({ redirectOnSubmit, medicationData, setMedicationData, pat
                                 setMedicationData((prevData) => ({
                                     ...prevData,
                                     target: newValue,
+                                    targetRoute: 'alt'
                                 }));
                             } else if (newValue && newValue.inputValue) {
                                 // Create a new value from the user input
                                 setMedicationData((prevData) => ({
                                     ...prevData,
                                     target: newValue.inputValue,
+                                    targetRoute: 'alt'
                                 }));
                             }
                         }}
