@@ -1,7 +1,9 @@
 import { TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
 import * as React from "react";
+import { MedicationContext } from "../Tools/MedicationContext";
 
-function PatientInfoForm({ patientData, setPatientData }) {
+function PatientInfoForm() {
+    const [medicationData, setPatientData] = React.useContext(MedicationContext);
     //useEffect(() => {
     //    // Load patient data from local storage when component mounts
     //    const storedData = localStorage.getItem("patientData");
@@ -18,7 +20,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         const newData = {
-            ...patientData,
+            ...medicationData.patientData,
             [name]: type === "checkbox" ? checked : value,
         };
         setPatientData(newData);
@@ -34,7 +36,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Height (cm)"
                 name="height"
-                value={patientData.height || 0}
+                value={medicationData.patientData.height || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -43,7 +45,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Weight (kg)"
                 name="weight"
-                value={patientData.weight || 0}
+                value={medicationData.patientData.weight || 0}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -53,7 +55,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 <InputLabel>Gender</InputLabel>
                 <Select
                     name="gender"
-                    value={patientData.gender || ''}
+                    value={medicationData.patientData.gender || ''}
                     onChange={handleChange}
                 >
                     <MenuItem value="male">Male</MenuItem>
@@ -65,9 +67,9 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 control={
                     <Checkbox
                         name="pregnant"
-                        checked={!!patientData.pregnant}
+                        checked={!!medicationData.patientData.pregnant}
                         onChange={handleChange}
-                        disabled={patientData.gender !== 'female'}
+                        disabled={medicationData.patientData.gender !== 'female'}
                     />
                 }
                 label="Pregnant"
@@ -76,7 +78,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 control={
                     <Checkbox
                         name="liver"
-                        checked={!!patientData.liver}
+                        checked={!!medicationData.patientData.liver}
                         onChange={handleChange}
                     />
                 }
@@ -86,7 +88,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 control={
                     <Checkbox
                         name="kidney"
-                        checked={!!patientData.kidney}
+                        checked={!!medicationData.patientData.kidney}
                         onChange={handleChange}
                     />
                 }
@@ -96,7 +98,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
                 control={
                     <Checkbox
                         name="gastro"
-                        checked={!!patientData.gastro}
+                        checked={!!medicationData.patientData.gastro}
                         onChange={handleChange}
                     />
                 }
@@ -105,7 +107,7 @@ function PatientInfoForm({ patientData, setPatientData }) {
             <TextField
                 label="Existing Disease"
                 name="disease"
-                value={patientData.disease || ''}
+                value={medicationData.patientData.disease || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
