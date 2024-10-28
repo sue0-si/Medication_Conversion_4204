@@ -44,4 +44,17 @@ N/A
 - restored previous sprint works and merged into main
 
 ### Known Issues
-- N/A
+- previous issues still apply
+
+## Version 0.4.0
+
+### New Features
+- Formula and Medication Name selection tools that present options and can be searched
+- Field options are updated dynamically as form is filled
+
+  
+### Bug Fixes
+-
+
+### Known Issues
+- selection option filering needs to be updated to present relevent types based on route

@@ -1,59 +1,81 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Autocomplete, TextField, Button } from '@mui/material';
 import AddFormulaModal from './AddFormulaModal';
+import { extractFormulaOptions } from '../Tools/Options';
+import { MedicationContext } from '../Tools/MedicationContext';
 
-function SelectFormula({ label, options, medicationData, setMedicationData }) {
+function SelectFormula() {
+    const { medicationData, setMedicationData } = useContext(MedicationContext);
     const [inputValue, setInputValue] = useState('');
-    const [customFormulae, setCustomFormulae] = useState([...options]);  // Initialize with provided options
+    const [formulaOptions, setFormulaOptions] = useState([]);  // All formula options
+    const [filteredOptions, setFilteredOptions] = useState([]);  // Filtered formula options
     const [isModalOpen, setIsModalOpen] = useState(false);  // Control modal visibility
 
+    // Load all formula options on mount
     useEffect(() => {
-        setCustomFormulae([...options]);  // Update customFormulae whenever new options are passed in
-        console.log("Options passed to autocomplete: ", customFormulae);
-    }, [options]);  // Ensure this runs when options changes
-    // Function to add a new formula from the modal
-    const addNewFormula = (newFormula) => {
-        setCustomFormulae([...customFormulae, newFormula]);  // Add the full formula object to the list
-        setMedicationData((prevData) => ({
-            ...prevData,
-            formulaName: newFormula.formulaName,  // Set the newly added formula name
-            formula: newFormula  // Set the full formula details
-        }));
-    };
+        const allOptions = extractFormulaOptions();
+        setFormulaOptions(allOptions);
+    }, []);
 
-    // Handle selection change in the Autocomplete dropdown
+    // Filter options based on source and target
+    useEffect(() => {
+        let relevantOptions = formulaOptions;
+
+        // Filter by source medication
+        if (medicationData.name !== "") {
+            relevantOptions = relevantOptions.filter(option =>
+                option.sourceDrug.toLowerCase() === medicationData.name.toLowerCase()
+            );
+        }
+
+        // Filter by target medication
+        if (medicationData.target !== "") {
+            relevantOptions = relevantOptions.filter(option =>
+                option.targetDrug.toLowerCase() === medicationData.target.toLowerCase()
+            );
+        }
+
+        setFilteredOptions(relevantOptions);
+    }, [medicationData.name, medicationData.target, formulaOptions]);
+
+    // Handle formula selection change
     const handleFormulaChange = (event, newValue) => {
-        const selectedFormula = customFormulae.find(formula => formula.formulaName === newValue);
+        const selectedFormula = filteredOptions.find(formula => formula.formulaName === newValue);
         if (selectedFormula) {
-            setMedicationData((prevData) => ({
+            setMedicationData(prevData => ({
                 ...prevData,
-                formulaName: selectedFormula.formulaName,  // Set the selected formula name
-                formula: selectedFormula  // Set the full formula details (conversion ratios, etc.)
+                formulaName: selectedFormula.formulaName,
+                formula: selectedFormula
             }));
         }
     };
-    
+
+    // Function to add a new formula from the modal
+    const addNewFormula = (newFormula) => {
+        setFormulaOptions([...formulaOptions, newFormula]);  // Add new formula to all options
+        setFilteredOptions([...filteredOptions, newFormula]);  // Add new formula to filtered options
+        setMedicationData(prevData => ({
+            ...prevData,
+            formulaName: newFormula.formulaName,
+            formula: newFormula
+        }));
+    };
 
     return (
         <div>
-            {/* Autocomplete with custom formula options */}
             <Autocomplete
                 freeSolo
-                autoSelect
-                options={customFormulae.map(formula => formula.formulaName)}  // Display formula names in the dropdown
+                options={filteredOptions.map(formula => formula.formulaName)}  // Display filtered formula names
                 value={medicationData.formulaName || ''}  // Set the selected formula name
                 inputValue={inputValue}
-                getOptionLabel={(option) => option}  // Use formula names as options
-                onChange={handleFormulaChange}  // Set both formulaName and formula in medicationData
-                onInputChange={(event, newInputValue) => {
-                    setInputValue(newInputValue);  // Handle free input typing
-                }}
+                onChange={handleFormulaChange}
+                onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+                noOptionsText="No formulae found based on form entries"
                 renderInput={(params) => (
-                    <TextField {...params} label={label || "Conversion Formula"} variant="outlined" fullWidth />
+                    <TextField {...params} label="Conversion Formula" variant="outlined" fullWidth />
                 )}
             />
 
-            {/* Button to open AddFormulaModal for adding new formula */}
             <Button variant="outlined" onClick={() => setIsModalOpen(true)} sx={{ mt: 2 }}>
                 Add New Formula
             </Button>
@@ -61,8 +83,8 @@ function SelectFormula({ label, options, medicationData, setMedicationData }) {
             {/* Modal for Adding Formula */}
             <AddFormulaModal
                 open={isModalOpen}
-                handleClose={() => setIsModalOpen(false)}  // Close modal on submission or cancel
-                addFormula={addNewFormula}  // Add the new formula to the options list
+                handleClose={() => setIsModalOpen(false)}  // Close modal
+                addFormula={addNewFormula}  // Add the new formula
                 medicationData={medicationData}  // Pass medication data to autofill the modal
             />
         </div>
