@@ -10,9 +10,11 @@ export const defaultMedicationData = {
     formula: {},  // Select box for different formulas
     patient: false,
     patientData: {
+        age: 0,
         height: 0,
         weight: 0,
         gender: "",
+        pregnant: false,
         liver: false,
         kidney: false,
         gastro: false,
