@@ -4,7 +4,7 @@ import { defaultResultsData } from '../Tools/Defaults';
 import ConversionResults from '../Components/ConversionResults';  // Import shared ConversionResults component
 import { performConversion } from '../Tools/ConversionLogic';  // Import shared conversion logic
 
-const AltConversionResult = () => {
+function AltConversionResult() {
     const [results, setResults] = React.useState(defaultResultsData);
     const [error, setError] = React.useState(null);
     const location = useLocation();
