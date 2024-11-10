@@ -6,7 +6,7 @@ import PatientInfoForm from "./PatientInfoForm";
 import SelectFormula from "./SelectFormula";
 import SelectMedication from "./SelectMedication";
 
-function MedInputForm({ formtype }) {
+function MedInputForm({ formtype, onSubmit }) {
     const [submittedData, setSubmittedData] = useState(null);  // Store the form data on submit
     const navigate = useNavigate();
     const [showPatientForm, setShowPatientForm] = useState(false);
@@ -59,7 +59,9 @@ function MedInputForm({ formtype }) {
         }
 
         setSubmittedData(medicationData);
-        navigate("/" + formtype + "/" + medicationData.name, { state: { medicationData } });
+        //navigate("/" + formtype + "/" + medicationData.name, { state: { medicationData } });
+        setMedicationData(medicationData);  // Update medication data in the context
+        onSubmit();  // Also call the parent handler to toggle the view
     };
 
     const handleCloseDialog = () => {
