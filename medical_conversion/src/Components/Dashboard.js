@@ -243,10 +243,10 @@ export default function Dashboard({children, heading}) {
                                     <ListItemText primary="Medication Information" />
                             </ListItemButton>
                         </Link>
-                        <ListItemButton>
-                            <Link to='/po-iv'>
+                        <ListItemButton sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Link to='/po-iv' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                                 <ListItemIcon>
-                                    <VaccinesIcon/>
+                                    <VaccinesIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="PO:IV Conversion" />
                             </Link>
@@ -254,10 +254,11 @@ export default function Dashboard({children, heading}) {
                                 <AddCircleOutlineIcon />
                             </IconButton>
                         </ListItemButton>
-                        <ListItemButton>
-                            <Link to='/alt'>
+
+                        <ListItemButton sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Link to='/alt' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                                 <ListItemIcon>
-                                    <BalanceIcon/>
+                                    <BalanceIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Alt. Medication Conversion" />
                             </Link>
@@ -295,68 +296,84 @@ export default function Dashboard({children, heading}) {
                     })}
                 >
                     <Toolbar />
-                    <Tabs
-                        value={activeTab}
-                        onChange={handleTabChange}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                        aria-label="Open Tabs"
-                        sx={{
-                            borderBottom: 1,
-                            borderColor: 'divider',
-                            '.Mui-selected': {
-                                color: 'primary.main', // Change the color of the selected tab text
-                                fontWeight: 'bold',
-                            },
-                        }}
-                    >
-                        {frames.map((frame, index) => (
-                            <Tab
-                                key={frame.id}
-                                label={
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        {frame.title}
-                                        {index !== 0 && (
-                                            <IconButton
-                                                size="small"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    closeFrame(frame.id);
-                                                }}
-                                            >
-                                                <CloseIcon fontSize="small" />
-                                            </IconButton>
-                                        )}
-                                    </div>
-                                }
-                            />
-                        ))}
+                    {/* Conditionally render the Tabs only if there are more than one frame */}
+                    {frames.length > 1 && (
+                        <Tabs
+                            value={activeTab}
+                            onChange={handleTabChange}
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            aria-label="Open Tabs"
+                            sx={{
+                                borderBottom: 1,
+                                borderColor: 'divider',
+                                '.Mui-selected': {
+                                    color: 'primary.main', // Change the color of the selected tab text
+                                    fontWeight: 'bold',
+                                },
+                            }}
+                        >
+                            {frames.map((frame, index) => (
+                                <Tab
+                                    key={frame.id}
+                                    label={
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            {frame.title}
+                                            {index !== 0 && (
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        closeFrame(frame.id);
+                                                    }}
+                                                >
+                                                    <CloseIcon fontSize="small" />
+                                                </IconButton>
+                                            )}
+                                        </div>
+                                    }
+                                />
+                            ))}
                         </Tabs>
+                    )}
+
+                    {/* Render the content */}
                     <Box
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            gap: 2,
+                            flexGrow: 1,
                             padding: 2,
-                            overflowX: 'auto',
-                            width: '100%',
+                            overflow: 'auto',
+                            display: 'flex',
+                            justifyContent: frames.length > 1 ? 'flex-start' : 'center',
                         }}
                     >
-                        {frames.map((frame) => (
+                        {frames.length > 1 ? (
+                            frames.map((frame) => (
+                                <Box
+                                    key={frame.id}
+                                    className="tab-content"
+                                    sx={{
+                                        flexShrink: 0,
+                                        border: frame.id === activeTab ? '2px solid #1976d2' : '1px solid #ccc',
+                                        borderRadius: '8px',
+                                        padding: '16px',
+                                        marginRight: '16px',
+                                    }}
+                                >
+                                    {frame.component}
+                                </Box>
+                            ))
+                        ) : (
                             <Box
-                                key={frame.id}
-                                className="tab-content"
                                 sx={{
-                                    flexShrink: 0,
-                                    border: frame.id === activeTab ? '2px solid #1976d2' : '1px solid #ccc', // Highlight border for selected tab
-                                    borderRadius: '8px',
+                                    width: '100%',
+                                    height: '100%',
                                     padding: '16px',
-                                    backgroundColor: frame.id === activeTab ? '#f0f8ff' : 'inherit', // Highlight background for selected tab
                                 }}
                             >
-                                {frame.component}
+                                {children}
                             </Box>
-                        ))}
+                        )}
                     </Box>
                 </Box>
             </Box>
