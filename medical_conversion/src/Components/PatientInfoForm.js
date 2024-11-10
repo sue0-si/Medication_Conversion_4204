@@ -3,7 +3,7 @@ import * as React from "react";
 import { MedicationContext } from "../Tools/MedicationContext";
 
 function PatientInfoForm() {
-    const [medicationData, setPatientData] = React.useContext(MedicationContext);
+    const {medicationData, setPatientData} = React.useContext(MedicationContext);
     //useEffect(() => {
     //    // Load patient data from local storage when component mounts
     //    const storedData = localStorage.getItem("patientData");
