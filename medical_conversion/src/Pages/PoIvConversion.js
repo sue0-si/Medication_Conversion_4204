@@ -1,19 +1,13 @@
-// JavaScript source code
 import * as React from "react";
 import Dashboard from "../Components/Dashboard";
-import MedInputForm from "../Components/MedInputForm";
-import { MedicationProvider } from '../Tools/MedicationContext';
+import PoIvConversionTool from "./PoIvConversionTool";
+
 
 const PoIvConversion = () => {
-   
-
-
     return (
         <div>
-            <Dashboard heading='PO:IV Conversion'>
-                <MedicationProvider>
-                    <MedInputForm formtype={"po-iv"} />
-                </MedicationProvider>
+            <Dashboard heading='PO:IV Medication Conversion'>
+                <PoIvConversionTool />
             </Dashboard>
         </div>
     );

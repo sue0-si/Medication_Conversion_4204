@@ -28,6 +28,7 @@ import AltConversionTool from '../Pages/AltConversionTool';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
+import PoIvConversionTool from '../Pages/PoIvConversionTool';
 
 
 //width of open nav pannel
@@ -110,27 +111,30 @@ export default function Dashboard({children, heading}) {
     const handleKeyboardNavigation = (event) => {
         if (event.key === 'Tab') {
             const focusedElement = document.activeElement;
-
             const tabContentElement = focusedElement.closest('.tab-content');
 
-            // If tabContentElement is null, exit the function early
+            // Exit early if the focused element is not inside any tab content
             if (!tabContentElement) return;
 
             const focusableElements = Array.from(
-                focusedElement
-                    .closest('.tab-content')
-                    .querySelectorAll('input, button, select, textarea, [tabindex]:not([tabindex="-1"])')
+                tabContentElement.querySelectorAll('input, button, select, textarea, [tabindex]:not([tabindex="-1"])')
             );
+
+            // Exit early if there are no focusable elements
+            if (focusableElements.length === 0) return;
 
             const lastElement = focusableElements[focusableElements.length - 1];
             const firstElement = focusableElements[0];
 
+            // Shift + Tab: Move to the previous tab if on the first element
             if (event.shiftKey && focusedElement === firstElement) {
                 event.preventDefault();
                 const newActiveTab = activeTab === 0 ? frames.length - 1 : activeTab - 1;
                 setActiveTab(newActiveTab);
                 setTimeout(() => focusFirstInputInTab(newActiveTab), 0);
-            } else if (!event.shiftKey && focusedElement === lastElement) {
+            }
+            // Tab: Move to the next tab if on the last element
+            else if (!event.shiftKey && focusedElement === lastElement) {
                 event.preventDefault();
                 const newActiveTab = activeTab === frames.length - 1 ? 0 : activeTab + 1;
                 setActiveTab(newActiveTab);
@@ -149,10 +153,28 @@ export default function Dashboard({children, heading}) {
         }
     };
 
+    const handleFocus = (event) => {
+        const focusedElement = event.target;
+        const tabContentElement = focusedElement.closest('.tab-content');
+
+        // If the focused element is not inside any tab content, do nothing
+        if (!tabContentElement) return;
+
+        // Find the index of the tab content
+        const tabIndex = Array.from(document.querySelectorAll('.tab-content')).indexOf(tabContentElement);
+
+        // If a valid tab index is found, update the active tab
+        if (tabIndex !== -1 && tabIndex !== activeTab) {
+            setActiveTab(tabIndex);
+        }
+    };
+
     React.useEffect(() => {
         window.addEventListener('keydown', handleKeyboardNavigation);
+        document.addEventListener('focusin', handleFocus);
         return () => {
             window.removeEventListener('keydown', handleKeyboardNavigation);
+            document.removeEventListener('focusin', handleFocus);
         };
     }, [activeTab, frames.length]);
 
@@ -220,15 +242,18 @@ export default function Dashboard({children, heading}) {
                                 </ListItemIcon>
                                     <ListItemText primary="Medication Information" />
                             </ListItemButton>
-                            </Link>
+                        </Link>
+                        <ListItemButton>
                             <Link to='/po-iv'>
-                            <ListItemButton>
                                 <ListItemIcon>
                                     <VaccinesIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary="PO:IV Conversion" />
-                            </ListItemButton>
-                        </Link>
+                            </Link>
+                            <IconButton onClick={() => addFrame("Po:IV Conversion", <PoIvConversionTool />)}>
+                                <AddCircleOutlineIcon />
+                            </IconButton>
+                        </ListItemButton>
                         <ListItemButton>
                             <Link to='/alt'>
                                 <ListItemIcon>

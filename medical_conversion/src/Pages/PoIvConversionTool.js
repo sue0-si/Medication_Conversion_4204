@@ -1,11 +1,12 @@
+// JavaScript source code
 import React, { useState } from 'react';
 import { MedicationProvider } from '../Tools/MedicationContext';
-import AltConversionResults from './AltConversionResults';
+import PoIvConversionResults from './PoIvConversionResults';
 import MedInputForm from '../Components/MedInputForm';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
 
-const AltConversionTool = () => {
+const PoIvConversionTool = () => {
     const [isResultsView, setIsResultsView] = useState(false);
     //const { setMedicationData } = useContext(MedicationContext);
 
@@ -20,21 +21,21 @@ const AltConversionTool = () => {
     };
 
     return (
-            <MedicationProvider>
-                {!isResultsView && (
-                    <MedInputForm formtype={"alt"} onSubmit={handleFormSubmit} />
-                )}
+        <MedicationProvider>
+            {!isResultsView && (
+                <MedInputForm formtype={"po-iv"} onSubmit={handleFormSubmit} />
+            )}
 
-                {isResultsView && (
-                    <div>
-                        <IconButton onClick={handleBackButton}>
-                            <ArrowBackIcon></ArrowBackIcon>
-                        </IconButton>
-                        <AltConversionResults />
-                    </div>
-                    )}
-            </MedicationProvider>
+            {isResultsView && (
+                <div>
+                    <IconButton onClick={handleBackButton}>
+                        <ArrowBackIcon></ArrowBackIcon>
+                    </IconButton>
+                    <PoIvConversionResults />
+                </div>
+            )}
+        </MedicationProvider>
     );
 };
 
-export default AltConversionTool;
+export default PoIvConversionTool;
