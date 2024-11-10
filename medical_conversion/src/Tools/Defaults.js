@@ -8,6 +8,7 @@ export const defaultMedicationData = {
     targetRoute: '', // desired method of administration (PO-IV onv.)
     formulaName: '',
     formula: {},  // Select box for different formulas
+    formulaJustification: "",
     patient: false,
     patientData: {
         age: 0,
@@ -21,6 +22,7 @@ export const defaultMedicationData = {
         disease: ""
     }
 };
+
 
 export const defaultResultsData = {
     medName: '',
