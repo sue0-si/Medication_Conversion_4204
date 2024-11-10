@@ -77,7 +77,15 @@ function ConversionResults({ resultsType, medicationData, results }) {
 
         return (
             <div>
-                <Box sx={{ mt: 4 }}>
+                <Box sx={{
+                    maxWidth: '800px', // Limit the maximum width
+                    width: '100%',     // Allow it to grow up to maxWidth
+                    margin: '0 auto',  // Center the content
+                    padding: '16px',   // Add padding for spacing
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9f9f9',
+                }}>
                     {warningError !== null && (
                         <p>Error obtaining conversion warnings: {warningError}</p>
                     )}
