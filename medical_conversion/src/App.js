@@ -13,7 +13,8 @@ import DrugDetail from './Pages/DrugDetail.js';
 import PoIvConversion from './Pages/PoIvConversion';
 import PoIvConversionResults from './Pages/PoIvConversionResults';
 import AltConversion from './Pages/AltConversion';
-import AltConversionResults from './Pages/AltConversionResults.js';
+import { MedicationProvider, MedicationContext } from './Tools/MedicationContext';
+
 function App() {
     const [mode] = React.useState('light');
   return (
@@ -26,8 +27,7 @@ function App() {
                   <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
                   <Route path="/po-iv" element={<PoIvConversion />} />
                   <Route path="/po-iv/:medicationName" element={<PoIvConversionResults resultsType={"po-iv"} />} />
-                  <Route path="/alt" element={<AltConversion />} />
-                  <Route path="/alt/:medicationName" element={<AltConversionResults resultsType={"alt"}/> } />
+                  <Route path="/alt" element={<AltConversion />}/>
                   </Routes>
           </Router>
           <Copyright/>

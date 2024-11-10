@@ -19,9 +19,15 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import BalanceIcon from '@mui/icons-material/Balance';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+import SplitPane from 'react-split-pane';
+import AltConversionTool from '../Pages/AltConversionTool';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 //width of open nav pannel
@@ -45,11 +51,13 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
+
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         '& .MuiDrawer-paper': {
-            position: 'relative',
+            position: 'fixed',
             whiteSpace: 'nowrap',
+            overflow: 'hidden',
             width: drawerWidth,
             transition: theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,
@@ -57,11 +65,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
             }),
             boxSizing: 'border-box',
             ...(!open && {
-                overflowX: 'hidden',
-                transition: theme.transitions.create('width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.leavingScreen,
-                }),
                 width: theme.spacing(7),
                 [theme.breakpoints.up('sm')]: {
                     width: theme.spacing(9),
@@ -77,15 +80,88 @@ const defaultTheme = createTheme();
 
 export default function Dashboard({children, heading}) {
     const [open, setOpen] = React.useState(false);
+    const [frames, setFrames] = React.useState([{ id: 0, title: 'Main', component: children }]);
+    const [activeTab, setActiveTab] = React.useState(0);
+    
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
+    // Function to add a new frame
+    const addFrame = (title, component) => {
+        const formattedTitle = title + " " + frames.length;
+        const newFrame = { id: frames.length, title: formattedTitle, component };
+        setFrames([...frames, newFrame]);
+        setActiveTab(frames.length); // Switch to the newly added frame
+    };
+
+    // Function to close a frame
+    const closeFrame = (id) => {
+        const updatedFrames = frames.filter((frame) => frame.id !== id);
+        setFrames(updatedFrames);
+        setActiveTab(0); // Switch back to the main content
+    };
+
+    const handleTabChange = (event, newValue) => {
+        setActiveTab(newValue);
+    };
+
+
+    const handleKeyboardNavigation = (event) => {
+        if (event.key === 'Tab') {
+            const focusedElement = document.activeElement;
+
+            const tabContentElement = focusedElement.closest('.tab-content');
+
+            // If tabContentElement is null, exit the function early
+            if (!tabContentElement) return;
+
+            const focusableElements = Array.from(
+                focusedElement
+                    .closest('.tab-content')
+                    .querySelectorAll('input, button, select, textarea, [tabindex]:not([tabindex="-1"])')
+            );
+
+            const lastElement = focusableElements[focusableElements.length - 1];
+            const firstElement = focusableElements[0];
+
+            if (event.shiftKey && focusedElement === firstElement) {
+                event.preventDefault();
+                const newActiveTab = activeTab === 0 ? frames.length - 1 : activeTab - 1;
+                setActiveTab(newActiveTab);
+                setTimeout(() => focusFirstInputInTab(newActiveTab), 0);
+            } else if (!event.shiftKey && focusedElement === lastElement) {
+                event.preventDefault();
+                const newActiveTab = activeTab === frames.length - 1 ? 0 : activeTab + 1;
+                setActiveTab(newActiveTab);
+                setTimeout(() => focusFirstInputInTab(newActiveTab), 0);
+            }
+        }
+    };
+
+    const focusFirstInputInTab = (tabIndex) => {
+        const tabContent = document.querySelectorAll('.tab-content')[tabIndex];
+        if (tabContent) {
+            const firstInput = tabContent.querySelector('input, button, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+    };
+
+    React.useEffect(() => {
+        window.addEventListener('keydown', handleKeyboardNavigation);
+        return () => {
+            window.removeEventListener('keydown', handleKeyboardNavigation);
+        };
+    }, [activeTab, frames.length]);
+
+
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex'}}>
                 <CssBaseline />
-                <AppBar position="absolute" open={open}>
+                <AppBar position="fixed" open={open}>
                     <Toolbar
                         sx={{
                             pr: '24px', // keep right padding when drawer closed
@@ -144,8 +220,8 @@ export default function Dashboard({children, heading}) {
                                 </ListItemIcon>
                                     <ListItemText primary="Medication Information" />
                             </ListItemButton>
-                         </Link>
-                         <Link to='/po-iv'>
+                            </Link>
+                            <Link to='/po-iv'>
                             <ListItemButton>
                                 <ListItemIcon>
                                     <VaccinesIcon/>
@@ -153,14 +229,18 @@ export default function Dashboard({children, heading}) {
                                 <ListItemText primary="PO:IV Conversion" />
                             </ListItemButton>
                         </Link>
-                        <Link to='/alt'>
-                            <ListItemButton>
+                        <ListItemButton>
+                            <Link to='/alt'>
                                 <ListItemIcon>
                                     <BalanceIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary="Alt. Medication Conversion" />
-                            </ListItemButton>
-                        </Link>
+                            </Link>
+                            <IconButton onClick={() => addFrame("Alt Conversion", <AltConversionTool />)}>
+                                <AddCircleOutlineIcon />
+                            </IconButton>
+                        </ListItemButton>
+
 
                         <ListItemButton>
                             <ListItemIcon>
@@ -170,22 +250,89 @@ export default function Dashboard({children, heading}) {
                         </ListItemButton>
                     </List>
                 </Drawer>
+
                 <Box
                     component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
+                   
+                    sx={(theme) => ({
                         flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflowX: 'auto',
+                        p: 3,
+                        marginLeft: open ? `${drawerWidth}px` : theme.spacing(9),
+                        maxWidth: '1200px', // Set a maximum width
+                        margin: '0 auto',   // Center the content
+                        transition: theme.transitions.create('margin', {
+                            easing: theme.transitions.easing.sharp,
+                            duration: theme.transitions.duration.enteringScreen,
+                        }),
+                    })}
                 >
                     <Toolbar />
-                    <Container>
-                        { children}
-                    </Container>
+                    <Tabs
+                        value={activeTab}
+                        onChange={handleTabChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        aria-label="Open Tabs"
+                        sx={{
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            '.Mui-selected': {
+                                color: 'primary.main', // Change the color of the selected tab text
+                                fontWeight: 'bold',
+                            },
+                        }}
+                    >
+                        {frames.map((frame, index) => (
+                            <Tab
+                                key={frame.id}
+                                label={
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        {frame.title}
+                                        {index !== 0 && (
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    closeFrame(frame.id);
+                                                }}
+                                            >
+                                                <CloseIcon fontSize="small" />
+                                            </IconButton>
+                                        )}
+                                    </div>
+                                }
+                            />
+                        ))}
+                        </Tabs>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            gap: 2,
+                            padding: 2,
+                            overflowX: 'auto',
+                            width: '100%',
+                        }}
+                    >
+                        {frames.map((frame) => (
+                            <Box
+                                key={frame.id}
+                                className="tab-content"
+                                sx={{
+                                    flexShrink: 0,
+                                    border: frame.id === activeTab ? '2px solid #1976d2' : '1px solid #ccc', // Highlight border for selected tab
+                                    borderRadius: '8px',
+                                    padding: '16px',
+                                    backgroundColor: frame.id === activeTab ? '#f0f8ff' : 'inherit', // Highlight background for selected tab
+                                }}
+                            >
+                                {frame.component}
+                            </Box>
+                        ))}
+                    </Box>
                 </Box>
             </Box>
         </ThemeProvider>
