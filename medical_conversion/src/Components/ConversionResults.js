@@ -15,6 +15,15 @@ function ConversionResults({ resultsType, medicationData, results }) {
     const [warnings, setWarnings] = React.useState([]);
     const [error, setError] = React.useState(null);
 
+    React.useEffect(() => {
+        // Set target to name if target is empty
+        if (!medicationData.target) {
+            medicationData.target = medicationData.name;
+            if (results.conversionFormula) {
+                results.conversionFormula = results.conversionFormula.replace(/of .*$/, `of ${medicationData.name}`);
+            }
+        }
+    }, [medicationData]);
     const handleBackButton = () => {
         navigate('/' + { resultsType });
     };
@@ -24,7 +33,6 @@ function ConversionResults({ resultsType, medicationData, results }) {
         if (string.toLowerCase() === "iv") return "IV";
         if (string.toLowerCase() === "sc") return "SC";
 
-        // Default capitalization for other strings
         return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     };
 
@@ -197,12 +205,11 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                         </TableRow>
                                     </>
                                 )}
-
                             </TableBody>
                         </Table>
                     </TableContainer>
 
-                    {/* Patient Information Section (if available) */}
+                    {/* Patient Information Section */}
                     {medicationData.patient && (
                         <>
                             <Typography variant="h6" gutterBottom>
@@ -258,7 +265,11 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
-                                    <TableCell><strong>{results.conversionFormula}</strong></TableCell>
+                                    <TableCell>
+                                        <strong>
+                                            {results.conversionFormula}
+                                        </strong>
+                                    </TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -314,9 +325,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
                     </Typography>
                     <Administration targetRoute={medicationData?.targetRoute}></Administration>
                 </Box>
-
             </Dashboard>
-
         </div>
     );
 }
