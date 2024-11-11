@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
 import SelectFormula from "./SelectFormula";
 import { extractFormulaOptions } from "../Tools/Options";
-
+import SelectMedication from "./SelectMedication";
 import { MedicationContext } from "../Tools/MedicationContext"
 
 function MedInputForm({formtype, onSubmit
@@ -134,15 +134,7 @@ function MedInputForm({formtype, onSubmit
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        <TextField
-          label="Medication Name"
-          name="name"
-          value={medicationData.name}
-          onChange={formtype === "alt" ? handleMedicationNameChange : handleChange}
-          required
-          fullWidth
-          margin="normal"
-        />
+        <SelectMedication field="name" label="Select Source Medication" />
 
         <FormControl fullWidth margin="normal">
           <Typography variant="Subtitle 1" gutterBottom>
@@ -208,54 +200,12 @@ function MedInputForm({formtype, onSubmit
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        {/* ALT form */}
-        {formtype === "alt" && (
-          <>
-            <Autocomplete
-              label="Desired Medication Name"
-              freeSolo
-              required
-              autoSelect
-              options={altMedOptions}
-              value={medicationData.target}
-              onChange={(event, newValue) => {
-                if (typeof newValue === "string") {
-                  setMedicationData((prevData) => ({
-                    ...prevData,
-                    target: newValue,
-                  }));
-                } else if (newValue && newValue.inputValue) {
-                  setMedicationData((prevData) => ({
-                    ...prevData,
-                    target: newValue.inputValue,
-                  }));
-                }
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Desired Medication Name"
-                  variant="outlined"
-                  required
-                />
-              )}
-            />
-          </>
-        )}
+       
+        <SelectMedication field="target" label="Select Target Medication" />
 
         {/* PO-IV form */}
         {formtype === "po-iv" && (
           <>
-            <TextField
-              label="Desired Medication"
-              name="target"
-              value={medicationData.target}
-              onChange={handleChange}
-              required
-              fullWidth
-              margin="normal"
-            />
-
             <FormControl fullWidth margin="normal">
               <Typography variant="Subtitle 1" gutterBottom>
                 Desired Administration Method
