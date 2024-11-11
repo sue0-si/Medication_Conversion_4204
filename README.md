@@ -8,14 +8,15 @@ Converting IV to Oral formulations and vice versa.
 ### New Features
 - Formula and Medication Name selection tools that present options and can be searched
 - Field options are updated dynamically as the form is filled
+- Feature to add additional conversion calculation tools to any page for comparisons
 
   
 ### Bug Fixes
 - removed unused imports that generate an error
 - fixed patient information parsing error
+- selection option filtering updated to present relevant options based on route (opiods)
 
 ### Known Issues
-- selection option filtering needs to be updated to present relevant types based on route
 - need to make formula selection more clear (is it based off of drug inputs, formula selection, or new formula creation)
 
 ## Version 0.3.0
