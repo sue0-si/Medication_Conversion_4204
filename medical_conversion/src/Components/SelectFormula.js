@@ -46,7 +46,7 @@ function SelectFormula() {
                 ...prevData,
                 formulaName: selectedFormula.formulaName,
                 formula: selectedFormula,
-                formulaJustification: selectedFormula.formulaJustification === "" ? "Default Formula from {Source}" : selectedFormula.formulaJustification
+                formulaJustification: selectedFormula.justification === "" ? "Default Formula from {Source}" : selectedFormula.justification
             }));
         }
     };
@@ -59,7 +59,7 @@ function SelectFormula() {
             ...prevData,
             formulaName: newFormula.formulaName,
             formula: newFormula,
-            formulaJustification: newFormula.formulaJustification === "" ? "User added custom formula" : newFormula.formulaJustification
+            formulaJustification: newFormula.justification === "" ? "User added custom formula" : newFormula.justification
         }));
     };
 
