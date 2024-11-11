@@ -11,7 +11,8 @@ Converting IV to Oral formulations and vice versa.
 
   
 ### Bug Fixes
--
+- removed unused imports that generate an error
+- fixed patient information parsing error
 
 ### Known Issues
 - selection option filtering needs to be updated to present relevant types based on route
