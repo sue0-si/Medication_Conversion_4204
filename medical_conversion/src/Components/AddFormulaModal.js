@@ -8,15 +8,14 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
     const [conversionRatio, setConversionRatio] = useState('');
     const [customFormula, setCustomFormula] = useState('');
     const [useCustomFormula, setUseCustomFormula] = useState(false);
-    const [drugClass, setDrugClass] = useState('');  // New field for class
+    const [drugClass, setDrugClass] = useState('');
 
     // Auto-fill form based on medicationData
     useEffect(() => {
         if (medicationData) {
             setSourceDrug(medicationData.name || '');
-            setFormulaName(medicationData.formula || '');
             setTargetDrug(medicationData.target || '');
-            // Additional autofill logic can be added here if more fields in medicationData need to be reflected
+            setFormulaName(medicationData.formulaName || `${medicationData.name} to ${medicationData.target}`);
         }
     }, [medicationData]);
 
@@ -31,10 +30,10 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
             conversionRatio: useCustomFormula ? null : parseFloat(conversionRatio),
             customFormula: useCustomFormula ? customFormula : null,
             formulaType: useCustomFormula ? 'custom' : 'ratio',
-            class: drugClass  // Save the class
+            class: drugClass
         };
 
-        addFormula(newFormula);  // Call parent's function to add formula
+        addFormula(newFormula);  // Add the new formula
         handleClose();  // Close the modal
     };
 
@@ -42,11 +41,6 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
         <Modal open={open} onClose={handleClose}>
             <Box sx={{ ...modalStyle, width: 400 }}>
                 <Typography variant="h6">Add a Custom Formula</Typography>
-
-                <Typography variant="body1" gutterBottom>
-                    Enter a conversion ratio (e.g., 1:4.5) for standard conversion, or define a custom mathematical formula using variables (e.g., "dose * 0.5 + 10").
-                </Typography>
-
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Formula Name"
@@ -63,7 +57,7 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
                         required
                         fullWidth
                         margin="normal"
-                        placeholder="e.g., opioid, benzodiazepine, etc."
+                        placeholder="e.g., opioid, benzodiazepine"
                     />
                     <TextField
                         label="Source Drug"
@@ -72,7 +66,7 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
                         required
                         fullWidth
                         margin="normal"
-                        placeholder="e.g., Morphine, Diazepam"
+                        placeholder="e.g., Morphine"
                     />
                     <TextField
                         label="Target Drug"
@@ -81,9 +75,8 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
                         required
                         fullWidth
                         margin="normal"
-                        placeholder="e.g., Hydromorphone, Lorazepam"
+                        placeholder="e.g., Hydromorphone"
                     />
-
                     <Button onClick={() => setUseCustomFormula(!useCustomFormula)} sx={{ mb: 2 }}>
                         {useCustomFormula ? "Switch to Ratio" : "Use Custom Formula"}
                     </Button>
