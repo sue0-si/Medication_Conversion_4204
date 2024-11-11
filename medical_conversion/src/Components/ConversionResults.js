@@ -21,9 +21,6 @@ function ConversionResults({ resultsType, medicationData, results }) {
             }
         }
     }, [medicationData]);
-    const handleBackButton = () => {
-        navigate('/' + resultsType);
-    };
 
     const capitalizeFirstLetter = (string) => {
         if (!string) return "";
@@ -70,6 +67,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                     isApplicable = true;
                                 }
                                 break;
+                            default: break;
                         }
                     }
                 }
@@ -170,9 +168,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
                     borderRadius: '8px',
                     backgroundColor: '#f9f9f9',
                 }}>
-                    {warningError !== null && (
-                        <p>Error obtaining conversion warnings: {warningError}</p>
-                    )}
+                    
                     <Typography variant="h4" gutterBottom>
                         Conversion Results
                     </Typography>

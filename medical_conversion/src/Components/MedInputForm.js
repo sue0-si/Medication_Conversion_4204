@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   TextField,
   Button,
@@ -22,16 +22,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
 import SelectFormula from "./SelectFormula";
-import { extractFormulaOptions } from "../Tools/formulaOptions";
+import { extractFormulaOptions } from "../Tools/Options";
 
-function MedInputForm({
-  redirectOnSubmit,
-  medicationData,
-  setMedicationData,
-  patientData,
-  setPatientData,
-  formtype,
+import { MedicationContext } from "../Tools/MedicationContext"
+
+function MedInputForm({formtype, onSubmit
 }) {
+  const { medicationData, setMedicationData, setPatientData } = useContext(MedicationContext);
   const [submittedData, setSubmittedData] = useState(null);
   const navigate = useNavigate();
   const [showPatientForm, setShowPatientForm] = useState(false);
@@ -112,9 +109,7 @@ function MedInputForm({
     }
 
     setSubmittedData(medicationData);
-    navigate(redirectOnSubmit + medicationData.name, {
-      state: { medicationData, patientData },
-    });
+    onSubmit();
   };
 
   const handleCloseDialog = () => {
@@ -320,7 +315,7 @@ function MedInputForm({
           </Button>
 
           {showPatientForm && (
-            <PatientInfoForm patientData={patientData} setPatientData={setPatientData} />
+            <PatientInfoForm patientData={medicationData.patientData} setPatientData={setPatientData} />
           )}
         </FormControl>
       </Box>
