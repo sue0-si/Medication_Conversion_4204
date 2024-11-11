@@ -59,7 +59,7 @@ function SelectFormula() {
             ...prevData,
             formulaName: newFormula.formulaName,
             formula: newFormula,
-            formulaJustification: newFormula.formulaJustification
+            formulaJustification: newFormula.formulaJustification === "" ? "User added custom formula" : newFormula.formulaJustification
         }));
     };
 
