@@ -27,7 +27,7 @@ function App() {
                   <Route path="/po-iv" element={<PoIvConversion />} />
                   <Route path="/po-iv/:medicationName" element={<ConversionResults resultsType={"po-iv"} />} />
                   <Route path="/alt" element={<AltConversion />} />
-                  <Route path="/alt/:medicationName" element={<ConversionResults resultsType={"alt"}/> } />
+                  <Route path="/alt/:medicationName" element={<AltConversionResult resultsType={"alt"}/> } />
                   </Routes>
           </Router>
           <Copyright/>

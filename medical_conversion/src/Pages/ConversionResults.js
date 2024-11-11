@@ -113,7 +113,7 @@ function ConversionResults({ resultsType }) {
                 dosageUnit: medicationData.dosageUnit,
                 conversionFormula: conversionFormulaText,
                 warnings: [],  // Add warnings if needed
-                formulaName: medicationData.formulaName || "Standard Ratio",
+                formulaName: medicationData.formulaName ? medicationData.formulaName + " (user added)" : "Standard Ratio",
             });
         };
 
