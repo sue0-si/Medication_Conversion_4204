@@ -1,18 +1,15 @@
 // JavaScript source code
 import * as React from "react";
 import Administration from './Administration';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, IconButton } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Dashboard from "./Dashboard";
 import AlertDialog from "./AlertDialog";
 import axios from 'axios';
 import warningData from '../Tools/warning.json';
 
 function ConversionResults({ resultsType, medicationData, results }) {
-    const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
-    const navigate = useNavigate();
     const [warnings, setWarnings] = React.useState([]);
+
     const [error, setError] = React.useState(null);
 
     React.useEffect(() => {
@@ -25,7 +22,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
         }
     }, [medicationData]);
     const handleBackButton = () => {
-        navigate('/' + { resultsType });
+        navigate('/' + resultsType);
     };
 
     const capitalizeFirstLetter = (string) => {
@@ -162,14 +159,20 @@ function ConversionResults({ resultsType, medicationData, results }) {
 
     }, [medicationData]);
 
-    return (
-        <div>
-            <Dashboard heading='Conversion Results'>
-                <IconButton onClick={handleBackButton}>
-                    <ArrowBackIcon></ArrowBackIcon>
-                </IconButton>
-                <Box sx={{ mt: 4 }}>
-
+        return (
+            <div>
+                <Box sx={{
+                    maxWidth: '800px', // Limit the maximum width
+                    width: '100%',     // Allow it to grow up to maxWidth
+                    margin: '0 auto',  // Center the content
+                    padding: '16px',   // Add padding for spacing
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9f9f9',
+                }}>
+                    {warningError !== null && (
+                        <p>Error obtaining conversion warnings: {warningError}</p>
+                    )}
                     <Typography variant="h4" gutterBottom>
                         Conversion Results
                     </Typography>
@@ -205,11 +208,14 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                         </TableRow>
                                     </>
                                 )}
+
                             </TableBody>
                         </Table>
                     </TableContainer>
 
+
                     {/* Patient Information Section */}
+
                     {medicationData.patient && (
                         <>
                             <Typography variant="h6" gutterBottom>
@@ -265,11 +271,13 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
+
                                     <TableCell>
                                         <strong>
                                             {results.conversionFormula}
                                         </strong>
                                     </TableCell>
+
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -293,6 +301,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
                             </TableBody>
                         </Table>
                     </TableContainer>
+
 
                     {/*Warnings Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
@@ -325,9 +334,9 @@ function ConversionResults({ resultsType, medicationData, results }) {
                     </Typography>
                     <Administration targetRoute={medicationData?.targetRoute}></Administration>
                 </Box>
-            </Dashboard>
-        </div>
-    );
-}
+            </div>
+        );
+    }
+
 
 export default ConversionResults;

@@ -15,6 +15,7 @@ Converting IV to Oral formulations and vice versa.
 
 ### Known Issues
 - selection option filtering needs to be updated to present relevant types based on route
+- need to make formula selection more clear (is it based off of drug inputs, formula selection, or new formula creation)
 
 ## Version 0.3.0
 
