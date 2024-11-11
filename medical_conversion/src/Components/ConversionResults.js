@@ -5,75 +5,159 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import { useNavigate } from 'react-router-dom';
 import AlertDialog from "./AlertDialog";
 import axios from 'axios';
+import warningData from '../Tools/warning.json';
 
 function ConversionResults({ resultsType, medicationData, results }) {
     const [warnings, setWarnings] = React.useState([]);
-    const [warningError, setWarningError] = React.useState(null);
 
+    const [error, setError] = React.useState(null);
 
-        const capitalizeFirstLetter = (string) => {
-            if (!string) return "";
-            if (string.toLowerCase() === "iv") return "IV";
-            if (string.toLowerCase() === "sc") return "SC";
-
-            // Default capitalization for other strings
-            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-        };
-
-        const fetchWarnings = async (drugName) => {
-            try {
-                const fields = ['boxed_warning', 'do_not_use', 'drug_interactions', 'when_using', 'pregnancy', 'geriatric', 'pediatric'];
-                const newWarnings = [];
-
-                for (const field of fields) {
-                    const response = await axios.get(`https://api.fda.gov/drug/label.json?search=${field}:${drugName}`);
-                    if (response.data.results && response.data.results.length > 0) {
-                        const warningData = response.data.results[0];
-                        const content = warningData[field] ? warningData[field][0] : `No ${field.replace('_', ' ')} information available.`;
-                        newWarnings.push({ section: capitalizeFirstLetter(field.replace('_', ' ')), content });
-                    }
-                }
-
-                if (medicationData.patientData?.pregnant) {
-                    const pregnancyWarning = newWarnings.find(warning => warning.section === 'Pregnancy');
-                    if (!pregnancyWarning) {
-                        newWarnings.push({ section: 'Pregnancy', content: 'No pregnancy-specific warning available.' });
-                    }
-                }
-
-                if (medicationData.patientData?.age > 65) {
-                    const geriatricWarning = newWarnings.find(warning => warning.section === 'Geriatric');
-                    if (!geriatricWarning) {
-                        newWarnings.push({ section: 'Geriatric', content: 'No geriatric-specific warning available.' });
-                    }
-                }
-
-                if (medicationData.patientData?.age < 18) {
-                    const pediatricWarning = newWarnings.find(warning => warning.section === 'Pediatric');
-                    if (!pediatricWarning) {
-                        newWarnings.push({ section: 'Pediatric', content: 'No pediatric-specific warning available.' });
-                    }
-                }
-
-                setWarnings(newWarnings);
-            } catch (err) {
-                setWarningError("Error fetching warnings data.");
-                setWarnings([{ section: 'General', content: 'No warnings available due to API error.' }]);
+    React.useEffect(() => {
+        // Set target to name if target is empty
+        if (!medicationData.target) {
+            medicationData.target = medicationData.name;
+            if (results.conversionFormula) {
+                results.conversionFormula = results.conversionFormula.replace(/of .*$/, `of ${medicationData.name}`);
             }
-        };
+        }
+    }, [medicationData]);
+    const handleBackButton = () => {
+        navigate('/' + resultsType);
+    };
 
-        React.useEffect(() => {
-            if (!medicationData || !medicationData.name) {
-                setWarningError("No valid medication data provided.");
-                return;
+    const capitalizeFirstLetter = (string) => {
+        if (!string) return "";
+        if (string.toLowerCase() === "iv") return "IV";
+        if (string.toLowerCase() === "sc") return "SC";
+
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+
+    const getLocalWarnings = () => {
+        const localWarnings = [];
+        const drug = warningData.drugs.find(d => d.drug_name.toLowerCase() === medicationData.name.toLowerCase());
+
+        if (drug) {
+            drug.warnings.forEach(warning => {
+                const patientInfo = warning.patient_info;
+                let isApplicable = false;
+
+                if (patientInfo === "general") {
+                    isApplicable = true;
+                } else {
+                    for (const [key, value] of Object.entries(patientInfo)) {
+                        switch (key) {
+                            case "age":
+                                const patientAge = parseInt(medicationData.patientData.age);
+                                if (patientAge >= value.min && patientAge <= value.max) {
+                                    isApplicable = true;
+                                }
+                                break;
+                            case "gender":
+                                if (medicationData.patientData.gender === value) {
+                                    isApplicable = true;
+                                }
+                                break;
+                            case "weight":
+                                const patientWeight = parseInt(medicationData.patientData.weight);
+                                if (patientWeight >= value.min && patientWeight <= value.max) {
+                                    isApplicable = true;
+                                }
+                                break;
+                            case "condition":
+                                if (medicationData.patientData.disease?.toLowerCase().includes(value.toLowerCase()) ||
+                                    (value === "pregnancy" && medicationData.patientData.pregnant)) {
+                                    isApplicable = true;
+                                }
+                                break;
+                        }
+                    }
+                }
+
+                if (isApplicable) {
+                    localWarnings.push({
+                        section: patientInfo === "general" ? 'General Warning' : 'Patient-Specific Warning',
+                        content: warning.warning_message
+                    });
+                }
+            });
+        }
+
+        // Check for hazardous combinations
+        const combinationWarnings = warningData.hazardous_combinations.filter(combo =>
+            combo.combination.some(drug =>
+                drug.toLowerCase() === medicationData.name.toLowerCase() ||
+                (medicationData.target && drug.toLowerCase() === medicationData.target.toLowerCase())
+            )
+        );
+
+        combinationWarnings.forEach(warning => {
+            localWarnings.push({
+                section: 'Drug Interaction Warning',
+                content: warning.warning_message
+            });
+        });
+
+        return localWarnings;
+    };
+
+    const fetchWarnings = async (drugName) => {
+        try {
+            const fields = ['boxed_warning', 'do_not_use', 'drug_interactions', 'when_using', 'pregnancy', 'geriatric', 'pediatric'];
+            const apiWarnings = [];
+
+            for (const field of fields) {
+                const response = await axios.get(`https://api.fda.gov/drug/label.json?search=${field}:${drugName}`);
+                if (response.data.results && response.data.results.length > 0) {
+                    const warningData = response.data.results[0];
+                    const content = warningData[field] ? warningData[field][0] : `No ${field.replace('_', ' ')} information available.`;
+                    apiWarnings.push({ section: capitalizeFirstLetter(field.replace('_', ' ')), content });
+                }
             }
 
-            // Fetch warnings for the medication
-            fetchWarnings(medicationData.name);
+            if (medicationData.patientData?.pregnant) {
+                const pregnancyWarning = apiWarnings.find(warning => warning.section === 'Pregnancy');
+                if (!pregnancyWarning) {
+                    apiWarnings.push({ section: 'Pregnancy', content: 'No pregnancy-specific warning available.' });
+                }
+            }
 
-        }, [medicationData]);
+            if (medicationData.patientData?.age > 65) {
+                const geriatricWarning = apiWarnings.find(warning => warning.section === 'Geriatric');
+                if (!geriatricWarning) {
+                    apiWarnings.push({ section: 'Geriatric', content: 'No geriatric-specific warning available.' });
+                }
+            }
 
-        
+            if (medicationData.patientData?.age < 18) {
+                const pediatricWarning = apiWarnings.find(warning => warning.section === 'Pediatric');
+                if (!pediatricWarning) {
+                    apiWarnings.push({ section: 'Pediatric', content: 'No pediatric-specific warning available.' });
+                }
+            }
+
+            // Get local warnings and combine them with API warnings
+            const localWarnings = getLocalWarnings();
+            setWarnings([...apiWarnings, ...localWarnings]);
+
+        } catch (err) {
+            setError("Error fetching warnings data.");
+            // If API fails, still show local warnings
+            const localWarnings = getLocalWarnings();
+            setWarnings(localWarnings.length > 0 ? localWarnings : [{ section: 'General', content: 'No warnings available due to API error.' }]);
+        }
+    };
+
+    React.useEffect(() => {
+        if (!medicationData || !medicationData.name) {
+            setError("No valid medication data provided.");
+            return;
+        }
+
+        // Fetch warnings for the medication
+        fetchWarnings(medicationData.name);
+
+    }, [medicationData]);
 
         return (
             <div>
@@ -129,7 +213,9 @@ function ConversionResults({ resultsType, medicationData, results }) {
                         </Table>
                     </TableContainer>
 
-                    {/* Patient Information Section (if available) */}
+
+                    {/* Patient Information Section */}
+
                     {medicationData.patient && (
                         <>
                             <Typography variant="h6" gutterBottom>
@@ -185,7 +271,13 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Formula:</TableCell>
-                                    <TableCell><strong>{results.conversionFormula}</strong></TableCell>
+
+                                    <TableCell>
+                                        <strong>
+                                            {results.conversionFormula}
+                                        </strong>
+                                    </TableCell>
+
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -209,14 +301,6 @@ function ConversionResults({ resultsType, medicationData, results }) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-
-                    {/*{*/}
-                    {/*    close == false && (*/}
-                    {/*    drugsMatch.length > 0 ? drugsMatch.map((warning, index) => (*/}
-                    {/*        <AlertDialog warning={warning} onOkay={handleClick}></AlertDialog>*/}
-                    {/*    )) : <AlertDialog warning={"Underdosing / Overdosing could lead to death or severe/permanent disability"} onOkay={handleClick}></AlertDialog>*/}
-                    {/*)}*/}
-
 
 
                     {/*Warnings Section */}
@@ -250,12 +334,9 @@ function ConversionResults({ resultsType, medicationData, results }) {
                     </Typography>
                     <Administration targetRoute={medicationData?.targetRoute}></Administration>
                 </Box>
-
-
             </div>
         );
     }
-
 
 
 export default ConversionResults;
