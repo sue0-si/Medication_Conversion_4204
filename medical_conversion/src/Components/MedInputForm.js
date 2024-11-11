@@ -49,17 +49,29 @@ function MedInputForm({
 
   const getFilteredOptions = () => {
     const filtered = formulaOptions.filter((option) => {
-      const isRelevantMedication = option.formulaName
-        .toLowerCase()
-        .includes(medicationData.name?.toLowerCase());
-      const isRelevantRoute =
-        !medicationData.route ||
-        option.formulaName.toLowerCase().includes(medicationData.route?.toLowerCase());
-      return isRelevantMedication && isRelevantRoute;
+      const isRelevantMedication = medicationData.name
+        ? option.formulaName.toLowerCase().includes(medicationData.name.toLowerCase())
+        : true;
+      const isRelevantRoute = medicationData.route
+        ? option.formulaName.toLowerCase().includes(medicationData.route.toLowerCase())
+        : true;
+      const isRelevantTargetMedication = medicationData.target
+        ? option.formulaName.toLowerCase().includes(medicationData.target.toLowerCase())
+        : true;
+      const isRelevantTargetRoute = medicationData.targetRoute
+        ? option.formulaName.toLowerCase().includes(medicationData.targetRoute.toLowerCase())
+        : true;
+  
+      return (
+        isRelevantMedication &&
+        isRelevantRoute &&
+        isRelevantTargetMedication &&
+        isRelevantTargetRoute
+      );
     });
     return filtered;
   };
-
+  
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setMedicationData((prevData) => ({
