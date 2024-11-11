@@ -30,6 +30,7 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
             conversionRatio: useCustomFormula ? null : parseFloat(conversionRatio),
             customFormula: useCustomFormula ? customFormula : null,
             formulaType: useCustomFormula ? 'custom' : 'ratio',
+            justification: "User Custom",
             class: drugClass
         };
 

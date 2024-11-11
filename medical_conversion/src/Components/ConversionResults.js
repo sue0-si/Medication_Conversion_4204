@@ -275,6 +275,14 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                     </TableCell>
 
                                 </TableRow>
+                                <TableRow>
+                                    <TableCell>Formula Justification:</TableCell>
+                                    <TableCell>
+                                        <strong>
+                                            {medicationData.formulaJustification ?? results.formulaJustification ?? "Justification not available."}
+                                        </strong>
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>

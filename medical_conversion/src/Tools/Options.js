@@ -26,7 +26,8 @@ export const extractFormulaOptions = () => {
                 targetDrug: normalizedTargetDrug,
                 conversionRatio: benzodiazepines[drug].Conversions[normalizedTargetDrug],
                 class: benzodiazepines[drug].class,
-                formulaName: `${drug} to ${normalizedTargetDrug}`
+                formulaName: `${drug} to ${normalizedTargetDrug}`,
+                justification: "Conversion Formula recieved as strength ratio {clincalc.com/benzodiazepine/} and does not account for patient variables"
             });
         });
     });
@@ -41,7 +42,8 @@ export const extractFormulaOptions = () => {
                     targetDrug: normalizedTargetDrug,
                     conversionRatio: opioids[drug].Conversions[route][normalizedTargetDrug],
                     class: opioids[drug].class,
-                    formulaName: `${drug} to ${normalizedTargetDrug} via ${route}`
+                    formulaName: `${drug} to ${normalizedTargetDrug} via ${route}`,
+                justification: "Conversion Formula recieved as strength ratio {cancercalc.com/opioid_conversion.php / paindata.org/caclulator.php} and does not account for patient variables"
                 });
             });
         });
@@ -56,7 +58,8 @@ export const extractFormulaOptions = () => {
                 targetDrug: normalizedTargetDrug,
                 conversionRatio: localAnesthetics[drug].Conversions[normalizedTargetDrug],
                 class: localAnesthetics[drug].class,
-                formulaName: `${drug} to ${normalizedTargetDrug}`
+                formulaName: `${drug} to ${normalizedTargetDrug}`,
+                justification: "Conversion Formula recieved as strength ratio {www.mdcalc.com/calc/10205/local-anesthetic-dosing-calculator} and does not account for patient variables"
             });
         });
     });
@@ -70,7 +73,8 @@ export const extractFormulaOptions = () => {
                 targetDrug: normalizedTargetDrug,
                 conversionRatio: steroids[drug].Conversions[normalizedTargetDrug],
                 class: steroids[drug].class,
-                formulaName: `${drug} to ${normalizedTargetDrug}`
+                formulaName: `${drug} to ${normalizedTargetDrug}`,
+                justification: "Conversion Formula recieved as strength ratio {www.mdcalc.com/calc/2040/steroid-conversion-calculator} and does not account for patient variables"
             });
         });
     });
@@ -111,6 +115,26 @@ export const extractMedicationOptions = () => {
             }
             medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
             medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
+        });
+    });
+
+    Object.keys(opioids).forEach((drug) => {
+        medicationConversions.to[drug] = new Set();
+
+        // Iterate through all available routes for each drug
+        Object.keys(opioids[drug].Conversions).forEach((route) => {
+            Object.keys(opioids[drug].Conversions[route]).forEach((targetDrug) => {
+                const normalizedTargetDrug = normalizeDrugName(targetDrug);
+
+                // Initialize the 'from' set if it doesn't exist
+                if (!medicationConversions.from[normalizedTargetDrug]) {
+                    medicationConversions.from[normalizedTargetDrug] = new Set();
+                }
+
+                // Add the target drug and its route to the 'to' and 'from' sets
+                medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
+                medicationConversions.from[normalizedTargetDrug].add(`${drug} (${route})`);
+            });
         });
     });
 

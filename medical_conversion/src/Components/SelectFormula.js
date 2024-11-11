@@ -45,7 +45,8 @@ function SelectFormula() {
             setMedicationData(prevData => ({
                 ...prevData,
                 formulaName: selectedFormula.formulaName,
-                formula: selectedFormula
+                formula: selectedFormula,
+                formulaJustification: selectedFormula.justification === "" ? "Default Formula from {Source}" : selectedFormula.justification
             }));
         }
     };
@@ -57,7 +58,8 @@ function SelectFormula() {
         setMedicationData(prevData => ({
             ...prevData,
             formulaName: newFormula.formulaName,
-            formula: newFormula
+            formula: newFormula,
+            formulaJustification: newFormula.justification === "" ? "User added custom formula" : newFormula.justification
         }));
     };
 

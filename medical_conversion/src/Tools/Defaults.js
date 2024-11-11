@@ -8,6 +8,7 @@ export const defaultMedicationData = {
     targetRoute: '', // desired method of administration (PO-IV onv.)
     formulaName: '',
     formula: {},  // Select box for different formulas
+    formulaJustification: null,
     patient: false,
     patientData: {
         age: 0,
@@ -22,6 +23,7 @@ export const defaultMedicationData = {
     }
 };
 
+
 export const defaultResultsData = {
     medName: '',
     dosage: 0,
@@ -30,5 +32,6 @@ export const defaultResultsData = {
     error: "None",
     conversionFormula: '',
     formulaName: '',
+    formulaJustification: "Conversion formula provided as strength ratio and does not account for patient factors",
     warnings: []
 }
