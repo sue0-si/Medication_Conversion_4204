@@ -279,7 +279,7 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                     <TableCell>Formula Justification:</TableCell>
                                     <TableCell>
                                         <strong>
-                                            {medicationData.formulaJustification}
+                                            {medicationData.formulaJustification || results.formulaJustification}
                                         </strong>
                                     </TableCell>
                                 </TableRow>
