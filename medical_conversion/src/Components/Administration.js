@@ -34,11 +34,19 @@ function Administration({ targetRoute }) {
                     Oral administration requires taking the medication by mouth. It is recommended to take the medication
                     with a full glass of water, and in some cases, with food to prevent stomach upset. Do not crush or
                     chew extended-release tablets unless instructed by a healthcare provider. Follow the prescribed
-                    dosage, and if you miss a dose, take it as soon as possible unless it’s almost time for the next dose.
+                    dosage, and if you miss a dose, take it as soon as possible unless itï¿½s almost time for the next dose.
                 </Typography>
             )}
 
-            {!["iv", "sc", "oral"].includes(targetRoute?.toLowerCase()) && (
+            {targetRoute?.toLowerCase() === 'alt' && (
+                <Typography variant="body1" gutterBottom>
+                    Alternative medications are often used when the original prescribed drug is unsuitable for a patient due to factors like side effects, allergies, or ineffectiveness.
+                    Although alternatives are often in the same class, their dosages are not always equivalent. 
+                    Doctors carefully assess the equivalent dose when switching from one medication to another to ensure effectiveness and safety.
+                </Typography>
+            )}
+
+            {!["iv", "sc", "oral", 'alt'].includes(targetRoute?.toLowerCase()) && (
                 <Typography variant="body1" gutterBottom>
                     No specific administration instructions available for the selected route.
                 </Typography>
