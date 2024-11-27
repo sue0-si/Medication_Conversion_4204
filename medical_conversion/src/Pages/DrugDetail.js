@@ -114,6 +114,7 @@ const DrugDetail = () => {
                     <ChevronLeftIcon />
                     <p>Return To Search</p>
                 </IconButton>
+                <h1>{drugName.charAt(0).toUpperCase() + drugName.slice(1)}</h1>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="drug detail tab">
                         <Tab label="Dosage Guideline" value={0} />
