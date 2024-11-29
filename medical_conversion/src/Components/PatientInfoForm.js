@@ -19,17 +19,35 @@ function PatientInfoForm() {
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
-        setPatientData({
-            [name]: type === "checkbox" ? checked : value === "" ? type === "number" ? 0 : value : Number(value),
-        });
+
+        // Create a copy of the current patient data
+        let newData = { ...medicationData.patientData };
+
+        // Handle checkbox inputs
+        if (type === "checkbox") {
+            newData[name] = checked;
+        }
+        // Handle numeric fields
+        else if (["height", "weight", "age"].includes(name)) {
+            newData[name] = value === "" ? "" : Number(value);
+        }
+        // Handle text and dropdown fields
+        else {
+            newData[name] = value;
+        }
+
+        // Update the context with the modified data
+        setPatientData(newData);
     };
 
     const handleBlur = (event) => {
         const { name, value } = event.target;
-        if (value === "") {
-            setPatientData({
-                [name]: 0, // Reset to 0 if the field is left empty
-            });
+
+        if (["height", "weight", "age"].includes(name) && value === "") {
+            setPatientData((prevData) => ({
+                ...prevData,
+                [name]: 0, // Reset to 0 if left blank
+            }));
         }
     };
         

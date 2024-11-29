@@ -267,7 +267,7 @@ function ConversionResults({ resultsType }) {
                     </TableContainer>
 
             {/* Patient Information Section (if available) */}
-            {medicationData.patient !== false && (
+                    {(medicationData.patientData && Object.keys(medicationData.patientData).length > 0) &&  (
                 <>
                     <Typography variant="h6" gutterBottom>
                         Patient Information:
