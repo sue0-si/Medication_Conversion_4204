@@ -124,7 +124,7 @@ const DrugDetail = () => {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}
+                    {dosage_and_administration ? <DataTable dataString={dosage_and_administration[0]} /> : "No dosage guideline available"}
                     {/*<DataTable dataString={dosage_and_administration[0]}/>*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
