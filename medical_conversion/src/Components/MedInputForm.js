@@ -79,7 +79,7 @@ function MedInputForm({formtype, onSubmit
       setShowPatientForm(!showPatientForm);
       setMedicationData((prevData) => ({
           ...prevData,
-          patient: showPatientForm,
+          patient: { showPatientForm },
       }));
   };
 
