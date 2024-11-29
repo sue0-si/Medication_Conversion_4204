@@ -8,18 +8,19 @@ import { drugClassMap } from '../Components/drugClassMap';  // Correct import
 import Administration from '../Components/Administration';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { defaultResultsData } from '../Tools/Defaults'
+import { defaultResultsData } from '../Tools/Defaults';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Dashboard from "../Components/Dashboard";
 import AlertDialog from "../Components/AlertDialog";
-import warningData from '../Tools/warning.json'
+import warningData from '../Tools/warning.json';
+import MedicationContext from '../Tools/MedicationContext';
 
 function ConversionResults({ resultsType }) {
     const [results, setResults] = React.useState(defaultResultsData);
     const [error, setError] = React.useState(null);
     const location = useLocation();
-    const { medicationData } = location.state || {};
-    const { patientData } = location.state || {};
+    const { medicationData } = React.useContext(MedicationContext)
+    const { patientData } = medicationData.patientData;
     const [collapsedWarnings, setCollapsedWarnings] = React.useState([]);
     const navigate = useNavigate();
 
@@ -266,7 +267,7 @@ function ConversionResults({ resultsType }) {
                     </TableContainer>
 
             {/* Patient Information Section (if available) */}
-            {medicationData.patient && (
+            {medicationData.patient !== false && (
                 <>
                     <Typography variant="h6" gutterBottom>
                         Patient Information:

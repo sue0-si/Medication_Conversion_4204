@@ -12,7 +12,7 @@ export const MedicationProvider = ({ children }) => {
     const setPatientData = (newPatientData) => {
         setMedicationData(prevState => ({
             ...prevState,
-            patient: { ...prevState.patient, ...newPatientData }
+            patientData: { ...prevState.patientData, ...newPatientData }
         }));
     };
 

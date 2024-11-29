@@ -19,24 +19,27 @@ function PatientInfoForm() {
 
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
-        const newData = {
-            ...medicationData.patientData,
-            [name]: type === "checkbox" ? checked : value,
-        };
-        setPatientData(newData);
-
-        // Save to local storage whenever data changes
-        /*localStorage.setItem("patientData", JSON.stringify(newData));*/
+        setPatientData({
+            [name]: type === "checkbox" ? checked : value === "" ? type === "number" ? 0 : value : Number(value),
+        });
     };
 
-    
-
+    const handleBlur = (event) => {
+        const { name, value } = event.target;
+        if (value === "") {
+            setPatientData({
+                [name]: 0, // Reset to 0 if the field is left empty
+            });
+        }
+    };
+        
     return (
         <div>
             <TextField
                 label="Height (cm)"
                 name="height"
-                value={medicationData.patientData.height || 0}
+                value={medicationData.patientData.height || ""}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -45,7 +48,8 @@ function PatientInfoForm() {
             <TextField
                 label="Weight (kg)"
                 name="weight"
-                value={medicationData.patientData.weight || 0}
+                value={medicationData.patientData.weight || ""}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -143,8 +147,7 @@ export default PatientInfoForm;
 //const variableList = [
 //    {label: "Age", name: "age", type:"number"},
 //    {label: "Race", name: "race", type:"text"},
-//    {label: "Gender", name: "gender", type:"text"},
-//    {label: "Marital Status", name: "marital status", type:"text"},
+//    {label: "Gender", name: "gender", type:"text"},,
 //    {label: "Body Mass Index (BMI)", name: "BMI", type:"number"},
 //    {label: "Comorbidity", name: "comorbidity", type:"number"},
 //    {label: "Length of Stay (LOS)", name: "Length of Stay", type:"number"},
