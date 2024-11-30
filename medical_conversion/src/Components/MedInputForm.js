@@ -76,18 +76,11 @@ function MedInputForm({formtype, onSubmit
   };
 
   const handleClick = () => {
-    setShowPatientForm(!showPatientForm);
-    if (showPatientForm) {
+      setShowPatientForm(!showPatientForm);
       setMedicationData((prevData) => ({
-        ...prevData,
-        patient: true,
+          ...prevData,
+          patient: { showPatientForm },
       }));
-    } else {
-      setMedicationData((prevData) => ({
-        ...prevData,
-        patient: false,
-      }));
-    }
   };
 
   const handleSubmit = async (event) => {
