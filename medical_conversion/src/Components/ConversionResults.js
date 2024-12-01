@@ -170,8 +170,27 @@ function ConversionResults({ resultsType, medicationData, results }) {
                 }}>
                     
                     <Typography variant="h4" gutterBottom>
-                        Conversion Results
+                        Conversion Results: { medicationData.name } to { medicationData.target }
                     </Typography>
+
+                    {/* Conversion Results Section */}
+                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                        Calculated Dosage:
+                    </Typography>
+                    <TableContainer component={Paper} sx={{ mb: 4 }}>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Medication Name:</TableCell>
+                                    <TableCell><strong>{results.medName}</strong></TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Dosage:</TableCell>
+                                    <TableCell><strong>{results.dosage} {results.dosageUnit}</strong></TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
                     {/* Conversion Information Section */}
                     <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
@@ -282,25 +301,6 @@ function ConversionResults({ resultsType, medicationData, results }) {
                                             {medicationData.formulaJustification ?? results.formulaJustification ?? "Justification not available."}
                                         </strong>
                                     </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                    {/* Conversion Results Section */}
-                    <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                        Calculated Dosage:
-                    </Typography>
-                    <TableContainer component={Paper} sx={{ mb: 4 }}>
-                        <Table>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>Medication Name:</TableCell>
-                                    <TableCell><strong>{results.medName}</strong></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Dosage:</TableCell>
-                                    <TableCell><strong>{results.dosage} {results.dosageUnit}</strong></TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
