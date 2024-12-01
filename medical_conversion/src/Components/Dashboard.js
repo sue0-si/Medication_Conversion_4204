@@ -274,9 +274,6 @@ export default function Dashboard({children, heading}) {
                                 </ListItemIcon>
                                 <ListItemText primary="FAQ" />
                             </Link>
-                            <IconButton onClick={() => addFrame("Feedback / Bug Report", <Feedback />)}>
-                                <AddCircleOutlineIcon />
-                            </IconButton>
                         </ListItemButton>
                     </List>
                 </Drawer>
