@@ -226,7 +226,7 @@ export default function Dashboard({children, heading}) {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <Link to='/'>
+                        <Link to='/' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                             <ListItemButton>
                                 <ListItemIcon>
                                     <HomeIcon />
@@ -234,7 +234,7 @@ export default function Dashboard({children, heading}) {
                                 <ListItemText primary="Home" />
                             </ListItemButton>
                         </Link>
-                        <Link to='/medication-information'>
+                        <Link to='/medication-information' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                             <ListItemButton>
                                 <ListItemIcon>
                                     <ManageSearchIcon/>
