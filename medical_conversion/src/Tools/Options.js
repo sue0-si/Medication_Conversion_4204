@@ -127,7 +127,7 @@ export const extractOpioidMedications = () => {
 
                 // Add the target drug and its route to the 'to' and 'from' sets
                 medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
-                medicationConversions.from[normalizedTargetDrug].add(`${drug} (${route})`);
+                medicationConversions.from[normalizedTargetDrug].add(`${drug}`);
             });
         });
     });
@@ -193,7 +193,7 @@ export const extractMedicationOptions = () => {
 
                 // Add the target drug and its route to the 'to' and 'from' sets
                 medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
-                medicationConversions.from[normalizedTargetDrug].add(`${drug} (${route})`);
+                medicationConversions.from[normalizedTargetDrug].add(`${drug}`);
             });
         });
     });
