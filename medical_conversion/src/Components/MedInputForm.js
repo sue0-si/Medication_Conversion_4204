@@ -109,6 +109,13 @@ function MedInputForm({ formtype, onSubmit }) {
       return;
     }
 
+      if (!showPatientForm) {
+          setMedicationData((prevData) => ({
+              ...prevData,
+              patient: false
+          }));
+      }
+
     setSubmittedData(medicationData);
     onSubmit();
   };
