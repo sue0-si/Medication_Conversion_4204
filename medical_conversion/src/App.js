@@ -12,6 +12,7 @@ import MedicationLookup from './Pages/MedicationSearch';
 import DrugDetail from './Pages/DrugDetail.js';
 import PoIvConversion from './Pages/PoIvConversion';
 import AltConversion from './Pages/AltConversion';
+import Feedback from './Pages/Feedback.js';
 
 function App() {
     const [mode] = React.useState('light');
@@ -25,6 +26,7 @@ function App() {
                   <Route path="/medication-information/:medication-name" element={<DrugDetail />} />
                   <Route path="/po-iv" element={<PoIvConversion />} />
                   <Route path="/alt" element={<AltConversion />}/>
+                  <Route path="/feedback" element={<Feedback />}/>
                   </Routes>
           </Router>
           <Copyright/>

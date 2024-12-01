@@ -27,6 +27,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
 import PoIvConversionTool from '../Pages/PoIvConversionTool';
+import Feedback from '../Pages/Feedback';
 
 
 //width of open nav pannel
@@ -266,11 +267,16 @@ export default function Dashboard({children, heading}) {
                         </ListItemButton>
 
 
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <QuestionMarkIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="FAQ" />
+                        <ListItemButton sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Link to='/feedback' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+                                <ListItemIcon>
+                                    <QuestionMarkIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="FAQ" />
+                            </Link>
+                            <IconButton onClick={() => addFrame("Feedback / Bug Report", <Feedback />)}>
+                                <AddCircleOutlineIcon />
+                            </IconButton>
                         </ListItemButton>
                     </List>
                 </Drawer>
