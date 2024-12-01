@@ -42,7 +42,7 @@ export const extractFormulaOptions = () => {
                     targetDrug: normalizedTargetDrug,
                     conversionRatio: opioids[drug].Conversions[route][normalizedTargetDrug],
                     class: opioids[drug].class,
-                    formulaName: `${drug} to ${normalizedTargetDrug} via ${route}`,
+                    formulaName: `${drug} ${route} to ${normalizedTargetDrug} ${route}`,
                 justification: "Conversion Formula recieved as strength ratio {cancercalc.com/opioid_conversion.php / paindata.org/caclulator.php} and does not account for patient variables"
                 });
             });
