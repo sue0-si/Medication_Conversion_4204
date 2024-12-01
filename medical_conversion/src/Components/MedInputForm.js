@@ -57,7 +57,7 @@ function MedInputForm({ formtype, onSubmit }) {
       setMedicationData((prevData) => ({
         ...prevData,
         route: "oral", 
-        targetRoute: "oral"
+        targetRoute: "alt"
       }));
     }
   }, [formtype, setMedicationData]);
