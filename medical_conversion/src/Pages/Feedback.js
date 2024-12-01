@@ -41,7 +41,8 @@ const FeedbackBugReport = () => {
         padding: "20px",
       }}
     >
-        <Dashboard heading={"Feedback / Bug Report"}></Dashboard>
+    
+      <Dashboard heading={"Feedback / Bug Report"}></Dashboard>
       <Typography variant="h4" component="h1" gutterBottom>
         Submit Feedback or Report a Bug
       </Typography>
