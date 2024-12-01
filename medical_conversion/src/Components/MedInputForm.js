@@ -87,13 +87,9 @@ function MedInputForm({ formtype, onSubmit }) {
     setShowPatientForm(!showPatientForm);
     setMedicationData((prevData) => ({
         ...prevData,
-        patientData: { 
-            ...prevData.patientData,
-            showPatientForm: !showPatientForm 
-        },
+        patient: { showPatientForm },
     }));
 };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
