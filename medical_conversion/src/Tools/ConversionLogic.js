@@ -1,4 +1,3 @@
-// JavaScript source code
 import opioidRouteConversions from './opioidRouteConversions';
 import steroids from './steroids.json';
 import opioids from './opioids.json';
@@ -19,10 +18,25 @@ export const performConversion = (medicationData, setResults, setError, type) =>
 
     let conversionRatio = 1;  // Default ratio
     let convertedDosage = medicationData.dosage;  // Initialize with original dosage
+    let conversionFormula = ""; // For storing the formula used
 
     // 1. Use custom formula if available
-    if (medicationData.formula && medicationData.formula.conversionRatio) {
+    if (medicationData.formula && medicationData.formula.customFormula) {
+        let formulaToEvaluate = medicationData.formula.customFormula.replace(/dose/gi, medicationData.dosage);
+        try {
+            let result = eval(formulaToEvaluate); // Note: eval can be dangerous; consider safer alternatives
+            convertedDosage = result;
+            // Update conversionFormula to reflect the custom formula
+            conversionFormula = `${medicationData.formula.customFormula.replace(/dose/gi, medicationData.dosage)} = ${convertedDosage} ${medicationData.dosageUnit} of ${medicationData.target}`;
+        } catch (error) {
+            setError("Error evaluating custom formula");
+            return;
+        }
+    } else if (medicationData.formula && medicationData.formula.conversionRatio) {
+        // Use the provided conversion ratio
         conversionRatio = medicationData.formula.conversionRatio;
+        convertedDosage = medicationData.dosage * conversionRatio;
+        conversionFormula = `${medicationData.dosage} ${medicationData.dosageUnit} of ${medicationData.name} * ${conversionRatio} = ${convertedDosage} ${medicationData.dosageUnit} of ${medicationData.target}`;
     } else {
         // 2. Apply default logic based on drug class
         const firstDrugClass = drugClassMap[normalizedDrugName];
@@ -36,7 +50,7 @@ export const performConversion = (medicationData, setResults, setError, type) =>
             case 'opioid':
                 if (type === "poiv") {
                     conversionRatio = opioidRouteConversions?.[normalizedDrugName]?.[firstAdminType]?.[targetAdminType] || 1;
-                } else if (type==="alt") {
+                } else if (type === "alt") {
                     conversionRatio = opioids?.[normalizedDrugName]?.Conversions?.[normalizedDrugNameTarget] || 1;
                 }
                 break;
@@ -53,18 +67,17 @@ export const performConversion = (medicationData, setResults, setError, type) =>
                 setError("No valid drug class found");
                 return;
         }
+        convertedDosage = medicationData.dosage * conversionRatio;
+        conversionFormula = `${medicationData.dosage} ${medicationData.dosageUnit} of ${medicationData.name} * ${conversionRatio} = ${convertedDosage} ${medicationData.dosageUnit} of ${medicationData.target}`;
     }
-
-    // Perform conversion using the chosen ratio
-    convertedDosage = medicationData.dosage * conversionRatio;
 
     // Set the results for display
     setResults({
         medName: medicationData.target,
         dosage: Math.round(convertedDosage * 100) / 100,
         dosageUnit: medicationData.dosageUnit,
-        conversionFormula: `${medicationData.dosage} ${medicationData.dosageUnit} of ${medicationData.name} * ${conversionRatio} = ${convertedDosage} ${medicationData.dosageUnit} of ${medicationData.target}`,
+        conversionFormula: conversionFormula,
         warnings: [],  // Add warnings if needed
-        formulaName: medicationData.formulaName || "Standard Ratio",
+        formulaName: medicationData.formulaName || "Standard Formula",
     });
 };
