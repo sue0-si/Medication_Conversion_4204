@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { MedicationContext } from '../Tools/MedicationContext';
-import { extractMedicationOptions } from '../Tools/Options';  // Correct file reference for options
+import { extractMedicationOptions, extractOpioidMedications } from '../Tools/Options';  // Correct file reference for options
 import { Autocomplete, TextField } from '@mui/material';
 
 // Helper function to ensure safe string operations
@@ -8,17 +8,23 @@ const getSafeLowerCase = (value) => {
     return typeof value === 'string' ? value.toLowerCase() : '';
 };
 
-const SelectMedication = ({ label, field }) => {
+const SelectMedication = ({ label, field, formtype }) => {
     const { medicationData, setMedicationData } = useContext(MedicationContext);
     const [medicationConversions, setMedicationConversions] = useState({ to: {}, from: {} });
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [inputValue, setInputValue] = useState(medicationData[field] || '');  // Initialize with the selected value
-
-    // Load all available medications and conversions when the component mounts
+    
+    // Load all available medications and conversions for Alternative Drugs
     useEffect(() => {
-        const allOptions = extractMedicationOptions();  // Get all medication options and conversions
+        let allOptions = 0;
+        if (formtype === "po-iv") {
+            allOptions = extractOpioidMedications();  // Get all medication options and conversions
+        } else {
+            allOptions = extractMedicationOptions();  // Get all medication options and conversions
+        }
+
         setMedicationConversions(allOptions);
-    }, []);
+    }, [formtype]);
 
     // Filter options dynamically based on the selected field (name or target) and other field's value
     useEffect(() => {

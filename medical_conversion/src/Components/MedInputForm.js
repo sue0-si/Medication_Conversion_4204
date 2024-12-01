@@ -85,18 +85,15 @@ function MedInputForm({ formtype, onSubmit }) {
 
   const handleClick = () => {
     setShowPatientForm(!showPatientForm);
-    if (showPatientForm) {
-      setMedicationData((prevData) => ({
+    setMedicationData((prevData) => ({
         ...prevData,
-        patient: true,
-      }));
-    } else {
-      setMedicationData((prevData) => ({
-        ...prevData,
-        patient: false,
-      }));
-    }
-  };
+        patientData: { 
+            ...prevData.patientData,
+            showPatientForm: !showPatientForm 
+        },
+    }));
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -142,7 +139,7 @@ function MedInputForm({ formtype, onSubmit }) {
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        <SelectMedication field="name" label="Select Source Medication" />
+        <SelectMedication field="name" label="Select Source Medication" formtype = {formtype} />
 
         <FormControl fullWidth margin="normal">
           <Typography variant="Subtitle 1" gutterBottom>
@@ -210,7 +207,7 @@ function MedInputForm({ formtype, onSubmit }) {
 
         {/* Render target medication select box only if formtype is not "po-iv" */}
         {formtype !== "po-iv" && (
-          <SelectMedication field="target" label="Select Target Medication" />
+          <SelectMedication field="target" label="Select Target Medication" formtype={formtype}/>
         )}
 
         {/* PO-IV form */}
