@@ -26,8 +26,7 @@ import { extractFormulaOptions } from "../Tools/Options";
 import SelectMedication from "./SelectMedication";
 import { MedicationContext } from "../Tools/MedicationContext"
 
-function MedInputForm({formtype, onSubmit
-}) {
+function MedInputForm({ formtype, onSubmit }) {
   const { medicationData, setMedicationData, setPatientData } = useContext(MedicationContext);
   const [submittedData, setSubmittedData] = useState(null);
   const navigate = useNavigate();
@@ -43,6 +42,15 @@ function MedInputForm({formtype, onSubmit
     const allOptions = extractFormulaOptions();
     setFormulaOptions(allOptions);
   }, []);
+
+  useEffect(() => {
+    if (formtype === "po-iv") {
+      setMedicationData((prevData) => ({
+        ...prevData,
+        target: prevData.name,
+      }));
+    }
+  }, [medicationData.name, formtype, setMedicationData]);
 
   const getFilteredOptions = () => {
     const filtered = formulaOptions.filter((option) => {
@@ -200,8 +208,10 @@ function MedInputForm({formtype, onSubmit
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-       
-        <SelectMedication field="target" label="Select Target Medication" />
+        {/* Render target medication select box only if formtype is not "po-iv" */}
+        {formtype !== "po-iv" && (
+          <SelectMedication field="target" label="Select Target Medication" />
+        )}
 
         {/* PO-IV form */}
         {formtype === "po-iv" && (
@@ -265,7 +275,10 @@ function MedInputForm({formtype, onSubmit
           </Button>
 
           {showPatientForm && (
-            <PatientInfoForm patientData={medicationData.patientData} setPatientData={setPatientData} />
+            <PatientInfoForm
+              patientData={medicationData.patientData}
+              setPatientData={setPatientData}
+            />
           )}
         </FormControl>
       </Box>
