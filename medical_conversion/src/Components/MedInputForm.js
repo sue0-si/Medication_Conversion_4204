@@ -52,18 +52,42 @@ function MedInputForm({ formtype, onSubmit }) {
     }
   }, [medicationData.name, formtype, setMedicationData]);
 
+  useEffect(() => {
+    if (formtype !== "po-iv") {
+      setMedicationData((prevData) => ({
+        ...prevData,
+        route: "oral", 
+        targetRoute: "oral"
+      }));
+    }
+  }, [formtype, setMedicationData]);
+  
   const getFilteredOptions = () => {
     const filtered = formulaOptions.filter((option) => {
-      const isRelevantMedication = option.formulaName
-        .toLowerCase()
-        .includes(medicationData.name?.toLowerCase());
-      const isRelevantRoute =
-        !medicationData.route ||
-        option.formulaName.toLowerCase().includes(medicationData.route?.toLowerCase());
-      return isRelevantMedication && isRelevantRoute;
+      const isRelevantMedication = medicationData.name
+        ? option.formulaName.toLowerCase().includes(medicationData.name.toLowerCase())
+        : true;
+  
+      if (formtype === 'po-iv') {
+        const isRelevantTargetMedication = medicationData.target
+          ? option.formulaName.toLowerCase().includes(medicationData.target.toLowerCase())
+          : true;
+        const isRelevantTargetRoute = medicationData.targetRoute
+          ? option.formulaName.toLowerCase().includes(medicationData.targetRoute.toLowerCase())
+          : true;
+  
+        return (
+          isRelevantMedication &&
+          isRelevantTargetMedication &&
+          isRelevantTargetRoute
+        );
+      } else {
+        return isRelevantMedication;
+      }
     });
     return filtered;
   };
+  
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -145,6 +169,8 @@ function MedInputForm({ formtype, onSubmit }) {
         <SelectMedication field="name" label="Select Source Medication" formtype = {formtype} />
 
         <FormControl fullWidth margin="normal">
+      {formtype === "po-iv" && (
+        <>
           <Typography variant="Subtitle 1" gutterBottom>
             Administration Method
           </Typography>
@@ -170,7 +196,9 @@ function MedInputForm({ formtype, onSubmit }) {
               SC
             </ToggleButton>
           </ToggleButtonGroup>
-        </FormControl>
+        </>
+      ) }
+    </FormControl>
 
         {/* Dosage Input Field */}
         <TextField
