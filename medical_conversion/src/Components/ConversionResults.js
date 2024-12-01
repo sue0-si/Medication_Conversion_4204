@@ -1,11 +1,21 @@
 // JavaScript source code
 import * as React from "react";
-import Administration from './Administration';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import AlertDialog from "./AlertDialog";
-import axios from 'axios';
+import opioidRouteConversions from '../Tools/opioidRouteConversions';
+import steroids from '../Tools/steroids.json';
+import opioids from '../Tools/opioids.json';
+import benzodiazepine from '../Tools/benzodiazepine.json';
+import localAnesthetics from '../Tools/local_anesthetics.json';
+import { drugClassMap } from '../Tools/drugClassMap';  // Correct import
+import Administration from '../Components/Administration';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { defaultResultsData } from '../Tools/Defaults';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Dashboard from "../Components/Dashboard";
+import AlertDialog from "../Components/AlertDialog";
 import warningData from '../Tools/warning.json';
+import MedicationContext from '../Tools/MedicationContext';
+import axios from 'axios';
 
 function ConversionResults({ resultsType, medicationData, results }) {
     const [warnings, setWarnings] = React.useState([]);

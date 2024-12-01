@@ -9,7 +9,7 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
     const [drugClass, setDrugClass] = useState('');
     const [formulaError, setFormulaError] = useState(''); 
     
-    const inputRef = useRef(null); // **Ref to manage cursor position**
+    const inputRef = useRef(null); 
 
     // Auto-fill form based on medicationData
     useEffect(() => {
@@ -20,7 +20,6 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
         }
     }, [medicationData]);
 
-    // **Handler to Restrict Input Characters and Ensure "dose" Remains**
     const handleCustomFormulaChange = (e) => {
         const value = e.target.value;
 
@@ -77,9 +76,8 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
         addFormula(newFormula); // Add the new formula
         handleClose(); // Close the modal
 
-        // **Reset the form and errors after successful submission**
         setFormulaError('');
-        setCustomFormula('dose'); // **Reset to "dose"**
+        setCustomFormula('dose'); 
     };
 
     // Determine if the form is valid
