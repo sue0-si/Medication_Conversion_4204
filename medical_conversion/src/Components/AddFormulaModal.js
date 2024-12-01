@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, TextField, Button, Box, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Modal, TextField, Button, Box, Typography, Tooltip } from '@mui/material'; // Added Tooltip
 
 function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
     const [formulaName, setFormulaName] = useState('');
     const [sourceDrug, setSourceDrug] = useState('');
     const [targetDrug, setTargetDrug] = useState('');
-    const [conversionRatio, setConversionRatio] = useState('');
-    const [customFormula, setCustomFormula] = useState('');
-    const [useCustomFormula, setUseCustomFormula] = useState(false);
+    const [customFormula, setCustomFormula] = useState('dose');
     const [drugClass, setDrugClass] = useState('');
+    const [formulaError, setFormulaError] = useState(''); 
+    
+    const inputRef = useRef(null); // **Ref to manage cursor position**
 
     // Auto-fill form based on medicationData
     useEffect(() => {
@@ -19,6 +20,47 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
         }
     }, [medicationData]);
 
+    // **Handler to Restrict Input Characters and Ensure "dose" Remains**
+    const handleCustomFormulaChange = (e) => {
+        const value = e.target.value;
+
+        // Allowed characters: numbers, parentheses, brackets, ^, *, -, +, /, and "dose" (case-insensitive)
+        const regex = /^[0-9()\[\]\^\*\-\+\/\s]*dose[0-9()\[\]\^\*\-\+\/\s]*$/i;
+
+        if (regex.test(value)) {
+            setCustomFormula(value); // Update state with valid input
+
+            // Validate the formula
+            const isValid = validFormula(value);
+            if (isValid) {
+                setFormulaError(''); // Clear any existing errors
+            } else {
+                setFormulaError('Invalid formula');
+            }
+        } 
+    };
+
+    // Function to Validate the Formula
+    const validFormula = (formula) => {
+        try {
+            // Replace all instances of "dose" (case-insensitive) with 1
+            const formulaToValidate = formula.replace(/dose/gi, '1');
+
+            // Use the Function constructor to evaluate the formula safely
+            const func = new Function(`return (${formulaToValidate});`);
+            const result = func(); // Attempt to execute the formula
+
+            // Check if the result is a finite number
+            if (typeof result === 'number' && isFinite(result)) {
+                return true; // Valid formula
+            } else {
+                return false; // Invalid formula (e.g., division by zero resulting in Infinity)
+            }
+        } catch (error) {
+            return false; 
+        }
+    };
+
     // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,16 +69,21 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
             formulaName,
             sourceDrug,
             targetDrug,
-            conversionRatio: useCustomFormula ? null : parseFloat(conversionRatio),
-            customFormula: useCustomFormula ? customFormula : null,
-            formulaType: useCustomFormula ? 'custom' : 'ratio',
+            customFormula, 
             justification: "User Custom",
-            class: drugClass
+            class: drugClass,
         };
 
-        addFormula(newFormula);  // Add the new formula
-        handleClose();  // Close the modal
+        addFormula(newFormula); // Add the new formula
+        handleClose(); // Close the modal
+
+        // **Reset the form and errors after successful submission**
+        setFormulaError('');
+        setCustomFormula('dose'); // **Reset to "dose"**
     };
+
+    // Determine if the form is valid
+    const isValid = !formulaError && customFormula.trim() !== '';
 
     return (
         <Modal open={open} onClose={handleClose}>
@@ -78,35 +125,34 @@ function AddFormulaModal({ open, handleClose, addFormula, medicationData }) {
                         margin="normal"
                         placeholder="e.g., Hydromorphone"
                     />
-                    <Button onClick={() => setUseCustomFormula(!useCustomFormula)} sx={{ mb: 2 }}>
-                        {useCustomFormula ? "Switch to Ratio" : "Use Custom Formula"}
-                    </Button>
 
-                    {!useCustomFormula ? (
-                        <TextField
-                            label="Conversion Ratio"
-                            value={conversionRatio}
-                            onChange={(e) => setConversionRatio(e.target.value)}
-                            required
-                            fullWidth
-                            margin="normal"
-                            placeholder="Enter ratio (e.g., 1:4.5)"
-                        />
-                    ) : (
-                        <TextField
-                            label="Custom Formula"
-                            value={customFormula}
-                            onChange={(e) => setCustomFormula(e.target.value)}
-                            required
-                            fullWidth
-                            margin="normal"
-                            placeholder="e.g., dose * 0.5 + 5"
-                        />
-                    )}
+                    <TextField
+                        label="Custom Formula"
+                        value={customFormula}
+                        onChange={handleCustomFormulaChange} // Use the updated handler
+                        required
+                        fullWidth
+                        margin="normal"
+                        helperText={formulaError || "Example: (dose * 0.5) + 5"}
+                        error={!!formulaError}
+                        inputRef={inputRef}
+                    />
 
-                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                        Add Formula
-                    </Button>
+                    {/* Wrap the Button with Tooltip */}
+                    <Tooltip title={!isValid ? "Invalid formula" : ""} disableHoverListener={isValid}>
+                        {/* Use a span to wrap the Button because Tooltip doesn't work with disabled buttons */}
+                        <span>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                sx={{ mt: 2 }}
+                                disabled={!isValid} // Disable button when not valid
+                            >
+                                Add Formula
+                            </Button>
+                        </span>
+                    </Tooltip>
                 </form>
             </Box>
         </Modal>
@@ -120,7 +166,7 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 4
+    p: 4,
 };
 
 export default AddFormulaModal;
