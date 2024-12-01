@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Box, Typography, Button, Card, CardMedia, CardContent, Stack } from '@mui/material';
 import NavigationClosedView from '../Images/NavigationClosedView.png';
 import NavigationInstructions from '../Images/NavigationInstructions.png'
+import NavigationSearch from '../Images/NavigationSearch.png'
+import NavigationPOIV from '../Images/NavigationPOIV.png'
+import NavigationFeedback from '../Images/NavigationFeedback.png'
 
 //Add new instructions here, make sure to import Image and store in /Images folder
 const instructions = [
@@ -13,6 +16,18 @@ const instructions = [
         image: NavigationInstructions,
         description: 'Click the collapsed or expanded links to navigate the site, or use the \'plus\' buttons to add coversion tools to the page you\'re currently on.',
     },
+    {
+        image: NavigationSearch,
+        description: 'Use a search bar on the top left to retrieve a general information of the desired drug.'
+    },
+    {
+        image: NavigationPOIV,
+        description: 'For PO-IV and alt-medication conversion, choose the source and destination medication and input the amount of dosage. By clicking submit button, the conversion result will be shown.'
+    }, 
+    {
+        image: NavigationFeedback,
+        description: 'Choose either feedback or bug report and write a message.'
+    }
 ];
 
 const Instructions = () => {
@@ -36,10 +51,10 @@ const Instructions = () => {
                 Navigation and Features
             </Typography>
 
-            <Card sx={{ maxWidth: 600, margin: '0 auto', boxShadow: 3 }}>
+            <Card sx={{ maxWidth: 700, margin: '0 auto', boxShadow: 3 }}>
                 <CardMedia
                     component="img"
-                    height="300"
+                    height="400"
                     image={instructions[currentStep].image}
                     alt={`Step ${currentStep + 1}`}
                     sx={{ objectFit: 'contain' }}
