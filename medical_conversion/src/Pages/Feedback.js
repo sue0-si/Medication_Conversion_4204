@@ -19,18 +19,39 @@ const FeedbackBugReport = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    setSubmitted(true);
-    setFormData({ type: "feedback", name: "", email: "", message: "" });
-    setTimeout(() => setSubmitted(false), 3000); // Clear the message after 3 seconds
+
+    const formspreeEndpoint = "https://formspree.io/f/mdkoprqk"; 
+
+    try {
+      const response = await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ type: "feedback", name: "", email: "", message: "" });
+        setTimeout(() => setSubmitted(false), 3000);
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError("Failed to send the message. Please try again later.");
+      setTimeout(() => setError(""), 5000);
+    }
   };
 
   return (
@@ -41,7 +62,6 @@ const FeedbackBugReport = () => {
         padding: "20px",
       }}
     >
-    
       <Dashboard heading={"Feedback / Bug Report"}></Dashboard>
       <Typography variant="h4" component="h1" gutterBottom>
         Submit Feedback or Report a Bug
@@ -112,6 +132,15 @@ const FeedbackBugReport = () => {
           sx={{ mt: 2 }}
         >
           Thank you for your submission!
+        </Alert>
+      )}
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ mt: 2 }}
+        >
+          {error}
         </Alert>
       )}
     </Box>
