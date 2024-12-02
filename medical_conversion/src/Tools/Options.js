@@ -131,30 +131,19 @@ export const extractOpioidFormulae = () => {
 
 
 /**
- * Function to extract available medication names from multiple datasets
+ * Function to only extract opioids for po-iv
  */
-export const extractMedicationOptions = () => {
+export const extractOpioidMedications = () => {
     const medicationConversions = {
         to: {},   // Map of medications that can be converted to others
         from: {}  // Map of medications that can be converted from others
     };
-
-    // Add Benzodiazepines conversions
-    Object.keys(benzodiazepines).forEach((drug) => {
-        medicationConversions.to[drug] = new Set();
-        Object.keys(benzodiazepines[drug].Conversions).forEach((targetDrug) => {
-            const normalizedTargetDrug = normalizeDrugName(targetDrug);
-            if (!medicationConversions.from[normalizedTargetDrug]) {
-                medicationConversions.from[normalizedTargetDrug] = new Set();
-            }
-            medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
-            medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
-        });
-    });
-
-    // Add Opioids conversions
+    
+    // First Loop: Add basic opioid conversions
     Object.keys(opioids).forEach((drug) => {
-        medicationConversions.to[drug] = new Set();
+        if (!medicationConversions.to[drug]) {
+            medicationConversions.to[drug] = new Set();
+        }
         Object.keys(opioids[drug].Conversions).forEach((targetDrug) => {
             const normalizedTargetDrug = normalizeDrugName(targetDrug);
             if (!medicationConversions.from[normalizedTargetDrug]) {
@@ -165,8 +154,9 @@ export const extractMedicationOptions = () => {
         });
     });
 
+    // Second Loop: Add conversions with routes
     Object.keys(opioids).forEach((drug) => {
-        medicationConversions.to[drug] = new Set();
+        // Removed: medicationConversions.to[drug] = new Set();
 
         // Iterate through all available routes for each drug
         Object.keys(opioids[drug].Conversions).forEach((route) => {
@@ -178,36 +168,15 @@ export const extractMedicationOptions = () => {
                     medicationConversions.from[normalizedTargetDrug] = new Set();
                 }
 
+                // Initialize the 'to' set if it doesn't exist
+                if (!medicationConversions.to[drug]) {
+                    medicationConversions.to[drug] = new Set();
+                }
+
                 // Add the target drug and its route to the 'to' and 'from' sets
                 medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
                 medicationConversions.from[normalizedTargetDrug].add(`${drug}`);
             });
-        });
-    });
-
-    // Add Local Anesthetics conversions
-    Object.keys(localAnesthetics).forEach((drug) => {
-        medicationConversions.to[drug] = new Set();
-        Object.keys(localAnesthetics[drug].Conversions).forEach((targetDrug) => {
-            const normalizedTargetDrug = normalizeDrugName(targetDrug);
-            if (!medicationConversions.from[normalizedTargetDrug]) {
-                medicationConversions.from[normalizedTargetDrug] = new Set();
-            }
-            medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
-            medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
-        });
-    });
-
-    // Add Steroids conversions
-    Object.keys(steroids).forEach((drug) => {
-        medicationConversions.to[drug] = new Set();
-        Object.keys(steroids[drug].Conversions).forEach((targetDrug) => {
-            const normalizedTargetDrug = normalizeDrugName(targetDrug);
-            if (!medicationConversions.from[normalizedTargetDrug]) {
-                medicationConversions.from[normalizedTargetDrug] = new Set();
-            }
-            medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
-            medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
         });
     });
 

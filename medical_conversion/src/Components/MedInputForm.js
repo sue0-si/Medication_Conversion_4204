@@ -62,14 +62,16 @@ function MedInputForm({ formtype, onSubmit }) {
     }
   }, [medicationData.name, formtype, setMedicationData]);
 
-  // Update isOpioid whenever the selected medication changes
   useEffect(() => {
-    if (medicationData.class) {
-      setIsOpioid(medicationData.class.toLowerCase() === "opioid");
-    } else {
-      setIsOpioid(false);
+    if (formtype !== "po-iv") {
+      setMedicationData((prevData) => ({
+        ...prevData,
+        route: "oral", 
+        targetRoute: "alt"
+      }));
     }
-  }, [medicationData.class]);
+  }, [formtype, setMedicationData]);
+  
 
   const getFilteredOptions = () => {
     console.log("Filtering with:", {
@@ -117,6 +119,7 @@ function MedInputForm({ formtype, onSubmit }) {
     console.log("Filtered Options:", filtered);
     return filtered;
   };
+  
 
   const filteredOptions = useMemo(() => getFilteredOptions(), [
     formulaOptions,
@@ -178,6 +181,13 @@ function MedInputForm({ formtype, onSubmit }) {
       return;
     }
 
+      if (!showPatientForm) {
+          setMedicationData((prevData) => ({
+              ...prevData,
+              patient: false
+          }));
+      }
+
     setSubmittedData(medicationData);
     onSubmit();
   };
@@ -226,11 +236,11 @@ function MedInputForm({ formtype, onSubmit }) {
           onChange={handleMedicationNameChange} // Ensure onChange is handled
         />
 
-        <FormControl 
-          fullWidth 
-          margin="normal" 
-          disabled={formtype === "alt" && !isOpioid} // Disable based on condition
-        >
+
+        <FormControl fullWidth margin="normal">
+      {formtype === "po-iv" && (
+        <>
+
           <Typography variant="Subtitle 1" gutterBottom>
             Source Administration Method
           </Typography>
@@ -256,7 +266,9 @@ function MedInputForm({ formtype, onSubmit }) {
               SC
             </ToggleButton>
           </ToggleButtonGroup>
-        </FormControl>
+        </>
+      ) }
+    </FormControl>
 
         {/* Dosage Input Field */}
         <TextField

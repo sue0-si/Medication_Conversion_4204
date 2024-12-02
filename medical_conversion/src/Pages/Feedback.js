@@ -29,7 +29,7 @@ const FeedbackBugReport = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formspreeEndpoint = "https://formspree.io/f/mvgovjjy"; 
+    const formspreeEndpoint = "https://formspree.io/f/mdkoprqk"; 
 
     try {
       const response = await fetch(formspreeEndpoint, {

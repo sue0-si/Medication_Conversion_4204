@@ -124,19 +124,19 @@ const DrugDetail = () => {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {dosage_and_administration ? dosage_and_administration[0] : "No dosage guideline available"}
+                    {dosage_and_administration ? <DataTable dataString={dosage_and_administration[0]} /> : "No dosage guideline available"}
                     {/*<DataTable dataString={dosage_and_administration[0]}/>*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    {adverse_reactions ? adverse_reactions[0] : "No side effect information available"}
+                    {adverse_reactions ? <DataTable dataString={adverse_reactions[0]} /> : "No side effect information available"}
                     {/*<DataTable dataString={adverse_reactions[0]} />*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    {drug_interactions ? drug_interactions[0] : "No drug interaction information available"}
+                    {drug_interactions ? <DataTable dataString={drug_interactions[0]} /> : "No drug interaction information available"}
                     {/*<DataTable dataString={drug_interactions[0]} />*/}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={3}>
-                    {indications_and_usage ? indications_and_usage[0] : "No treatment indication available"}
+                    {indications_and_usage ? <DataTable dataString={indications_and_usage[0]} /> : "No treatment indication available"}
                     {/*<DataTable dataString={indications_and_usage[0]} />*/}
                 </CustomTabPanel>
             </Box>
