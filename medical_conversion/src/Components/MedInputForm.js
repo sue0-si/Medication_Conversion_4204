@@ -1,4 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+// MedInputForm.js
+
+import { useState, useEffect, useContext, useMemo } from "react";
 import {
   TextField,
   Button,
@@ -10,7 +12,6 @@ import {
   Typography,
   ToggleButton,
   ToggleButtonGroup,
-  Autocomplete,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,9 +23,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import PatientInfoForm from "./PatientInfoForm";
 import SelectFormula from "./SelectFormula";
-import { extractFormulaOptions } from "../Tools/Options";
+import { extractFormulaOptions, extractOpioidFormulae } from "../Tools/Options";
 import SelectMedication from "./SelectMedication";
-import { MedicationContext } from "../Tools/MedicationContext"
+import { MedicationContext } from "../Tools/MedicationContext";
 
 function MedInputForm({ formtype, onSubmit }) {
   const { medicationData, setMedicationData, setPatientData } = useContext(MedicationContext);
@@ -38,16 +39,25 @@ function MedInputForm({ formtype, onSubmit }) {
   ]);
   const [formulaOptions, setFormulaOptions] = useState([]);
 
+  // State to determine if the selected medication is an opioid
+  const [isOpioid, setIsOpioid] = useState(false);
+
+  // Set formulaOptions based on formtype
   useEffect(() => {
-    const allOptions = extractFormulaOptions();
+    let allOptions;
+    if (formtype === "po-iv") {
+      allOptions = extractOpioidFormulae(); // Use opioid-specific formulae with targetRoute
+    } else {
+      allOptions = extractFormulaOptions(); // Use general formulae
+    }
     setFormulaOptions(allOptions);
-  }, []);
+  }, [formtype]);
 
   useEffect(() => {
     if (formtype === "po-iv") {
       setMedicationData((prevData) => ({
         ...prevData,
-        target: prevData.name,
+        target: prevData.name, // Ensure target is same as source for po-iv
       }));
     }
   }, [medicationData.name, formtype, setMedicationData]);
@@ -62,32 +72,62 @@ function MedInputForm({ formtype, onSubmit }) {
     }
   }, [formtype, setMedicationData]);
   
+
   const getFilteredOptions = () => {
-    const filtered = formulaOptions.filter((option) => {
-      const isRelevantMedication = medicationData.name
-        ? option.formulaName.toLowerCase().includes(medicationData.name.toLowerCase())
-        : true;
-  
-      if (formtype === 'po-iv') {
-        const isRelevantTargetMedication = medicationData.target
-          ? option.formulaName.toLowerCase().includes(medicationData.target.toLowerCase())
-          : true;
-        const isRelevantTargetRoute = medicationData.targetRoute
-          ? option.formulaName.toLowerCase().includes(medicationData.targetRoute.toLowerCase())
-          : true;
-  
-        return (
-          isRelevantMedication &&
-          isRelevantTargetMedication &&
-          isRelevantTargetRoute
-        );
-      } else {
-        return isRelevantMedication;
-      }
+    console.log("Filtering with:", {
+      medicationName: medicationData.name,
+      targetMedication: medicationData.target,
+      route: medicationData.route,
+      targetRoute: medicationData.targetRoute,
+      formtype,
     });
+
+    const filtered = formulaOptions.filter((option) => {
+      // Filter based on Source Drug
+      const isRelevantSourceDrug =
+        medicationData.name &&
+        option.sourceDrug.toLowerCase().includes(medicationData.name.toLowerCase());
+
+      // Filter based on Target Drug
+      const isRelevantTargetDrug =
+        medicationData.target &&
+        option.targetDrug.toLowerCase().includes(medicationData.target.toLowerCase());
+
+      // Initialize route relevance as true
+      let isRelevantRoute = true;
+
+      // Apply route-based filtering only if formtype is "po-iv"
+      if (formtype === "po-iv") {
+        isRelevantRoute =
+          medicationData.route &&
+          option.sourceRoute.toLowerCase().includes(medicationData.route.toLowerCase()) &&
+          medicationData.targetRoute &&
+          option.targetRoute.toLowerCase().includes(medicationData.targetRoute.toLowerCase());
+      }
+
+      console.log({
+        option,
+        isRelevantSourceDrug,
+        isRelevantTargetDrug,
+        isRelevantRoute,
+      });
+
+      // Return true only if all relevant conditions are met
+      return isRelevantSourceDrug && isRelevantTargetDrug && isRelevantRoute;
+    });
+
+    console.log("Filtered Options:", filtered);
     return filtered;
   };
   
+
+  const filteredOptions = useMemo(() => getFilteredOptions(), [
+    formulaOptions,
+    medicationData.name,
+    medicationData.route,
+    medicationData.targetRoute,
+    formtype,
+  ]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -99,9 +139,17 @@ function MedInputForm({ formtype, onSubmit }) {
 
   const handleMedicationNameChange = (event) => {
     const value = event.target.value;
+
+    // Find the selected medication's class from formulaOptions
+    const selectedOption = formulaOptions.find(
+      (option) => option.sourceDrug.toLowerCase() === value.toLowerCase()
+    );
+    const medicationClass = selectedOption ? selectedOption.class : "";
+
     setMedicationData((prevData) => ({
       ...prevData,
       name: value,
+      class: medicationClass, // Ensure class is updated
     }));
 
     setAltOptions();
@@ -110,10 +158,10 @@ function MedInputForm({ formtype, onSubmit }) {
   const handleClick = () => {
     setShowPatientForm(!showPatientForm);
     setMedicationData((prevData) => ({
-        ...prevData,
-        patient: { showPatientForm },
+      ...prevData,
+      patient: { showPatientForm },
     }));
-};
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -122,7 +170,7 @@ function MedInputForm({ formtype, onSubmit }) {
     if (!medicationData.name) validationErrors.name = "Medication name is required.";
     if (!medicationData.dosage) validationErrors.dosage = "Dosage is required.";
     if (!medicationData.dosageUnit) validationErrors.dosageUnit = "Dosage unit is required.";
-    if (!medicationData.route) validationErrors.route = "Administration route is required.";
+    if (!medicationData.route && !(formtype === 'alt' && !isOpioid)) validationErrors.route = "Administration route is required.";
     if (!medicationData.target) validationErrors.target = "Target medication is required.";
     if (!medicationData.targetRoute && formtype === "po-iv")
       validationErrors.targetRoute = "Target administration method is required.";
@@ -157,6 +205,21 @@ function MedInputForm({ formtype, onSubmit }) {
     }
   };
 
+  // Logging medicationData updates
+  useEffect(() => {
+    console.log("medicationData updated:", medicationData);
+  }, [medicationData]);
+
+  const addNewFormula = (newFormula) => {
+    setFormulaOptions([...formulaOptions, newFormula]);
+    setMedicationData(prevData => ({
+      ...prevData,
+      formulaName: newFormula.formulaName,
+      formula: newFormula,
+      formulaJustification: newFormula.justification || "User added custom formula"
+    }));
+  };
+
   return (
     <FormControl component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
       {/* Input Medication Details */}
@@ -166,18 +229,25 @@ function MedInputForm({ formtype, onSubmit }) {
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        <SelectMedication field="name" label="Select Source Medication" formtype = {formtype} />
+        <SelectMedication 
+          field="name" 
+          label="Select Source Medication" 
+          formtype={formtype} 
+          onChange={handleMedicationNameChange} // Ensure onChange is handled
+        />
+
 
         <FormControl fullWidth margin="normal">
       {formtype === "po-iv" && (
         <>
+
           <Typography variant="Subtitle 1" gutterBottom>
-            Administration Method
+            Source Administration Method
           </Typography>
           <ToggleButtonGroup
             value={medicationData.route}
             exclusive
-            required
+            required={! (formtype === "alt" && !isOpioid)} // Make required only if not disabled
             onChange={(event, newMethod) => {
               setMedicationData((prevData) => ({
                 ...prevData,
@@ -238,7 +308,11 @@ function MedInputForm({ formtype, onSubmit }) {
 
         {/* Render target medication select box only if formtype is not "po-iv" */}
         {formtype !== "po-iv" && (
-          <SelectMedication field="target" label="Select Target Medication" formtype={formtype}/>
+          <SelectMedication 
+            field="target" 
+            label="Select Target Medication" 
+            formtype={formtype} 
+          />
         )}
 
         {/* PO-IV form */}
@@ -275,6 +349,7 @@ function MedInputForm({ formtype, onSubmit }) {
         )}
       </Box>
 
+
       {/* Conversion Formula Selection */}
       <Box mb={4}>
         <Typography variant="h5" gutterBottom>
@@ -282,11 +357,13 @@ function MedInputForm({ formtype, onSubmit }) {
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        <SelectFormula
-          label="Conversion Formula"
-          options={getFilteredOptions()}
-          medicationData={medicationData}
-          setMedicationData={setMedicationData}
+        <SelectFormula 
+            options={filteredOptions}
+            formtype={formtype}
+            label="Conversion Formula"
+            medicationData={medicationData}
+            setMedicationData={setMedicationData}
+            addNewFormula={addNewFormula} // Pass the addNewFormula function
         />
       </Box>
 
