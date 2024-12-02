@@ -1,178 +1,162 @@
 {
-   "drugs": [
-        {
-            "drug_name": "Betamethasone",
-            "warnings": [
-                {
-                    "patient_info": {
-                        "age": { "min": 0, "max": 12 }
-                    },
-                    "warning_message": "Safety and efficacy of betamethasone dipropionate have not been established in patients younger than 12 years."
-                },
-                {
-                    "patient_info": "general",
-                    "warning_message": "Prolonged use of high doses may suppress adrenal function. Monitor weight gain as it may indicate fluid retention or corticosteroid-induced effects."
-                }
-            ]
-        },
-        {
-            "drug_name": "Cortisone",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "May cause fluid retention and weight gain. Patients should monitor their weight regularly."
-                },
-                {
-                    "patient_info": {
-                        "condition": "diabetes"
-                    },
-                    "warning_message": "Cortisone can raise blood sugar levels, use with caution in diabetic patients."
-                }
-            ]
-        },
-        {
-            "drug_name": "Dexamethasone",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Long-term use may result in osteoporosis, particularly in postmenopausal women."
-                },
-                {
-                    "patient_info": {
-                        "gender": "female",
-                        "age": { "min": 50 }
-                    },
-                    "warning_message": "Postmenopausal women are at higher risk for bone loss when taking dexamethasone."
-                }
-            ]
-        },
-        {
-            "drug_name": "Morphine",
-            "warnings": [
-                {
-                    "patient_info": {
-                        "age": { "min": 0, "max": 18 }
-                    },
-                    "warning_message": "Accidental ingestion of even a single dose can result in a fatal overdose."
-                },
-                {
-                    "patient_info": "general",
-                    "warning_message": "Dosing errors due to confusion between mg and mL, and other morphine sulfate oral solutions of different concentrations, can result in accidental overdose and death."
-                },
-                {
-                    "patient_info": "general",
-                    "warning_message": "Avoid use with other central nervous system depressants such as benzodiazepines due to the risk of respiratory depression."
-                }
-            ]
-        },
-        {
-            "drug_name": "Oxycodone",
-            "warnings": [
-                {
-                    "patient_info": {
-                        "age": { "min": 59, "max": 120 }
-                    },
-                    "warning_message": "Oxycodone can slow or stop breathing, particularly in elderly patients."
-                },
-                {
-                    "patient_info": {
-                        "condition": "asthma"
-                    },
-                    "warning_message": "Patients with asthma or severe respiratory conditions should avoid oxycodone due to the risk of respiratory depression."
-                },
-                {
-                    "patient_info": "general",
-                    "warning_message": "Avoid combining with benzodiazepines or alcohol as it may increase the risk of severe sedation and respiratory depression."
-                }
-            ]
-        },
-        {
-            "drug_name": "Fentanyl (Patch)",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Fentanyl patches should not be used in opioid-naïve patients due to the risk of life-threatening respiratory depression."
-                },
-                {
-                    "patient_info": {
-                        "weight": { "min": 0, "max": 50 }
-                    },
-                    "warning_message": "Patients weighing less than 50 kg may require lower doses due to increased risk of respiratory depression."
-                }
-            ]
-        },
-        {
-            "drug_name": "Buprenorphine (Patch)",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Combining buprenorphine with other opioids may result in reduced effectiveness and withdrawal symptoms."
-                },
-                {
-                    "patient_info": {
-                        "weight": { "min": 0, "max": 50 }
-                    },
-                    "warning_message": "Patients under 50 kg should be monitored closely for overdose symptoms."
-                }
-            ]
-        },
-        {
-            "drug_name": "Bupivacaine",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Accidental intravascular injection may result in severe cardiovascular or central nervous system toxicity."
-                }
-            ]
-        },
-        {
-            "drug_name": "Diazepam",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Avoid alcohol and other central nervous system depressants while using diazepam to prevent severe drowsiness or breathing problems."
-                },
-                {
-                    "patient_info": {
-                        "gender": "female",
-                        "condition": "pregnancy"
-                    },
-                    "warning_message": "Diazepam should not be used during pregnancy due to the risk of fetal harm."
-                }
-            ]
-        },
-        {
-            "drug_name": "Midazolam",
-            "warnings": [
-                {
-                    "patient_info": "general",
-                    "warning_message": "Use caution when combining with other opioids, as this can lead to severe sedation, respiratory depression, or death."
-                },
-                {
-                    "patient_info": {
-                        "age": { "min": 0, "max": 18 }
-                    },
-                    "warning_message": "Not recommended for pediatric use unless under strict medical supervision."
-                }
-            ]
-        }
-    ],
-    "hazardous_combinations": [
-        {
-            "combination": ["Morphine", "Diazepam"],
-            "warning_message": "Using morphine with diazepam increases the risk of severe respiratory depression, sedation, and potentially fatal outcomes."
-        },
-        {
-            "combination": ["Fentanyl (Patch)", "Midazolam"],
-            "warning_message": "Concurrent use of fentanyl and midazolam can lead to extreme sedation, respiratory depression, and increased risk of fatal overdose."
-        },
-        {
-            "combination": ["Oxycodone", "Alprazolam (Xanax)"],
-            "warning_message": "Combining oxycodone and alprazolam may cause severe drowsiness, breathing problems, or coma."
-        },
-        {
-            "combination": ["Buprenorphine (Patch)", "Other Opioids"],
-            "warning_message": "Buprenorphine may block the effects of other opioids and cause withdrawal symptoms or reduced pain control."
-        }
-    ]
-}
+    "drugs": [
+         {
+             "drug_name": "Betamethasone",
+             "warnings": [
+                 {
+                     "patient_info": {
+                         "age": { "min": 0, "max": 12 }
+                     },
+                     "warning_message": "Safety and efficacy of betamethasone dipropionate have not been established in patients younger than 12 years."
+                 },
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Prolonged use of high doses may suppress adrenal function. Monitor weight gain as it may indicate fluid retention or corticosteroid-induced effects."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Cortisone",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "May cause fluid retention and weight gain. Patients should monitor their weight regularly."
+                 },
+                 {
+                     "patient_info": {
+                         "condition": "diabetes"
+                     },
+                     "warning_message": "Cortisone can raise blood sugar levels, use with caution in diabetic patients."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Dexamethasone",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Long-term use may result in osteoporosis, particularly in postmenopausal women."
+                 },
+                 {
+                     "patient_info": {
+                         "gender": "female",
+                         "age": { "min": 50 }
+                     },
+                     "warning_message": "Postmenopausal women are at higher risk for bone loss when taking dexamethasone."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Lidocaine",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Avoid excessive doses as it can lead to central nervous system toxicity."
+                 },
+                 {
+                     "patient_info": {
+                         "condition": "heart arrhythmia"
+                     },
+                     "warning_message": "Use with caution in patients with arrhythmia as it may exacerbate conditions."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Mepivacaine",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Inadvertent intravascular injection can cause severe adverse effects."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Ropivacaine",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Caution is advised for prolonged use in epidural anesthesia due to the risk of nerve damage."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Diazepam",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Avoid alcohol and other central nervous system depressants while using diazepam to prevent severe drowsiness or breathing problems."
+                 },
+                 {
+                     "patient_info": {
+                         "gender": "female",
+                         "condition": "pregnancy"
+                     },
+                     "warning_message": "Diazepam should not be used during pregnancy due to the risk of fetal harm."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Alprazolam",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Risk of dependency increases with prolonged use. Avoid abrupt discontinuation."
+                 },
+                 {
+                     "patient_info": {
+                         "age": { "min": 0, "max": 18 }
+                     },
+                     "warning_message": "Not recommended for pediatric patients without specialist advice."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Clonazepam",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "May cause severe drowsiness and dizziness. Avoid operating machinery."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Morphine",
+             "warnings": [
+                 {
+                     "patient_info": {
+                         "age": { "min": 0, "max": 18 }
+                     },
+                     "warning_message": "Accidental ingestion of even a single dose can result in a fatal overdose."
+                 },
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Dosing errors due to confusion between mg and mL, and other morphine sulfate oral solutions of different concentrations, can result in accidental overdose and death."
+                 },
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Avoid use with other central nervous system depressants such as benzodiazepines due to the risk of respiratory depression."
+                 }
+             ]
+         },
+         {
+             "drug_name": "Codeine",
+             "warnings": [
+                 {
+                     "patient_info": "general",
+                     "warning_message": "Use with caution in pediatric patients due to risk of respiratory depression."
+                 }
+             ]
+         }
+     ],
+     "hazardous_combinations": [
+         {
+             "combination": ["Morphine", "Diazepam"],
+             "warning_message": "Using morphine with diazepam increases the risk of severe respiratory depression, sedation, and potentially fatal outcomes."
+         },
+         {
+             "combination": ["Fentanyl (Patch)", "Midazolam"],
+             "warning_message": "Concurrent use of fentanyl and midazolam can lead to extreme sedation, respiratory depression, and increased risk of fatal overdose."
+         }
+     ]
+ }
+ 
