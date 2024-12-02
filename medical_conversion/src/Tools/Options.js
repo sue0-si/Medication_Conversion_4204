@@ -83,65 +83,52 @@ export const extractFormulaOptions = () => {
 };
 
 /**
- * Function to only extract opioids for po-iv
+ * Function to only extract opioid formulae for po-iv
  */
-export const extractOpioidMedications = () => {
-    const medicationConversions = {
-        to: {},   // Map of medications that can be converted to others
-        from: {}  // Map of medications that can be converted from others
-    };
-    
-    // First Loop: Add basic opioid conversions
+export const extractOpioidFormulae = () => {
+    const formulaOptions = [];
+    // Add Opioids formulas
     Object.keys(opioids).forEach((drug) => {
-        if (!medicationConversions.to[drug]) {
-            medicationConversions.to[drug] = new Set();
+        const drugData = opioids[drug];
+        if (!drugData.route_conversions) {
+            console.warn(`Skipping ${drug}, no route conversions available.`);
+            return; // Skip drugs without route conversions
         }
-        Object.keys(opioids[drug].Conversions).forEach((targetDrug) => {
-            const normalizedTargetDrug = normalizeDrugName(targetDrug);
-            if (!medicationConversions.from[normalizedTargetDrug]) {
-                medicationConversions.from[normalizedTargetDrug] = new Set();
+    
+        // Iterate through each route conversion
+        Object.keys(drugData.route_conversions).forEach((conversionKey) => {
+            const conversionRatio = drugData.route_conversions[conversionKey];
+            if (conversionRatio === null || conversionRatio === undefined) {
+                console.warn(`Skipping conversion for ${drug}: ${conversionKey} due to null/undefined ratio.`);
+                return; // Skip if conversion ratio is undefined or null
             }
-            medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
-            medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
-        });
-    });
-
-    // Second Loop: Add conversions with routes
-    Object.keys(opioids).forEach((drug) => {
-        // Removed: medicationConversions.to[drug] = new Set();
-
-        // Iterate through all available routes for each drug
-        Object.keys(opioids[drug].Conversions).forEach((route) => {
-            Object.keys(opioids[drug].Conversions[route]).forEach((targetDrug) => {
-                const normalizedTargetDrug = normalizeDrugName(targetDrug);
-
-                // Initialize the 'from' set if it doesn't exist
-                if (!medicationConversions.from[normalizedTargetDrug]) {
-                    medicationConversions.from[normalizedTargetDrug] = new Set();
-                }
-
-                // Initialize the 'to' set if it doesn't exist
-                if (!medicationConversions.to[drug]) {
-                    medicationConversions.to[drug] = new Set();
-                }
-
-                // Add the target drug and its route to the 'to' and 'from' sets
-                medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
-                medicationConversions.from[normalizedTargetDrug].add(`${drug}`);
+    
+            // Extract source and target routes from conversionKey
+            const [sourceRoute, targetRoute] = conversionKey.split("_to_");
+    
+            // Validate routes
+            if (!sourceRoute || !targetRoute) {
+                console.warn(`Invalid conversionKey format for ${drug}: ${conversionKey}`);
+                return; // Skip invalid conversionKey
+            }
+    
+            // Add the conversion formula to formulaOptions
+            formulaOptions.push({
+                sourceDrug: drug,
+                sourceRoute: sourceRoute.toLowerCase(),
+                targetDrug: drug, // Target drug is the same as the source drug in this structure
+                targetRoute: targetRoute.toLowerCase(),
+                conversionRatio,
+                class: drugData.class,
+                formulaName: `${drug} (${sourceRoute}) to (${targetRoute})`,
+                justification: "Conversion formula received as a direct strength ratio and does not account for patient variables."
             });
         });
     });
-
-    // Convert Sets to Arrays for easier filtering in UI
-    Object.keys(medicationConversions.to).forEach(drug => {
-        medicationConversions.to[drug] = Array.from(medicationConversions.to[drug]);
-    });
-    Object.keys(medicationConversions.from).forEach(drug => {
-        medicationConversions.from[drug] = Array.from(medicationConversions.from[drug]);
-    });
-
-    return medicationConversions;
+    
+    return formulaOptions;
 };
+
 
 /**
  * Function to extract available medication names from multiple datasets
@@ -221,6 +208,68 @@ export const extractMedicationOptions = () => {
             }
             medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
             medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
+        });
+    });
+
+    // Convert Sets to Arrays for easier filtering in UI
+    Object.keys(medicationConversions.to).forEach(drug => {
+        medicationConversions.to[drug] = Array.from(medicationConversions.to[drug]);
+    });
+    Object.keys(medicationConversions.from).forEach(drug => {
+        medicationConversions.from[drug] = Array.from(medicationConversions.from[drug]);
+    });
+
+    return medicationConversions;
+};
+
+
+/**
+ * Function to only extract opioids for po-iv
+ */
+export const extractOpioidMedications = () => {
+    const medicationConversions = {
+        to: {},   // Map of medications that can be converted to others
+        from: {}  // Map of medications that can be converted from others
+    };
+    
+    // First Loop: Add basic opioid conversions
+    Object.keys(opioids).forEach((drug) => {
+        if (!medicationConversions.to[drug]) {
+            medicationConversions.to[drug] = new Set();
+        }
+        Object.keys(opioids[drug].Conversions).forEach((targetDrug) => {
+            const normalizedTargetDrug = normalizeDrugName(targetDrug);
+            if (!medicationConversions.from[normalizedTargetDrug]) {
+                medicationConversions.from[normalizedTargetDrug] = new Set();
+            }
+            medicationConversions.to[drug].add(normalizedTargetDrug);  // drug can convert to targetDrug
+            medicationConversions.from[normalizedTargetDrug].add(drug); // Target drug can be converted from drug
+        });
+    });
+
+    // Second Loop: Add conversions with routes
+    Object.keys(opioids).forEach((drug) => {
+        // Removed: medicationConversions.to[drug] = new Set();
+
+        // Iterate through all available routes for each drug
+        Object.keys(opioids[drug].Conversions).forEach((route) => {
+            Object.keys(opioids[drug].Conversions[route]).forEach((targetDrug) => {
+                const normalizedTargetDrug = normalizeDrugName(targetDrug);
+
+                // Initialize the 'from' set if it doesn't exist
+                if (!medicationConversions.from[normalizedTargetDrug]) {
+                    medicationConversions.from[normalizedTargetDrug] = new Set();
+                }
+
+                // Initialize the 'to' set if it doesn't exist
+                if (!medicationConversions.to[drug]) {
+                    medicationConversions.to[drug] = new Set();
+                }
+
+                // Add the target drug and its route to the 'to' and 'from' sets
+                medicationConversions.to[drug].add(`${normalizedTargetDrug} (${route})`);
+                medicationConversions.from[normalizedTargetDrug].add(`${drug}`);
+            });
         });
     });
 
