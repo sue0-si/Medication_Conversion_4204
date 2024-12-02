@@ -74,56 +74,40 @@ function MedInputForm({ formtype, onSubmit }) {
   
 
   const getFilteredOptions = () => {
-    console.log("Filtering with:", {
-      medicationName: medicationData.name,
-      targetMedication: medicationData.target,
-      route: medicationData.route,
-      targetRoute: medicationData.targetRoute,
-      formtype,
-    });
-
     const filtered = formulaOptions.filter((option) => {
-      // Filter based on Source Drug
+      // a. Filter based on Source Drug (if selected)
       const isRelevantSourceDrug =
-        medicationData.name &&
+        !medicationData.name ||
         option.sourceDrug.toLowerCase().includes(medicationData.name.toLowerCase());
-
-      // Filter based on Target Drug
+  
+      // b. Filter based on Target Drug (if selected)
       const isRelevantTargetDrug =
-        medicationData.target &&
+        !medicationData.target ||
         option.targetDrug.toLowerCase().includes(medicationData.target.toLowerCase());
-
-      // Initialize route relevance as true
+  
+      // c. Initialize route relevance as true
       let isRelevantRoute = true;
-
-      // Apply route-based filtering only if formtype is "po-iv"
+  
+      // d. Apply route-based filtering only if formtype is "po-iv"
       if (formtype === "po-iv") {
         isRelevantRoute =
-          medicationData.route &&
-          option.sourceRoute.toLowerCase().includes(medicationData.route.toLowerCase()) &&
-          medicationData.targetRoute &&
-          option.targetRoute.toLowerCase().includes(medicationData.targetRoute.toLowerCase());
+          (!medicationData.route ||
+            option.sourceRoute.toLowerCase().includes(medicationData.route.toLowerCase())) &&
+          (!medicationData.targetRoute ||
+            option.targetRoute.toLowerCase().includes(medicationData.targetRoute.toLowerCase()));
       }
-
-      console.log({
-        option,
-        isRelevantSourceDrug,
-        isRelevantTargetDrug,
-        isRelevantRoute,
-      });
-
-      // Return true only if all relevant conditions are met
+  
       return isRelevantSourceDrug && isRelevantTargetDrug && isRelevantRoute;
     });
-
-    console.log("Filtered Options:", filtered);
     return filtered;
   };
+  
   
 
   const filteredOptions = useMemo(() => getFilteredOptions(), [
     formulaOptions,
     medicationData.name,
+    medicationData.target,
     medicationData.route,
     medicationData.targetRoute,
     formtype,
