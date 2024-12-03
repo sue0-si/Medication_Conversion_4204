@@ -2,8 +2,8 @@
 
 A supportive tool designed to assist healthcare professionals in converting between IV and oral medication
 formulations, calculating precise dosages, identifying alternative medications, and promoting patient safety
-with alerts and guidelines. While powerful and user-friendly, this application is intended to complement—not
-replace—the expertise and judgment of licensed medical practitioners.
+with alerts and guidelines. While powerful and user-friendly, this application is intended to complementâ€”not
+replaceâ€”the expertise and judgment of licensed medical practitioners.
 
 ---
 
@@ -16,9 +16,12 @@ replace—the expertise and judgment of licensed medical practitioners.
   Seamlessly perform IV-to-oral and oral-to-IV dosage conversions with a clear and intuitive interface.  
 
 - **Alternative Medication Conversions**:  
-  Calculate equivalent dosages for alternative medications, offering flexibility when substitutions are needed.  
+  Calculate equivalent dosages for alternative medications, offering flexibility when substitutions are needed.
 
-- **Dynamic Form Updates**:  
+- **Medication Information Search**: <br>
+  Quick search for dosage guidelines, side effects, and administration methods for each medication.
+
+- **Dynamic Form Updates**: 
   Form fields and options adapt dynamically to user inputs, ensuring relevant and accurate information is always displayed.  
 
 - **Multi-Tool Windows**:  
@@ -65,7 +68,7 @@ Ensure your system meets the following requirements before proceeding:
    - managing dependencies.
 
 2. **Install a Code Editor (optional but recommended):**
-   - Download and install [Visual Studio Code](https://code.visualstudio.com/). It’s a lightweight, efficient 
+   - Download and install [Visual Studio Code](https://code.visualstudio.com/). Itâ€™s a lightweight, efficient 
    - editor for JavaScript-based projects.
 
 3. **Verify Installations:**
