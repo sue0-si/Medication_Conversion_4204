@@ -97,7 +97,8 @@ Ensure your system meets the following requirements before proceeding:
 2. **Install Project Dependencies:**
    - Use npm to install the necessary dependencies. Run the following command:
      ```
-     npm install
+     npm install --force
+     npm install groq-sdk --force
      ```
    - This will download and install all required packages listed in the `package.json` file.
 
